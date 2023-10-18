@@ -1,0 +1,210 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<!-- 
+<h1 align="center">Notes</h1>
+<ul class="list-group list-group-flush" id="notes">
+  {% for note in user.notes %}
+  <li class="list-group-item">
+    {{ note.data }}
+    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+<form method="POST">
+  <textarea name="note" id="note" class="form-control"></textarea>
+  <br />
+  <div align="center">
+    <button type="submit" class="btn btn-primary">Add Note</button>
+  </div>
+</form>
+<h1 align="center">Events</h1>
+<ul class="list-group list-group-flush" id="events">
+  {% for event in user.notes %}
+  <li class="list-group-item">
+    {{ note.data }}
+    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+-->
+<style>
+  .form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-container form {
+    margin: 0 20px; /* Adjust the margin as needed */
+  }
+</style>
+<div class="form-container">
+<div id="submit_event">
+  <h3 align="center">Request an event</h1>
+  <form id = "event_form" action="/submit-event" method="POST">
+    <input type="hidden" name="event_form" value="1">
+    <label for="event_title">Title:</label>
+    <input type="text" id="event_title" name="event_title" required /><br />
+
+    <div id="availability">
+      <div class="date-time-entry">
+        <label for="event_date">Date:</label>
+        <input type="date" name="date[]" required /><br />
+        <label for="event_date">Start time:</label>
+        <input type="time" name="start_time[]" required /><br />
+        <label for="event_date">End Time:</label>
+        <input type="time" name="end_time[]" required /><br />
+      </div>
+    </div>
+    <button type="button" id="add-date-time">Add Date and Time</button>
+    <script>
+      document.getElementById("add-date-time").addEventListener("click", function () {
+      const dateTimesContainer = document.getElementById("availability");
+      const dateTimeEntry = document.querySelector(".date-time-entry").cloneNode(true);
+      dateTimesContainer.appendChild(dateTimeEntry);
+    });
+    </script>
+    <br />
+    <label for="event_description">Description:</label><br />
+    <textarea
+      id="event_description"
+      name="event_description"
+      rows="4"
+      cols="50"
+      required
+    ></textarea
+    ><br />
+    <div align="center">
+      <button type="submit" form = "event_form" class="btn btn-primary">Submit Event</button>
+    </div>
+  </form>
+  <br />
+</div>
+<div id="submit_trainer">
+  <h3 align="center">Submit training availability</h1>
+  <form id = "trainer_form" action="/submit-trainer" method="POST">
+    <input type="hidden" name="trainer_form" value="1">
+    <label for="trainer_name">Name:</label>
+    <input type="text" id="trainer_name" name="trainer_name" required /><br />
+
+    <div id="trainer-availability">
+      <div class="trainer-date-time-entry">
+        <label for="trainer_date">Date:</label>
+        <input type="date" name="date[]" required /><br />
+        <label for="trainer_date">Start time:</label>
+        <input type="time" name="start_time[]" required /><br />
+        <label for= "trainer_date">End Time:</label>
+        <input type="time" name="end_time[]" required /><br />
+      </div>
+    </div>
+    <button type="button" id="trainer-add-date-time">Add Date and Time</button>
+    <script>
+      document.getElementById("trainer-add-date-time").addEventListener("click", function () {
+      const trainerDateTimesContainer = document.getElementById("trainer-availability");
+      const trainerDateTimeEntry = document.querySelector(".trainer-date-time-entry").cloneNode(true);
+      trainerDateTimesContainer.appendChild(trainerDateTimeEntry);
+    });
+    </script>
+    <br />
+    <label for="other_info">Other information:</label><br />
+    <textarea
+      id="other_info"
+      name="other_info"
+      rows="4"
+      cols="50"
+    ></textarea
+    ><br />
+    <div align="center">
+      <button type="submit" form="trainer_form" class="btn btn-primary">Submit Training Availability</button>
+    </div>
+  </form>
+  <br />
+</div>
+</div>
+<div class="schedule_container">
+  <div class="box">
+    <!-- Event List -->
+    <ul class="list-group list-group-flush" id="notes">
+      {% for event in events %}
+      <li
+        id="event_{{event.id}}"
+        class="list-group-item"
+        style="border-color: {{ colors[(event.id - 1) % colors|length][1] }}; border-width: 3px;"
+      >
+        <strong>{{event.title}}</strong>
+        <input
+          type="checkbox"
+          class="event-checkbox"
+          event-id = "{{ event.id }}"
+        >
+    </input>
+        <br />
+        {% for date in event.dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}<br />
+        {% endfor %}
+        <p>{{ event.description }}</p>
+      </li> 
+      {% endfor %}
+    </ul>
+  </div>
+  <div id="calendar">
+    <!-- Calendar -->
+  </div>
+  <div class="box">
+    <!-- Trainer List -->
+    <ul class="list-group list-group-flush" id="notes">
+      {% for trainer in trainers %}
+      <li
+        id="trainer_{{trainer.id}}"
+        class="list-group-item"
+        style="border-color: {{ colors[(colors|length - 1) - ((trainer.id - 1) % colors|length)][1] }}; border-width: 3px;"
+      >
+        <strong>{{trainer.name}}</strong>
+        <input
+          type="checkbox"
+          class="trainer-checkbox"
+          trainer-id = "{{ trainer.id }}"
+          trainer-name="{{ trainer.name }}"
+        >
+    </input>
+        <br />
+        {% for date in trainer.dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}<br />
+        {% endfor %}
+        <p>{{ trainer.other_info }}</p>
+      </li> 
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="modal fade" id="detail-expand">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Modal Title</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="time" style="font-weight: bold">Event Time</div>
+          <div class="description"></div>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <br />
+  <br />
+</div>
+{% endblock %}
