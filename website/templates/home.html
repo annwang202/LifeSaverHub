@@ -41,90 +41,19 @@
   .form-container form {
     margin: 0 20px; /* Adjust the margin as needed */
   }
+  .page-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lightcoral;
+    color: white;
+    padding: 10px;
+  }
 </style>
-<div class="form-container">
-<div id="submit_event">
-  <h3 align="center">Request an event</h1>
-  <form id = "event_form" action="/submit-event" method="POST">
-    <input type="hidden" name="event_form" value="1">
-    <label for="event_title">Title:</label>
-    <input type="text" id="event_title" name="event_title" required /><br />
-
-    <div id="availability">
-      <div class="date-time-entry">
-        <label for="event_date">Date:</label>
-        <input type="date" name="date[]" required /><br />
-        <label for="event_date">Start time:</label>
-        <input type="time" name="start_time[]" required /><br />
-        <label for="event_date">End Time:</label>
-        <input type="time" name="end_time[]" required /><br />
-      </div>
-    </div>
-    <button type="button" id="add-date-time">Add Date and Time</button>
-    <script>
-      document.getElementById("add-date-time").addEventListener("click", function () {
-      const dateTimesContainer = document.getElementById("availability");
-      const dateTimeEntry = document.querySelector(".date-time-entry").cloneNode(true);
-      dateTimesContainer.appendChild(dateTimeEntry);
-    });
-    </script>
-    <br />
-    <label for="event_description">Description:</label><br />
-    <textarea
-      id="event_description"
-      name="event_description"
-      rows="4"
-      cols="50"
-      required
-    ></textarea
-    ><br />
-    <div align="center">
-      <button type="submit" form = "event_form" class="btn btn-primary">Submit Event</button>
-    </div>
-  </form>
-  <br />
+<div class="page-title">
+  <h2>LifeSaver Hub Scheduling</h2>
 </div>
-<div id="submit_trainer">
-  <h3 align="center">Submit training availability</h1>
-  <form id = "trainer_form" action="/submit-trainer" method="POST">
-    <input type="hidden" name="trainer_form" value="1">
-    <label for="trainer_name">Name:</label>
-    <input type="text" id="trainer_name" name="trainer_name" required /><br />
-
-    <div id="trainer-availability">
-      <div class="trainer-date-time-entry">
-        <label for="trainer_date">Date:</label>
-        <input type="date" name="date[]" required /><br />
-        <label for="trainer_date">Start time:</label>
-        <input type="time" name="start_time[]" required /><br />
-        <label for= "trainer_date">End Time:</label>
-        <input type="time" name="end_time[]" required /><br />
-      </div>
-    </div>
-    <button type="button" id="trainer-add-date-time">Add Date and Time</button>
-    <script>
-      document.getElementById("trainer-add-date-time").addEventListener("click", function () {
-      const trainerDateTimesContainer = document.getElementById("trainer-availability");
-      const trainerDateTimeEntry = document.querySelector(".trainer-date-time-entry").cloneNode(true);
-      trainerDateTimesContainer.appendChild(trainerDateTimeEntry);
-    });
-    </script>
-    <br />
-    <label for="other_info">Other information:</label><br />
-    <textarea
-      id="other_info"
-      name="other_info"
-      rows="4"
-      cols="50"
-    ></textarea
-    ><br />
-    <div align="center">
-      <button type="submit" form="trainer_form" class="btn btn-primary">Submit Training Availability</button>
-    </div>
-  </form>
-  <br />
-</div>
-</div>
+</br>
 <div class="schedule_container">
   <div class="box">
     <!-- Event List -->

@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
         headerToolbar: {
           left: "prev,next",
           center: "title",
-          right: "dayGridMonth,dayGridWeek,multiMonthYear", // user can switch between the two
+          right: "timeGridDay,dayGridMonth,timeGridWeek,multiMonthYear", // user can switch between the two
         }, 
         eventClick: function (info) {
           var modal = $("#detail-expand");

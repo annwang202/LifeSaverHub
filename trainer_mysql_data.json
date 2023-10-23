@@ -2,9 +2,7 @@
   {
     "events": [
       {
-        "allDay": true,
         "color": "#0791fa",
-        "eventDisplay": "background",
         "extendedProps": {
           "description": "Example other info.",
           "formattedEndTime": "04:06 PM",
@@ -17,9 +15,7 @@
         "title": "Tom"
       },
       {
-        "allDay": true,
         "color": "#0791fa",
-        "eventDisplay": "background",
         "extendedProps": {
           "description": "Example other info.",
           "formattedEndTime": "09:06 PM",
@@ -32,9 +28,7 @@
         "title": "Tom"
       },
       {
-        "allDay": true,
         "color": "#0791fa",
-        "eventDisplay": "background",
         "extendedProps": {
           "description": "Example other info.",
           "formattedEndTime": "11:06 AM",
@@ -48,5 +42,54 @@
       }
     ],
     "id": 1
+  },
+  {
+    "events": [
+      {
+        "color": "#d9f78b",
+        "extendedProps": {
+          "description": "Trainer submitted from /trainer",
+          "formattedEndTime": "09:01 AM",
+          "formattedStartDate": "2023-10-31 08:01 AM",
+          "trainerId": 2,
+          "trainerTrue": true
+        },
+        "id": 5,
+        "start": "2023-10-31T08:01:00",
+        "title": "Jane"
+      },
+      {
+        "color": "#d9f78b",
+        "extendedProps": {
+          "description": "Trainer submitted from /trainer",
+          "formattedEndTime": "09:01 PM",
+          "formattedStartDate": "2023-11-08 08:01 PM",
+          "trainerId": 2,
+          "trainerTrue": true
+        },
+        "id": 4,
+        "start": "2023-11-08T20:01:00",
+        "title": "Jane"
+      }
+    ],
+    "id": 2
+  },
+  {
+    "events": [
+      {
+        "color": "#facdac",
+        "extendedProps": {
+          "description": "Submitted through /trainer.",
+          "formattedEndTime": "07:06 PM",
+          "formattedStartDate": "2023-10-26 06:04 PM",
+          "trainerId": 3,
+          "trainerTrue": true
+        },
+        "id": 6,
+        "start": "2023-10-26T18:04:00",
+        "title": "Abby"
+      }
+    ],
+    "id": 3
   }
 ]

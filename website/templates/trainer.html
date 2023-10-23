@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+<style>
+  .form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-container form {
+    margin: 0 20px; /* Adjust the margin as needed */
+  }
+</style>
+<div class="form-container">
+    <div id="submit_trainer">
+        <h3 align="center">Submit training availability</h1>
+        <form id = "trainer_form" action="/submit-trainer" method="POST">
+          <input type="hidden" name="trainer_form" value="1">
+          <label for="trainer_name">Name:</label>
+          <input type="text" id="trainer_name" name="trainer_name" required /><br />
+      
+          <div id="trainer-availability">
+            <div class="trainer-date-time-entry">
+              <label for="trainer_date">Date:</label>
+              <input type="date" name="date[]" required /><br />
+              <label for="trainer_date">Start time:</label>
+              <input type="time" name="start_time[]" required /><br />
+              <label for= "trainer_date">End Time:</label>
+              <input type="time" name="end_time[]" required /><br />
+            </div>
+          </div>
+          <button type="button" id="trainer-add-date-time">Add Date and Time</button>
+          <script>
+            document.getElementById("trainer-add-date-time").addEventListener("click", function () {
+            const trainerDateTimesContainer = document.getElementById("trainer-availability");
+            const trainerDateTimeEntry = document.querySelector(".trainer-date-time-entry").cloneNode(true);
+            trainerDateTimesContainer.appendChild(trainerDateTimeEntry);
+          });
+          </script>
+          <br />
+          <label for="other_info">Other information:</label><br />
+          <textarea
+            id="other_info"
+            name="other_info"
+            rows="4"
+            cols="50"
+          ></textarea
+          ><br />
+          <div align="center">
+            <button type="submit" form="trainer_form" class="btn btn-primary">Submit Training Availability</button>
+          </div>
+        </form>
+        <br />
+      </div>
+</div>
+{% endblock %}

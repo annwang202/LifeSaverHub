@@ -1,0 +1,57 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+<style>
+  .form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-container form {
+    margin: 0 20px; /* Adjust the margin as needed */
+  }
+</style>
+<div class="form-container">
+<div id="submit_event">
+  <h3 align="center">Request an event</h1>
+  <form id = "event_form" action="/submit-event" method="POST">
+    <input type="hidden" name="event_form" value="1">
+    <label for="event_title">Title:</label>
+    <input type="text" id="event_title" name="event_title" required /><br />
+
+    <div id="availability">
+      <div class="date-time-entry">
+        <label for="event_date">Date:</label>
+        <input type="date" name="date[]" required /><br />
+        <label for="event_date">Start time:</label>
+        <input type="time" name="start_time[]" required /><br />
+        <label for="event_date">End Time:</label>
+        <input type="time" name="end_time[]" required /><br />
+      </div>
+    </div>
+    <button type="button" id="add-date-time">Add Date and Time</button>
+    <script>
+      document.getElementById("add-date-time").addEventListener("click", function () {
+      const dateTimesContainer = document.getElementById("availability");
+      const dateTimeEntry = document.querySelector(".date-time-entry").cloneNode(true);
+      dateTimesContainer.appendChild(dateTimeEntry);
+    });
+    </script>
+    <br />
+    <label for="event_description">Description:</label><br />
+    <textarea
+      id="event_description"
+      name="event_description"
+      rows="4"
+      cols="50"
+      required
+    ></textarea
+    ><br />
+    <div align="center">
+      <button type="submit" form = "event_form" class="btn btn-primary">Submit Event</button>
+    </div>
+  </form>
+  <br />
+</div>
+</div>
+{% endblock %}

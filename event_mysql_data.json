@@ -2,9 +2,11 @@
   {
     "events": [
       {
-        "borderColor": "#ffe1e0",
+        "color": "#ff80ff",
+        "display": "block",
         "displayEventEnd": true,
         "end": "2023-10-25T11:06:00",
+        "eventDisplay": "background",
         "extendedProps": {
           "description": "Example description 1.",
           "eventId": 1,
@@ -17,9 +19,11 @@
         "title": "Example Request 1"
       },
       {
-        "borderColor": "#ffe1e0",
+        "color": "#ff80ff",
+        "display": "block",
         "displayEventEnd": true,
         "end": "2023-10-18T11:06:00",
+        "eventDisplay": "background",
         "extendedProps": {
           "description": "Example description 1.",
           "eventId": 1,
@@ -37,9 +41,11 @@
   {
     "events": [
       {
-        "borderColor": "#fc4242",
+        "color": "#fc4242",
+        "display": "block",
         "displayEventEnd": true,
         "end": "2023-10-21T21:06:00",
+        "eventDisplay": "background",
         "extendedProps": {
           "description": "Example description 2.",
           "eventId": 2,
@@ -52,9 +58,11 @@
         "title": "Example Request 2"
       },
       {
-        "borderColor": "#fc4242",
+        "color": "#fc4242",
+        "display": "block",
         "displayEventEnd": true,
         "end": "2023-10-27T21:06:00",
+        "eventDisplay": "background",
         "extendedProps": {
           "description": "Example description 2.",
           "eventId": 2,
@@ -68,5 +76,66 @@
       }
     ],
     "id": 2
+  },
+  {
+    "events": [
+      {
+        "color": "#fca349",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2023-11-01T22:00:00",
+        "eventDisplay": "background",
+        "extendedProps": {
+          "description": "Event request created from /trainee.",
+          "eventId": 3,
+          "formattedEndTime": "10:00 PM",
+          "formattedStartDate": "2023-11-01 09:00 PM",
+          "trainerTrue": false
+        },
+        "id": 6,
+        "start": "2023-11-01T21:00:00",
+        "title": "Example Request 3"
+      },
+      {
+        "color": "#fca349",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2023-10-28T22:00:00",
+        "eventDisplay": "background",
+        "extendedProps": {
+          "description": "Event request created from /trainee.",
+          "eventId": 3,
+          "formattedEndTime": "10:00 PM",
+          "formattedStartDate": "2023-10-28 09:00 PM",
+          "trainerTrue": false
+        },
+        "id": 5,
+        "start": "2023-10-28T21:00:00",
+        "title": "Example Request 3"
+      }
+    ],
+    "id": 3
+  },
+  {
+    "events": [
+      {
+        "color": "#fcde17",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2023-10-30T08:03:00",
+        "eventDisplay": "background",
+        "extendedProps": {
+          "description": "Submitted through /trainee.",
+          "eventId": 4,
+          "formattedEndTime": "08:03 AM",
+          "formattedStartDate": "2023-10-30 06:03 AM",
+          "trainerTrue": false
+        },
+        "id": 7,
+        "start": "2023-10-30T06:03:00",
+        "title": "Example Request 4"
+      }
+    ],
+    "id": 4
   }
 ]

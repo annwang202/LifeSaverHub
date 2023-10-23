@@ -7,7 +7,7 @@ from datetime import datetime
 from sqlalchemy import asc
 
 views = Blueprint('views', __name__)
-colors = [["pink","#ffe1e0"],["red","#fc4242"],["orange","#fca349"],["yellow","#fcde17"],
+colors = [["pink","#ff80ff"],["red","#fc4242"],["orange","#fca349"],["yellow","#fcde17"],
           ["green","#14f51f"],["light-blue","#81ebf7"],["purple","#4c07fa"],["brown","#7F5D56"],["light-orange","#facdac"],["yellow-green","#d9f78b"],["blue","#0791fa"]]
 #trainer_colors = [["black"],["light-brown"],["light-grey"],["dark-grey"],["dark-brown"],["dark-green"],["dark-blue"]]
 
@@ -24,6 +24,31 @@ def home():
             trainer.dates.sort(key=lambda date: date.start_date)
     return render_template("home.html", user=current_user, events=events, trainers = trainers, colors = colors)
 
+@views.route('/trainee', methods=['GET', 'POST'])
+@login_required
+def trainee():
+    events = Event.query.all()
+    for event in events:
+        if event.dates:
+            event.dates.sort(key=lambda date: date.start_date)
+    trainers = Trainer.query.all()
+    for trainer in trainers:
+        if trainer.dates:
+            trainer.dates.sort(key=lambda date: date.start_date)
+    return render_template("trainee.html", user=current_user, events=events, trainers = trainers, colors = colors)
+
+@views.route('/trainer', methods=['GET', 'POST'])
+@login_required
+def trainer():
+    events = Event.query.all()
+    for event in events:
+        if event.dates:
+            event.dates.sort(key=lambda date: date.start_date)
+    trainers = Trainer.query.all()
+    for trainer in trainers:
+        if trainer.dates:
+            trainer.dates.sort(key=lambda date: date.start_date)
+    return render_template("trainer.html", user=current_user, events=events, trainers = trainers, colors = colors)
 
 @views.route('/submit-event', methods=['GET', 'POST'])
 @login_required
@@ -50,7 +75,7 @@ def submit_event():
             db.session.commit()
             flash('Event added to list!', category='success')
 
-    return redirect(url_for('views.home'))
+    return redirect(url_for('views.trainee'))
 
 @views.route('/submit-trainer', methods=['GET', 'POST'])
 @login_required
@@ -76,7 +101,7 @@ def submit_trainer():
             db.session.add(new_trainer)  # adding the note to the database
             db.session.commit()
             flash('Trainer added to list!', category='success')
-    return redirect(url_for('views.home'))
+    return redirect(url_for('views.trainer'))
 
 #@views.route('/delete-note', methods=['POST'])
 #def delete_note():
@@ -123,8 +148,10 @@ def event_mysql_to_json():
                 'title': event.title,
                 'start': slot.iso_formatted_start_date,
                 'end': slot.iso_formatted_end_date,
+                'eventDisplay':'background',
+                'display':'block',
                 'displayEventEnd': True,
-                'borderColor': colors[(event.id - 1) % len(colors)][1],
+                'color': colors[(event.id - 1) % len(colors)][1],
                 'extendedProps': {
                     'trainerTrue': False,
                     'description': event.description,
@@ -166,8 +193,6 @@ def trainer_mysql_to_json():
                 'title': trainer.name,
                 'start': slot.iso_formatted_start_date,
                 #'end': slot.iso_formatted_end_date,
-                'allDay': True,
-                'eventDisplay':'background',
                 'color': colors[(len(colors) - 1) - ((trainer.id - 1) % len(colors))][1],
                 'extendedProps': {
                     'trainerTrue': True,
