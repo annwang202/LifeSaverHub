@@ -114,16 +114,19 @@ def event_mysql_to_json():
     data = Event.query.all()
 
     # Convert the data to a list of dictionaries
-    data_dict = []
+    sources_list = []
     for event in data:
+        event_list = []
         for slot in event.dates:
             time_dict = {
                 'id': slot.id,
                 'title': event.title,
                 'start': slot.iso_formatted_start_date,
                 'end': slot.iso_formatted_end_date,
+                'displayEventEnd': True,
                 'borderColor': colors[(event.id - 1) % len(colors)][1],
                 'extendedProps': {
+                    'trainerTrue': False,
                     'description': event.description,
                     'formattedStartDate': slot.formatted_start_date,
                     'formattedEndTime': slot.formatted_end_time,
@@ -131,10 +134,12 @@ def event_mysql_to_json():
                 }
                 # Add other attributes here as needed
             }
-            data_dict.append(time_dict)
+            event_list.append(time_dict)
+        event_dict = {'events':event_list,'id':event.id}
+        sources_list.append(event_dict)
 
     # Convert the data to JSON
-    json_data = jsonify(data_dict).get_data(as_text=True)
+    json_data = jsonify(sources_list).get_data(as_text=True)
 
     # Save the JSON data to a file (optional)
     with open('event_mysql_data.json', 'w') as json_file:
@@ -152,16 +157,20 @@ def trainer_mysql_to_json():
     data = Trainer.query.all()
 
     # Convert the data to a list of dictionaries
-    data_dict = []
+    sources_list = []
     for trainer in data:
+        event_list = []
         for slot in trainer.dates:
             time_dict = {
                 'id': slot.id,
                 'title': trainer.name,
                 'start': slot.iso_formatted_start_date,
-                'end': slot.iso_formatted_end_date,
-                'backgroundColor': colors[(len(colors) - 1) - ((trainer.id - 1) % len(colors))][1],
+                #'end': slot.iso_formatted_end_date,
+                'allDay': True,
+                'eventDisplay':'background',
+                'color': colors[(len(colors) - 1) - ((trainer.id - 1) % len(colors))][1],
                 'extendedProps': {
+                    'trainerTrue': True,
                     'description': trainer.other_info,
                     'formattedStartDate': slot.formatted_start_date,
                     'formattedEndTime': slot.formatted_end_time,
@@ -169,10 +178,12 @@ def trainer_mysql_to_json():
                 }
                 # Add other attributes here as needed
             }
-            data_dict.append(time_dict)
+            event_list.append(time_dict)
+        trainer_dict = {'events':event_list,'id':trainer.id}
+        sources_list.append(trainer_dict)
 
     # Convert the data to JSON
-    json_data = jsonify(data_dict).get_data(as_text=True)
+    json_data = jsonify(sources_list).get_data(as_text=True)
 
     # Save the JSON data to a file (optional)
     with open('trainer_mysql_data.json', 'w') as json_file:

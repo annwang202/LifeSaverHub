@@ -1,54 +1,72 @@
 [
   {
-    "borderColor": "#ffe1e0",
-    "end": "2023-10-25T11:06:00",
-    "extendedProps": {
-      "description": "Example description 1.",
-      "eventId": 1,
-      "formattedEndTime": "11:06 AM",
-      "formattedStartDate": "2023-10-25 08:09 AM"
-    },
-    "id": 1,
-    "start": "2023-10-25T08:09:00",
-    "title": "Example Request 1"
+    "events": [
+      {
+        "borderColor": "#ffe1e0",
+        "displayEventEnd": true,
+        "end": "2023-10-25T11:06:00",
+        "extendedProps": {
+          "description": "Example description 1.",
+          "eventId": 1,
+          "formattedEndTime": "11:06 AM",
+          "formattedStartDate": "2023-10-25 08:09 AM",
+          "trainerTrue": false
+        },
+        "id": 1,
+        "start": "2023-10-25T08:09:00",
+        "title": "Example Request 1"
+      },
+      {
+        "borderColor": "#ffe1e0",
+        "displayEventEnd": true,
+        "end": "2023-10-18T11:06:00",
+        "extendedProps": {
+          "description": "Example description 1.",
+          "eventId": 1,
+          "formattedEndTime": "11:06 AM",
+          "formattedStartDate": "2023-10-18 08:09 AM",
+          "trainerTrue": false
+        },
+        "id": 2,
+        "start": "2023-10-18T08:09:00",
+        "title": "Example Request 1"
+      }
+    ],
+    "id": 1
   },
   {
-    "borderColor": "#ffe1e0",
-    "end": "2023-10-18T11:06:00",
-    "extendedProps": {
-      "description": "Example description 1.",
-      "eventId": 1,
-      "formattedEndTime": "11:06 AM",
-      "formattedStartDate": "2023-10-18 08:09 AM"
-    },
-    "id": 2,
-    "start": "2023-10-18T08:09:00",
-    "title": "Example Request 1"
-  },
-  {
-    "borderColor": "#fc4242",
-    "end": "2023-10-21T21:06:00",
-    "extendedProps": {
-      "description": "Example description 2.",
-      "eventId": 2,
-      "formattedEndTime": "09:06 PM",
-      "formattedStartDate": "2023-10-21 02:06 PM"
-    },
-    "id": 4,
-    "start": "2023-10-21T14:06:00",
-    "title": "Example Request 2"
-  },
-  {
-    "borderColor": "#fc4242",
-    "end": "2023-10-27T21:06:00",
-    "extendedProps": {
-      "description": "Example description 2.",
-      "eventId": 2,
-      "formattedEndTime": "09:06 PM",
-      "formattedStartDate": "2023-10-27 02:06 PM"
-    },
-    "id": 3,
-    "start": "2023-10-27T14:06:00",
-    "title": "Example Request 2"
+    "events": [
+      {
+        "borderColor": "#fc4242",
+        "displayEventEnd": true,
+        "end": "2023-10-21T21:06:00",
+        "extendedProps": {
+          "description": "Example description 2.",
+          "eventId": 2,
+          "formattedEndTime": "09:06 PM",
+          "formattedStartDate": "2023-10-21 02:06 PM",
+          "trainerTrue": false
+        },
+        "id": 4,
+        "start": "2023-10-21T14:06:00",
+        "title": "Example Request 2"
+      },
+      {
+        "borderColor": "#fc4242",
+        "displayEventEnd": true,
+        "end": "2023-10-27T21:06:00",
+        "extendedProps": {
+          "description": "Example description 2.",
+          "eventId": 2,
+          "formattedEndTime": "09:06 PM",
+          "formattedStartDate": "2023-10-27 02:06 PM",
+          "trainerTrue": false
+        },
+        "id": 3,
+        "start": "2023-10-27T14:06:00",
+        "title": "Example Request 2"
+      }
+    ],
+    "id": 2
   }
 ]

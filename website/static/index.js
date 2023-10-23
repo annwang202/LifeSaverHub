@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
           left: "prev,next",
           center: "title",
           right: "dayGridMonth,dayGridWeek,multiMonthYear", // user can switch between the two
-        },
+        }, 
         eventClick: function (info) {
           var modal = $("#detail-expand");
           var event = info.event;
@@ -47,31 +47,46 @@ document.addEventListener("DOMContentLoaded", function () {
       const checkedCheckboxes = document.querySelectorAll(
         ".event-checkbox:checked"
       );
+      const uncheckedCheckboxes = document.querySelectorAll(
+        ".event-checkbox:not(:checked)"
+      );
 
       // Collect the event IDs associated with checked checkboxes
       const eventIds = Array.from(checkedCheckboxes).map((checkbox) =>
         checkbox.getAttribute("event-id")
       );
+      console.log("checked events:");
       console.log(eventIds);
+      const hiddenEventIds = Array.from(uncheckedCheckboxes).map((checkbox) =>
+        checkbox.getAttribute("event-id")
+      );
+      console.log("unchecked events:");
+      console.log(hiddenEventIds);
 
       // Remove existing event sources that should be hidden
-      const removePromises = calendar.getEventSources().map((eventSource) => {
-        if (!eventIds.includes(eventSource.id.toString())) {
-          return eventSource.remove();
+      console.log("Event sources",calendar.getEventSources());
+      const removePromises = calendar.getEvents().map(function (event) {
+        if (event.extendedProps.trainerTrue === false) {
+          console.log("Removing",event);
+          return event.remove(() => resolve());
         }
+        console.log("Failed to remove",event);
+        // If the event doesn't meet the removal criteria, return a resolved promise
         return Promise.resolve();
       });
 
       // Add the updated event sources
+      console.log("Attempt to add events");
       Promise.all(removePromises).then(() => {
         // Add the updated event sources
         // Add eventDates associated with each event
-        const addPromises = data.map((eventSource) => {
+        console.log("eventIds",eventIds);
+        const addPromises = data.map((jsonsource) => {
+          console.log("jsonsource",jsonsource);
           if (
-            eventIds.includes(eventSource.extendedProps.eventId.toString()) &&
-            !calendar.getEventSources().some((source) => source.id === eventSource.extendedProps.eventId)
+            eventIds.includes(jsonsource.id.toString())
           ) {
-            const sourceArray = [eventSource];
+            const sourceArray = jsonsource;
             console.log("addEventSource called on:");
             console.log(sourceArray);
             return calendar.addEventSource(sourceArray);
@@ -80,13 +95,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // Wait for all add promises to complete
-        Promise.all(addPromises).then(() => {
+        return Promise.all(addPromises);
+      })
+        .then(() => {
           // Finally, refetch events
           calendar.refetchEvents();
-          console.log("calendar sources:");
-          console.log(calendar.getEventSources());
-        });
+          console.log("calendar events:");
+          console.log(calendar.getEvents());
+        })
+        .catch((error) => {
+          console.error("An error occurred:", error);
       });
+    })
+    .catch((error) => {
+      console.error("An error occurred during the data fetch:", error);
     });
     }
     function updateTrainerSources() {
@@ -96,33 +118,46 @@ document.addEventListener("DOMContentLoaded", function () {
       const checkedCheckboxes = document.querySelectorAll(
         ".trainer-checkbox:checked"
       );
-
-      const trainerNames = Array.from(checkedCheckboxes).map((checkbox) =>
-        checkbox.getAttribute("trainer-name")
+      const uncheckedCheckboxes = document.querySelectorAll(
+        ".trainer-checkbox:not(:checked)"
       );
-      console.log(trainerNames);
 
-      const removePromises = calendar.getEventSources().map((eventSource) => {
-        if (!trainerNames.includes(eventSource.title)) {
-          return eventSource.remove();
+      const trainerIds = Array.from(checkedCheckboxes).map((checkbox) =>
+        checkbox.getAttribute("trainer-id")
+      );
+      console.log(trainerIds);
+      const hiddenTrainerIds = Array.from(uncheckedCheckboxes).map((checkbox) =>
+        checkbox.getAttribute("trainer-id")
+      );
+
+      const removePromises = calendar.getEvents().map(function (event) {
+        if (event.extendedProps.trainerTrue === true) {
+          console.log("Removing",event);
+          return event.remove(() => resolve());
         }
+        console.log("Failed to remove",event);
+        // If the event doesn't meet the removal criteria, return a resolved promise
         return Promise.resolve();
       });
 
+      // Add the updated event sources
+      console.log("Attempt to add events");
       Promise.all(removePromises).then(() => {
-        const addPromises = data.map((eventSource) => {
+        // Add the updated event sources
+        // Add eventDates associated with each event
+        console.log("trainerIds",trainerIds);
+        const addPromises = data.map((jsonsource) => {
+          console.log("jsonsource",jsonsource);
           if (
-            trainerNames.includes(eventSource.title) &&
-            !calendar.getEventSources().some((source) => source.title === eventSource.title)
+            trainerIds.includes(jsonsource.id.toString())
           ) {
-            const sourceArray = [eventSource];
+            const sourceArray = jsonsource;
             console.log("addEventSource called on:");
             console.log(sourceArray);
             return calendar.addEventSource(sourceArray);
           }
           return Promise.resolve();
         });
-
         // Wait for all add promises to complete
         Promise.all(addPromises).then(() => {
           // Finally, refetch events
