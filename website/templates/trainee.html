@@ -13,38 +13,150 @@
 </style>
 <div class="form-container">
 <div id="submit_event">
-  <h3 align="center">Request an event</h1>
+  <h3 align="center">Request a Training Event</h1>
   <form id = "event_form" action="/submit-event" method="POST">
     <input type="hidden" name="event_form" value="1">
-    <label for="event_title">Title:</label>
-    <input type="text" id="event_title" name="event_title" required /><br />
-
+    <label for="event_name">Name of Person Making the Request:</label>
+    <input type="text" id="event_name" name="event_name" maxlength="50" required /><br />
+  </br>
+    <label for="event_email">Email:</label>
+    <input type="text" id="event_email" name="event_email" maxlength="50" required /><br />
+  </br>
+    <label for="event_phone">Phone Number:</label>
+    <input type="text" id="event_phone" name="event_phone" maxlength="16" required>
+  </br>
+    <label for="event_title">Your Organization:</label>
+    <input type="text" id="event_title" name="event_title" maxlength="50" required /><br />
+  </br>
+    <label for="training_types">Type of Training Requested (select any that apply):</label>
+</br>
+<div id = training_types>
+    <input type="checkbox" id="classroom_cpr_aed" name="training_type[]" value="Hands-only Adult CPR/AED - Classroom setting">
+    <label for="classroom_cpr_aed">Hands-only Adult CPR/AED - Classroom setting (45-60 minutes)</label><br>
+    <input type="checkbox" id="fair_cpr_aed" name="training_type[]" value="Hands-only Adult CPR/AED - Street/Health Fair">
+    <label for="fair_cpr_aed">Hands-only Adult CPR/AED - Street/Health Fair (teach a skill in 5 minutes)</label><br>
+    <input type="checkbox" id="heartsaver" name="training_type[]" value="Heartsaver CPR/AED/FA">
+    <label for="heartsaver">Heartsaver CPR/AED/FA (AHA Certification, $17/person, 2 hours)</label><br>
+    <input type="checkbox" id="child_infant_cpr" name="training_type[]" value="Child/Infant CPR">
+    <label for="child_infant_cpr">Child/Infant CPR (30 compressions:2 breaths. If added to adult training, 30 minutes. Otherwise, 60 minutes.)</label><br>
+    <input type="checkbox" id="narcan" name="training_type[]" value="Narcan">
+    <label for="narcan">Narcan (5-10 minutes)</label><br>
+    <input type="checkbox" id="hemorrhage_informal" name="training_type[]" value="Hemorrhage Control - Informal">
+    <label for="hemorrhage_informal">Hemorrhage Control - Informal (20 minutes)</label><br>
+    <input type="checkbox" id="hemorrhage_formal" name="training_type[]" value="Hemorrhage Control - Formal STB">
+    <label for="hemorrhage_informal">Hemorrhage Control - Formal STB (60 minutes, free certificate and official powerpoint)</label><br>
+  </div>
+  </br>
     <div id="availability">
-      <div class="date-time-entry">
-        <label for="event_date">Date:</label>
-        <input type="date" name="date[]" required /><br />
+      <div class="preferred-date-time">
+        <label for="event_date">Preferred Date:</label>
+        <input type="date" name="date" required /><br />
         <label for="event_date">Start time:</label>
-        <input type="time" name="start_time[]" required /><br />
+        <input type="time" name="start_time" required /><br />
         <label for="event_date">End Time:</label>
-        <input type="time" name="end_time[]" required /><br />
+        <input type="time" name="end_time" required /><br />
+      </br>
+      </div>
+      <label for="event_date">Back-up Date:</label>
+      <div class="backup-date-time">
+        <label for="event_date">Date:</label>
+        <input type="date" name="date[]" /><br />
+        <label for="event_date">Start time:</label>
+        <input type="time" name="start_time[]"/><br />
+        <label for="event_date">End Time:</label>
+        <input type="time" name="end_time[]"/><br />
+      </br>
       </div>
     </div>
-    <button type="button" id="add-date-time">Add Date and Time</button>
+    <button type="button" id="add-date-time">Add more back-up dates</button>
     <script>
       document.getElementById("add-date-time").addEventListener("click", function () {
       const dateTimesContainer = document.getElementById("availability");
-      const dateTimeEntry = document.querySelector(".date-time-entry").cloneNode(true);
+      const dateTimeEntry = document.querySelector(".backup-date-time").cloneNode(true);
       dateTimesContainer.appendChild(dateTimeEntry);
     });
     </script>
     <br />
-    <label for="event_description">Description:</label><br />
+  </br>
+  <label for="event_mission"><strong>What is your group's mission?</strong></label><br />
     <textarea
-      id="event_description"
-      name="event_description"
+      id="event_mission"
+      name="event_mission"
       rows="4"
       cols="50"
+      maxlength="500"
       required
+    ></textarea>
+    <label for="event_learners"><strong>About how many learners will there be? What is their age range? Any medical backgrounds?</strong></label><br />
+    <textarea
+      id="event_learners"
+      name="event_learners"
+      rows="4"
+      cols="50"
+      maxlength="500"
+      required
+    ></textarea>
+    <label for="event_place"><strong>Where will the event be? Is there parking?</strong></label><br />
+    <textarea
+      id="event_place"
+      name="event_place"
+      rows="4"
+      cols="50"
+      maxlength="500"
+      required
+    ></textarea>
+    <label for="event_chairs_tables"><strong>Will there be tables and chairs?</strong></label><br />
+    <textarea
+      id="event_chairs_tables"
+      name="event_chairs_tables"
+      rows="4"
+      cols="50"
+      maxlength="300"
+      required
+    ></textarea>
+    <label for="event_cultural"><strong>Any cultural considerations we should account for? We strive for racial concordance goals when possible - what should we be mindful of?
+</strong></label><br />
+    <textarea
+      id="event_cultural"
+      name="event_cultural"
+      rows="4"
+      cols="50"
+      maxlength="500"
+    ></textarea>
+    <label for="event_content_concerns"><strong>We generally teach hands-only CPR but would recommend rescue breathing for children. We also generally discuss Narcan. For AED instruction, we teach to take the clothes off of a patient. Our trainings include both male and female mannequins. Please let us know if you have any concerns over any of these topics.
+    </strong></label><br />
+        <textarea
+          id="event_content_concerns"
+          name="event_content_concerns"
+          rows="4"
+          cols="50"
+          maxlength="500"
+        ></textarea>
+    <label for="event_music"><strong>Sometimes we play music- any preference or anything to stay away from?
+    </strong></label><br />
+        <textarea
+          id="event_music"
+          name="event_music"
+          rows="2"
+          cols="50"
+          maxlength="300"
+        ></textarea>
+    <label for="event_photos"><strong>Permission to take photos for our social media? Any accounts we should tag?
+    </strong></label><br />
+        <textarea
+          id="event_photos"
+          name="event_photos"
+          rows="4"
+          cols="50"
+          maxlength="200"
+        ></textarea>
+    <label for="event_other_info"><strong>Any other information we should know?</strong></label><br />
+    <textarea
+      id="event_other_info"
+      name="event_other_info"
+      rows="4"
+      cols="50"
+      maxlength="1500"
     ></textarea
     ><br />
     <div align="center">

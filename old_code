@@ -1,0 +1,21 @@
+HTML:
+    <div id="checkAll-uncheckAll">
+      <input type= "button" onclick= 'trainerCheck()' value= "View All"/>
+      <input type= "button" onclick= 'trainerUncheck()' value= "View None"/>
+      <script>
+        var trigger = new Event("change");
+        function trainerCheck(){
+          var get= document.querySelectorAll(".trainer-checkbox");
+          for(var i= 0; i<get.length; i++){
+          get[i].checked= true;
+          get[i].dispatchEvent(trigger);}
+          }
+        function trainerUncheck(){
+          var get= document.querySelectorAll(".trainer-checkbox");
+          for(var i= 0; i<get.length; i++){
+          get[i].checked= false;
+          get[i].dispatchEvent(trigger);
+        }
+          }
+      </script>
+    </div>

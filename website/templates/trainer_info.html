@@ -1,0 +1,78 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+    <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
+    <div class="trainer-info-container">
+        <ul class="filterSection">
+            <strong>Show:</strong>
+          </br>
+            <li>
+                <input checked="true" type="checkbox" value="New"/>
+                <label>New</label>
+            </li>
+            <li>
+                <input checked="true" type="checkbox" value="Team Lead"/>
+                <label>Team Lead</label>
+            </li>
+            <li>
+                <input checked="true" type="checkbox" value="Suspended"/>
+                <label>Suspended</label>
+            </li>
+        </ul>
+        <ul class="list-group list-group-flush" id="trainerInfoFilter">
+          {% for trainer in trainers %}
+          <li
+            id="trainer_{{trainer.id}}"
+            data-type="{{trainer.status}}"
+            class="list-group-item"
+            style="display: inline-block; border-width: 3px;"
+          >
+          <h5>{{trainer.nickname}}</h5>
+          <p>Pronouns: {{trainer.pronouns}}</p>
+          <div class="trainer-details">
+            <button id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer')">Show/Hide details</button>
+            <div id="trainer_details_{{ trainer.id }}" style="display:none;">
+              <p>
+              Full name: {{trainer.name}}</br>
+              Date of birth: {{trainer.date}}</br>
+              Race/ethnicity: {{trainer.race_ethnicity}}</br>
+              How did you hear: {{trainer.how_did_you_hear}}</br>
+              Email: {{trainer.email}}</br>
+              Phone: {{trainer.phone}}</br>
+              Call or text: {{trainer.text_or_call}}</br>
+              Student? {{trainer.education}}</br>
+              Lifesaver skills: {{trainer.lifesaver_skills}}</br>
+              Relevant experience: {{trainer.relevant_exp}}</br>
+              Heartsaver interest: {{trainer.heartsaver_interest}}</br>
+              Other languages: {{trainer.languages}}</br>
+            </p>
+            </div>
+          </div>
+          <div class="update-status"><strong>Status:</strong> {{trainer.status}}</div>
+            <strong>General availability:</strong><br>
+              <div style="margin-left: 20px;">
+              {{trainer.gen_avail}}
+              </div>
+            <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
+            <strong>Other info:</strong><br>
+            <div style="margin-left: 20px;">{{ trainer.other_info }}</div>
+            <strong>Admin notes:</strong><br>
+            <div style="margin-left: 20px;">{{ trainer.admin_notes }}</div>
+            <button id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')">Update trainer status</button>
+            <div id="update_div_{{ trainer.name }}" style="display:none;">
+              <form id="update_form_{{ trainer.name }}"  name="update_trainer_form" action="/update-trainer" method="POST">
+                <input type="hidden" name="update_trainer_form" value="1">
+                <input type="hidden" name="update_id" value="{{trainer.id}}">
+                <select name="status" id="status_{{trainer.name}}">
+                  <option value="none" selected disabled hidden>Select a status</option>
+                  <option value="New">New</option>
+                  <option value="Team Lead">Team Lead</option>
+                  <option value="Suspended">Suspended</option>
+                </select>
+                <button type="submit" form = "update_form_{{ trainer.name }}" id="update_submit_{{ trainer.name }}" class="btn btn-primary">Update event</button>
+              </form>
+            </div>
+          </li> 
+          {% endfor %}
+        </ul>
+      </div>
+{% endblock %}>

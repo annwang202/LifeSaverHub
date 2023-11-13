@@ -1,77 +1,91 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Note, Event, EventDate, Trainer, TrainerDate
+from .models import Event, EventDate, Trainer, TrainerDate
 from . import db
 import json
 from datetime import datetime
 from sqlalchemy import asc
+from werkzeug.utils import secure_filename
 
 views = Blueprint('views', __name__)
-colors = [["pink","#ff80ff"],["red","#fc4242"],["orange","#fca349"],["yellow","#fcde17"],
-          ["green","#14f51f"],["light-blue","#81ebf7"],["purple","#4c07fa"],["brown","#7F5D56"],["light-orange","#facdac"],["yellow-green","#d9f78b"],["blue","#0791fa"]]
-#trainer_colors = [["black"],["light-brown"],["light-grey"],["dark-grey"],["dark-brown"],["dark-green"],["dark-blue"]]
+black = "#000000"
+white = "#FFFFFF"
+event_colors = [["#f7c95e",black],["#ffa04c",black],["#ff724f",white],["#f34e57",white],["#c8006f",white],["#7d0085",white],["#41008c",white],["#250250",white],["#f0d4fa",black]]
+trainer_colors = [["#044080",white],["#0889d4",white],["#8dcbd9",white],["#5bde81",white],["#018a78",white],["#daf763",black],["#e8e15f",black],["#fab852",black],["#fa6464",black]]
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
     events = Event.query.all()
     for event in events:
-        if event.dates:
-            event.dates.sort(key=lambda date: date.start_date)
+        if event.backup_dates:
+            event.backup_dates.sort(key=lambda date: date.start_date)
     trainers = Trainer.query.all()
+    '''
     for trainer in trainers:
-        if trainer.dates:
-            trainer.dates.sort(key=lambda date: date.start_date)
-    return render_template("home.html", user=current_user, events=events, trainers = trainers, colors = colors)
+        if trainer.gen_avail:
+            trainer.gen_avail.sort(key=lambda date: date.start_date)
+    '''
+    return render_template("home.html", user=current_user, events=events, trainers = trainers, event_colors = event_colors,trainer_colors=trainer_colors)
 
 @views.route('/trainee', methods=['GET', 'POST'])
 @login_required
 def trainee():
-    events = Event.query.all()
-    for event in events:
-        if event.dates:
-            event.dates.sort(key=lambda date: date.start_date)
-    trainers = Trainer.query.all()
-    for trainer in trainers:
-        if trainer.dates:
-            trainer.dates.sort(key=lambda date: date.start_date)
-    return render_template("trainee.html", user=current_user, events=events, trainers = trainers, colors = colors)
+    return render_template("trainee.html", user=current_user)
 
 @views.route('/trainer', methods=['GET', 'POST'])
 @login_required
 def trainer():
-    events = Event.query.all()
-    for event in events:
-        if event.dates:
-            event.dates.sort(key=lambda date: date.start_date)
+    return render_template("trainer.html", user=current_user, trainer_colors=trainer_colors)
+
+@views.route('/trainer_info', methods=['GET', 'POST'])
+@login_required
+def trainer_info():
     trainers = Trainer.query.all()
+    '''
     for trainer in trainers:
-        if trainer.dates:
-            trainer.dates.sort(key=lambda date: date.start_date)
-    return render_template("trainer.html", user=current_user, events=events, trainers = trainers, colors = colors)
+        if trainer.gen_avail:
+            trainer.gen_avail.sort(key=lambda date: date.start_date)
+    '''
+    return render_template("trainer_info.html", user=current_user, trainers = trainers,trainer_colors=trainer_colors)
+
 
 @views.route('/submit-event', methods=['GET', 'POST'])
 @login_required
 def submit_event():
     if request.method == 'POST':
         if request.form.get("event_form"): #get event form submission
-            event_title = request.form["event_title"]
-            event_description = request.form["event_description"]
-            date_entries = request.form.getlist("date[]")  # Retrieve multiple date entries
-            start_times = request.form.getlist("start_time[]")  # Retrieve multiple start times
-            end_times = request.form.getlist("end_time[]")  # Retrieve multiple end times
-            new_event = Event(title=event_title, description=event_description)
-            for date, start_time, end_time in zip(date_entries, start_times, end_times):
-                event_date = datetime.strptime(f"{date} {start_time}", "%Y-%m-%d %H:%M")
-                end_date = datetime.strptime(f"{date} {end_time}", "%Y-%m-%d %H:%M")
-                iso8601_start_date = event_date.isoformat()
-                iso8601_end_date = end_date.isoformat()
-                formatted_event_date = event_date.strftime('%Y-%m-%d %I:%M %p')
-                formatted_end_time = end_date.strftime("%I:%M %p")
-                new_event_date = EventDate(
-                    start_date=event_date, end_date = end_date, formatted_start_date=formatted_event_date, formatted_end_time = formatted_end_time,iso_formatted_start_date=iso8601_start_date,iso_formatted_end_date=iso8601_end_date)
-                new_event.dates.append(new_event_date)
-            db.session.add(new_event)  # adding the note to the database
+            name = request.form["event_name"]
+            email = request.form["event_email"]
+            phone = request.form["event_phone"]
+            title = request.form["event_title"]
+            training_types = request.form.getlist('training_type[]')
+            training_types_string = ', '.join(training_types)
+            preferred_date = request.form.getlist("date")
+            preferred_start = request.form.getlist("start_time")
+            preferred_end = request.form.getlist("end_time")
+            backup_dates = request.form.getlist("date[]")  # Retrieve multiple date entries
+            backup_starts = request.form.getlist("start_time[]")  # Retrieve multiple start times
+            backup_ends = request.form.getlist("end_time[]")  # Retrieve multiple end times
+            mission = request.form.get("event_mission")
+            learners = request.form.get("event_learners")
+            place = request.form.get("event_place")
+            chairs_tables = request.form.get("event_chairs_tables")
+            cultural = request.form.get("event_cultural")
+            content_concerns = request.form.get("event_content_concerns")
+            music = request.form.get("event_music")
+            photos = request.form.get("event_photos")
+            other_info = request.form.get("event_other_info")
+            status = "New"
+            new_event = Event(name=name,email=email,phone=phone,title=title, training_types=training_types_string,
+                              mission=mission,learners=learners,place=place,chairs_tables=chairs_tables,cultural=cultural,
+                              content_concerns=content_concerns,music=music,photos=photos,other_info=other_info,status=status)
+            backup_eventDates = create_event_dates(backup_dates,backup_starts,backup_ends)
+            for eventDate in backup_eventDates:
+                new_event.backup_dates.append(eventDate)
+            preferred_eventDates = create_event_dates(preferred_date,preferred_start,preferred_end)
+            new_event.preferred_date.append(preferred_eventDates[0])
+            db.session.add(new_event)  # adding the event to the database
             db.session.commit()
             flash('Event added to list!', category='success')
 
@@ -83,11 +97,47 @@ def submit_trainer():
     if request.method == 'POST':
         if request.form.get("trainer_form"): #get training availability form submission
             trainer_name = request.form["trainer_name"]
-            other_info = request.form["other_info"]
+            trainer_nickname = request.form["trainer_nickname"]
+            trainer_bd = request.form["trainer_bd"]
+            bd_date = datetime.strptime(trainer_bd, '%Y-%m-%d').date()
+            trainer_pronouns = request.form["trainer_pronouns"]
+            trainer_race = request.form["trainer_race"]
+            how_did_you_hear = request.form["how_did_you_hear"]
+            trainer_phone = request.form["trainer_phone"]
+            text_or_call = request.form["text_or_call"]
+            trainer_email = request.form["trainer_email"]
+            trainer_education = request.form["trainer_education"]
+            ls_skills_background = request.form.getlist("ls_skills_background[]")
+            ls_skills_background_string = ', '.join(ls_skills_background)
+            relevant_experience = request.form["relevant_experience"]
+            get_heartsaver_instructor_interest = request.form.get('heartsaver_instructor_interest')
+            if get_heartsaver_instructor_interest == 'on':
+                heartsaver_instructor_interest = 'Yes'
+            else:
+                heartsaver_instructor_interest = 'No'
+            trainer_availability = request.form["trainer_availability"]
+            '''
             date_entries = request.form.getlist("date[]")  # Retrieve multiple date entries
             start_times = request.form.getlist("start_time[]")  # Retrieve multiple start times
             end_times = request.form.getlist("end_time[]")  # Retrieve multiple end times
-            new_trainer = Trainer(name=trainer_name, other_info=other_info)
+            '''
+            preferred_hrs_per_month = request.form["preferred_hrs_per_month"]
+            trainer_languages = request.form["trainer_languages"]
+            other_info = request.form["other_info"]
+            '''
+            docs = request.files.getlist('trainer_docs[]')
+            for file in docs:
+                if file:
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+            '''
+            new_trainer = Trainer(name=trainer_name, nickname=trainer_nickname,date_of_birth=bd_date,pronouns=trainer_pronouns,
+                                  race_ethnicity=trainer_race,how_did_you_hear=how_did_you_hear,
+                                  phone=trainer_phone,text_or_call=text_or_call,email=trainer_email,education=trainer_education,
+                                  lifesaver_skills=ls_skills_background_string,relevant_exp=relevant_experience,
+                                  heartsaver_interest=heartsaver_instructor_interest,gen_avail=trainer_availability,hrs_per_month=preferred_hrs_per_month,
+                                  languages=trainer_languages,other_info=other_info,status="New")
+            '''
             for date, start_time, end_time in zip(date_entries, start_times, end_times):
                 trainer_date = datetime.strptime(f"{date} {start_time}", "%Y-%m-%d %H:%M")
                 end_date = datetime.strptime(f"{date} {end_time}", "%Y-%m-%d %H:%M")
@@ -97,25 +147,46 @@ def submit_trainer():
                 formatted_end_time = end_date.strftime("%I:%M %p")
                 new_trainer_date = TrainerDate(
                     start_date=trainer_date, end_date = end_date, formatted_start_date=formatted_trainer_date, formatted_end_time = formatted_end_time,iso_formatted_start_date=iso8601_start_date,iso_formatted_end_date=iso8601_end_date)
-                new_trainer.dates.append(new_trainer_date)
+                new_trainer.gen_avail.append(new_trainer_date)
+            '''
             db.session.add(new_trainer)  # adding the note to the database
             db.session.commit()
             flash('Trainer added to list!', category='success')
     return redirect(url_for('views.trainer'))
 
-#@views.route('/delete-note', methods=['POST'])
-#def delete_note():
-    # this function expects a JSON from the INDEX.js file
- #   note = json.loads(request.data)
-  #  noteId = note['noteId']
-   # note = Note.query.get(noteId)
-    #if note:
-     #   if note.user_id == current_user.id:
-      #      db.session.delete(note)
-       #     db.session.commit()
+@views.route('/update-event', methods=['GET', 'POST'])
+@login_required
+def update_event():
+    if request.method == 'POST':
+        if request.form.get("update_form"): #get event form submission
+            update_id = request.form.get('update_id')
+            new_status = request.form.get('status')
+            event = Event.query.get(update_id)
+            if event:
+                # Update the event status
+                event.status = new_status
+                db.session.commit()
+                flash('Event updated!', category='success')
+            else:
+                flash('Event not found or could not be updated.', category='error')
+    return redirect(url_for('views.home'))
 
-   # return jsonify({})
-
+@views.route('/update-trainer', methods=['GET', 'POST'])
+@login_required
+def update_trainer():
+    if request.method == 'POST':
+        if request.form.get("update_trainer_form"): #get event form submission
+            update_id = request.form.get('update_id')
+            new_status = request.form.get('status')
+            trainer = Trainer.query.get(update_id)
+            if trainer:
+                # Update the event status
+                trainer.status = new_status
+                db.session.commit()
+                flash('Trainer updated!', category='success')
+            else:
+                flash('Trainer not found or could not be updated.', category='error')
+    return redirect(url_for('views.trainer_info'))
 
 @views.route('/delete-event', methods=['POST'])
 def delete_event():
@@ -133,7 +204,7 @@ def delete_event():
 def event_mysql_to_json():
     # Assuming you have a SQLAlchemy model for the table you want to export
     # Replace 'YourModel' with the actual name of your SQLAlchemy model
-    from .models import User, Note, Event, EventDate
+    from .models import User, Event, EventDate
 
     # Query the data from the database
     data = Event.query.all()
@@ -142,7 +213,7 @@ def event_mysql_to_json():
     sources_list = []
     for event in data:
         event_list = []
-        for slot in event.dates:
+        for slot in (event.backup_dates + event.preferred_date):
             time_dict = {
                 'id': slot.id,
                 'title': event.title,
@@ -151,10 +222,10 @@ def event_mysql_to_json():
                 'eventDisplay':'background',
                 'display':'block',
                 'displayEventEnd': True,
-                'color': colors[(event.id - 1) % len(colors)][1],
+                'color': event_colors[(event.id - 1) % len(event_colors)][0],
+                'eventTextColor':event_colors[(event.id - 1) % len(event_colors)][1],
                 'extendedProps': {
                     'trainerTrue': False,
-                    'description': event.description,
                     'formattedStartDate': slot.formatted_start_date,
                     'formattedEndTime': slot.formatted_end_time,
                     'eventId':event.id
@@ -174,11 +245,12 @@ def event_mysql_to_json():
 
     return json_data
 
+'''
 @views.route('/trainerdata')
 def trainer_mysql_to_json():
     # Assuming you have a SQLAlchemy model for the table you want to export
     # Replace 'YourModel' with the actual name of your SQLAlchemy model
-    from .models import User, Note, Trainer, TrainerDate
+    from .models import User, Trainer, TrainerDate
 
     # Query the data from the database
     data = Trainer.query.all()
@@ -187,13 +259,14 @@ def trainer_mysql_to_json():
     sources_list = []
     for trainer in data:
         event_list = []
-        for slot in trainer.dates:
+        for slot in trainer.gen_avail:
             time_dict = {
                 'id': slot.id,
                 'title': trainer.name,
                 'start': slot.iso_formatted_start_date,
-                #'end': slot.iso_formatted_end_date,
-                'color': colors[(len(colors) - 1) - ((trainer.id - 1) % len(colors))][1],
+                'end': slot.iso_formatted_end_date,
+                'displayEventEnd': True,
+                'color': trainer_colors[(trainer.id - 1) % len(trainer_colors)][0],
                 'extendedProps': {
                     'trainerTrue': True,
                     'description': trainer.other_info,
@@ -215,3 +288,54 @@ def trainer_mysql_to_json():
         json_file.write(json_data)
 
     return json_data
+'''
+############
+'''
+@views.route('/icsfinalcalendar')
+def create_ics():
+    from .models import User, Event, EventDate,Trainer,TrainerDate
+
+    # Query the data from the database
+    event_data = Event.query.all()
+    trainer_data = Trainer.query.all()
+
+    ics_content = "BEGIN:VCALENDAR\n"
+    for event in event_data:
+        if (event.status=="Scheduled"):
+            for slot in event.dates:
+                ics_content += "BEGIN:VEVENT\n"
+                ics_content += f"DTSTART:{slot.iso_formatted_start_date}\n"
+                ics_content += f"DTEND:{slot.iso_formatted_end_date}\n"
+                ics_content += f"SUMMARY:{event.title}\n"
+                ics_content += f"DESCRIPTION:{event.description}\n"
+                ics_content += "END:VEVENT\n"
+    for trainer in trainer_data:
+        if (trainer.status == "Scheduled"):
+            for slot in trainer.gen_avail:
+                ics_content += "BEGIN:VEVENT\n"
+                ics_content += f"DTSTART:{slot.iso_formatted_start_date}\n"
+                ics_content += f"DTEND:{slot.iso_formatted_end_date}\n"
+                ics_content += f"SUMMARY:{trainer.name}\n"
+                ics_content += f"DESCRIPTION:{trainer.other_info}\n"
+                ics_content += "END:VEVENT\n"
+    ics_content += "END:VCALENDAR"
+
+# Save to a .ics file
+    with open("scheduled_events.ics", "w") as ics_file:
+        ics_file.write(ics_content)
+    return ics_file
+'''
+####
+def create_event_dates(dates,starts,ends):
+    event_dates = []
+    for date, start_time, end_time in zip(dates, starts, ends):
+        event_date = datetime.strptime(f"{date} {start_time}", "%Y-%m-%d %H:%M")
+        end_date = datetime.strptime(f"{date} {end_time}", "%Y-%m-%d %H:%M")
+        iso8601_start_date = event_date.isoformat()
+        iso8601_end_date = end_date.isoformat()
+        formatted_event_date = event_date.strftime('%m/%d/%Y %I:%M %p')
+        formatted_end_time = end_date.strftime("%I:%M %p")
+        new_event_date = EventDate(
+        start_date=event_date, end_date = end_date, formatted_start_date=formatted_event_date, formatted_end_time = formatted_end_time,iso_formatted_start_date=iso8601_start_date,iso_formatted_end_date=iso8601_end_date)
+        event_dates.append(new_event_date)
+    return event_dates

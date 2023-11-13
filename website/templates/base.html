@@ -16,10 +16,22 @@
     />
     <link rel="stylesheet" type="text/css" href="{{url_prefix}}/static/styles/web.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="module" src="{{url_prefix}}/static/index.js"></script>
+    <script type="module" src="{{url_prefix}}/static/scripts/base.js"></script>
     <script src="
 https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
 "></script>
+<script>
+  function showOrHideDropdown(id,prefix)
+    {
+      let el = document.getElementById(`${prefix}_${id}`)
+      if(el.style.display === "block"){
+        el.style.display = "none"
+      }
+      else{
+        el.style.display = "block"
+      }
+    }
+</script>
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
@@ -36,6 +48,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
         <div class="navbar-nav">
           {% if user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="trainer_info" href="/trainer_info">Trainer Info</a>
           <a class="nav-item nav-link" id="trainee" href="/trainee">Request an Event</a>
           <a class="nav-item nav-link" id="trainer" href="/trainer">Trainers</a>
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>

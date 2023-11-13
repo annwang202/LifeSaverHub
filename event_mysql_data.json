@@ -2,140 +2,57 @@
   {
     "events": [
       {
-        "color": "#ff80ff",
+        "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-10-25T11:06:00",
+        "end": "2023-11-15T16:00:00",
         "eventDisplay": "background",
+        "eventTextColor": "#000000",
         "extendedProps": {
-          "description": "Example description 1.",
           "eventId": 1,
-          "formattedEndTime": "11:06 AM",
-          "formattedStartDate": "2023-10-25 08:09 AM",
-          "trainerTrue": false
-        },
-        "id": 1,
-        "start": "2023-10-25T08:09:00",
-        "title": "Example Request 1"
-      },
-      {
-        "color": "#ff80ff",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2023-10-18T11:06:00",
-        "eventDisplay": "background",
-        "extendedProps": {
-          "description": "Example description 1.",
-          "eventId": 1,
-          "formattedEndTime": "11:06 AM",
-          "formattedStartDate": "2023-10-18 08:09 AM",
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "11/15/2023 01:00 PM",
           "trainerTrue": false
         },
         "id": 2,
-        "start": "2023-10-18T08:09:00",
-        "title": "Example Request 1"
-      }
-    ],
-    "id": 1
-  },
-  {
-    "events": [
-      {
-        "color": "#fc4242",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2023-10-21T21:06:00",
-        "eventDisplay": "background",
-        "extendedProps": {
-          "description": "Example description 2.",
-          "eventId": 2,
-          "formattedEndTime": "09:06 PM",
-          "formattedStartDate": "2023-10-21 02:06 PM",
-          "trainerTrue": false
-        },
-        "id": 4,
-        "start": "2023-10-21T14:06:00",
-        "title": "Example Request 2"
+        "start": "2023-11-15T13:00:00",
+        "title": "Fake organization"
       },
       {
-        "color": "#fc4242",
+        "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-10-27T21:06:00",
+        "end": "2023-11-20T16:00:00",
         "eventDisplay": "background",
+        "eventTextColor": "#000000",
         "extendedProps": {
-          "description": "Example description 2.",
-          "eventId": 2,
-          "formattedEndTime": "09:06 PM",
-          "formattedStartDate": "2023-10-27 02:06 PM",
+          "eventId": 1,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "11/20/2023 01:00 PM",
           "trainerTrue": false
         },
         "id": 3,
-        "start": "2023-10-27T14:06:00",
-        "title": "Example Request 2"
-      }
-    ],
-    "id": 2
-  },
-  {
-    "events": [
-      {
-        "color": "#fca349",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2023-11-01T22:00:00",
-        "eventDisplay": "background",
-        "extendedProps": {
-          "description": "Event request created from /trainee.",
-          "eventId": 3,
-          "formattedEndTime": "10:00 PM",
-          "formattedStartDate": "2023-11-01 09:00 PM",
-          "trainerTrue": false
-        },
-        "id": 6,
-        "start": "2023-11-01T21:00:00",
-        "title": "Example Request 3"
+        "start": "2023-11-20T13:00:00",
+        "title": "Fake organization"
       },
       {
-        "color": "#fca349",
+        "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-10-28T22:00:00",
+        "end": "2023-11-13T16:00:00",
         "eventDisplay": "background",
+        "eventTextColor": "#000000",
         "extendedProps": {
-          "description": "Event request created from /trainee.",
-          "eventId": 3,
-          "formattedEndTime": "10:00 PM",
-          "formattedStartDate": "2023-10-28 09:00 PM",
+          "eventId": 1,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "11/13/2023 01:00 PM",
           "trainerTrue": false
         },
-        "id": 5,
-        "start": "2023-10-28T21:00:00",
-        "title": "Example Request 3"
+        "id": 1,
+        "start": "2023-11-13T13:00:00",
+        "title": "Fake organization"
       }
     ],
-    "id": 3
-  },
-  {
-    "events": [
-      {
-        "color": "#fcde17",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2023-10-30T08:03:00",
-        "eventDisplay": "background",
-        "extendedProps": {
-          "description": "Submitted through /trainee.",
-          "eventId": 4,
-          "formattedEndTime": "08:03 AM",
-          "formattedStartDate": "2023-10-30 06:03 AM",
-          "trainerTrue": false
-        },
-        "id": 7,
-        "start": "2023-10-30T06:03:00",
-        "title": "Example Request 4"
-      }
-    ],
-    "id": 4
+    "id": 1
   }
 ]

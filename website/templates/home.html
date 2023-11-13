@@ -1,36 +1,5 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<!-- 
-<h1 align="center">Notes</h1>
-<ul class="list-group list-group-flush" id="notes">
-  {% for note in user.notes %}
-  <li class="list-group-item">
-    {{ note.data }}
-    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </li>
-  {% endfor %}
-</ul>
-<form method="POST">
-  <textarea name="note" id="note" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary">Add Note</button>
-  </div>
-</form>
-<h1 align="center">Events</h1>
-<ul class="list-group list-group-flush" id="events">
-  {% for event in user.notes %}
-  <li class="list-group-item">
-    {{ note.data }}
-    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </li>
-  {% endfor %}
-</ul>
--->
 <style>
   .form-container {
     display: flex;
@@ -50,31 +19,119 @@
     padding: 10px;
   }
 </style>
+<script type="module" src="{{url_prefix}}/static/scripts/matching.js"></script>
 <div class="page-title">
   <h2>LifeSaver Hub Scheduling</h2>
 </div>
 </br>
 <div class="schedule_container">
   <div class="box">
+    <ul class="filterSection">
+      <strong>Show:</strong>
+    </br>
+      <li>
+          <input checked="true" type="checkbox" value="New"/>
+          <label>New</label>
+      </li>
+      <li>
+          <input checked="true" type="checkbox" value="Confirmed"/>
+          <label>Confirmed</label>
+      </li>
+      <li>
+          <input checked="true" type="checkbox" value="Tentative"/>
+          <label>Tentative</label>
+      </li>
+      <li>
+        <input checked="true" type="checkbox" value="Scheduled"/>
+        <label>Scheduled</label>
+      </li>
+      <li>
+      </br>
+        <input checked="true" type="checkbox" value="Happened"/>
+        <label>Happened</label>
+      </li>
+      <li>
+        <input checked="true" type="checkbox" value="Canceled"/>
+        <label>Canceled</label>
+      </li>
+  </ul>
+  <div id="checkAll-uncheckAll">
+    <input type= "button" onclick= 'check()' value= "View All"/>
+    <input type= "button" onclick= 'unCheck()' value= "View None"/>
+    <script>
+      var trigger = new Event("change");
+      function check(){
+        var get= document.querySelectorAll(".event-checkbox");
+        for(var i= 0; i<get.length; i++){
+        get[i].checked= true;
+        get[i].dispatchEvent(trigger);}
+        }
+      function unCheck(){
+        var get= document.querySelectorAll(".event-checkbox");
+        for(var i= 0; i<get.length; i++){
+        get[i].checked= false;
+        get[i].dispatchEvent(trigger);
+      }
+        }
+    </script>
+  </div>
     <!-- Event List -->
-    <ul class="list-group list-group-flush" id="notes">
+    <ul class="list-group list-group-flush" id="itemsToFilter">
       {% for event in events %}
       <li
         id="event_{{event.id}}"
         class="list-group-item"
-        style="border-color: {{ colors[(event.id - 1) % colors|length][1] }}; border-width: 3px;"
+        data-type="{{event.status}}"
+        style="border-color: {{ event_colors[(event.id - 1) % event_colors|length][0] }}; border-width: 3px;"
       >
         <strong>{{event.title}}</strong>
         <input
           type="checkbox"
           class="event-checkbox"
           event-id = "{{ event.id }}"
+          value = "{{event.status}}"
         >
-    </input>
-        <br />
-        {% for date in event.dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}<br />
-        {% endfor %}
-        <p>{{ event.description }}</p>
+        <p><strong>Preferred date: </strong></br>{% for preferred_date in event.preferred_date %} {{preferred_date.formatted_start_date}} - {{preferred_date.formatted_end_time}}{% endfor %}</p>
+        <p><strong>Backup dates: </strong></br>{% for date in event.backup_dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}</br>
+          {% endfor %}</p>
+        <div class="event-details">
+          <button id="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'event')">Show/Hide details</button>
+          <div id="event_details_{{ event.id }}" style="display:none;">
+            <p>Contact name: {{event.name}}</br>
+            Email: {{event.email}}</br>
+            Phone: {{event.phone}}</br>
+            Desired training types: {{event.training_types}}</br>
+            Mission: {{event.mission}}</br>
+            Learners: {{event.learners}}</br>
+            Location: {{event.place}}</br>
+            Chairs/tables: {{event.chairs_tables}}</br>
+            Cultural considerations: {{event.cultural}}</br>
+            Content concerns: {{content_concerns}}</br>
+            Music: {{event.music}}</br>
+            Photography permission: {{event.photos}}</br>
+            Additional info: {{event.other_info}}
+          </p>
+          </div>
+        </div>
+    <div class="update-status"><strong>Status:</strong> {{event.status}}</div>
+        <button id="{{event.id}}"class="update-event-option" onClick="showOrHideDropdown(this.id,'update_div')">Update event status</button>
+        <div id="update_div_{{ event.id }}" style="display:none;">
+          <form id="update_form_{{ event.id }}"  name="update_form" action="/update-event" method="POST">
+            <input type="hidden" name="update_form" value="1">
+            <input type="hidden" name="update_id" value="{{event.id}}">
+            <select name="status" id="status_{{event.id}}">
+              <option value="none" selected disabled hidden>Select a status</option>
+              <option value="New">New</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Tentative">Tentative</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Happened">Happened</option>
+              <option value="Canceled">Canceled</option>
+            </select>
+            <button type="submit" form = "update_form_{{ event.id }}" id="update_submit_{{ event.id }}" class="btn btn-primary">Update event</button>
+          </form>
+        </div>
+        <p>Admin notes: {{event.admin_notes}}</p>
       </li> 
       {% endfor %}
     </ul>
@@ -83,29 +140,7 @@
     <!-- Calendar -->
   </div>
   <div class="box">
-    <!-- Trainer List -->
-    <ul class="list-group list-group-flush" id="notes">
-      {% for trainer in trainers %}
-      <li
-        id="trainer_{{trainer.id}}"
-        class="list-group-item"
-        style="border-color: {{ colors[(colors|length - 1) - ((trainer.id - 1) % colors|length)][1] }}; border-width: 3px;"
-      >
-        <strong>{{trainer.name}}</strong>
-        <input
-          type="checkbox"
-          class="trainer-checkbox"
-          trainer-id = "{{ trainer.id }}"
-          trainer-name="{{ trainer.name }}"
-        >
-    </input>
-        <br />
-        {% for date in trainer.dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}<br />
-        {% endfor %}
-        <p>{{ trainer.other_info }}</p>
-      </li> 
-      {% endfor %}
-    </ul>
+    <!-- List of scheduled events + create/edit event function -->
   </div>
   <div class="modal fade" id="detail-expand">
     <div class="modal-dialog">
