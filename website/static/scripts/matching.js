@@ -1,4 +1,5 @@
 import { filterList } from './base.js';
+import { autocomplete } from './base.js';
 
 document.addEventListener("DOMContentLoaded", function () {
   function fetchDataAndInitializeCalendar() {
@@ -27,6 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
             ? event.borderColor
             : event.backgroundColor;
           modal.find(".modal-content").css("border-color", borderColor);
+          $("#assignment-event-id").val(event.extendedProps.eventId);
+          $("#assignment-start-date").val(event.startStr);
+          $("#assignment-end-date").val(event.endStr);
+          $("#assignment-formatted-start-date").val(event.extendedProps.formattedStartDate)
+          $("#assignment-formatted-end-time").val(event.extendedProps.formattedEndTime)
           modal.modal();
         },
       });
@@ -103,11 +109,11 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("An error occurred during the data fetch:", error);
       });
     }
-    /*
     function updateTrainerSources() {
       $.getJSON(`/trainerdata`, function (data) {
         console.log("updateTrainerSources called");
         // Retrieve checked checkboxes
+        /*
         const checkedCheckboxes = document.querySelectorAll(
           ".trainer-checkbox:checked"
         );
@@ -155,20 +161,36 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("calendar sources:");
             console.log(calendar.getEventSources());
           });
-        });
+        }); */
       });
-    }*/
+    }
+    //add autocomplete to additional inputs
+    document.getElementById("add-trainer-slot").addEventListener("click", function () {
+      const slotsContainer = document.getElementById("trainer-slots");
+      const slotEntry = document.querySelector(".trainer-search").cloneNode(true);
+      slotEntry.querySelectorAll('input[type="text"]').forEach(function (input) {
+        input.value = '';
+      });
+      slotsContainer.appendChild(slotEntry);
+      $.getJSON(`/trainerdata`, function (data) {
+        let trainer_names = data.map(person => `${person.name} (${person.email})`)
+        autocomplete(document.querySelectorAll(".myInput"), trainer_names);
+      });
+    });
     // Event listener for checkbox change
     const eventCheckboxes = document.querySelectorAll(".event-checkbox");
     eventCheckboxes.forEach(function (checkbox) {
       checkbox.addEventListener("change", updateEventSources);
     });
-    /*
     const trainerCheckboxes = document.querySelectorAll(".trainer-checkbox");
     trainerCheckboxes.forEach(function (checkbox) {
       checkbox.addEventListener("change", updateTrainerSources);
-    });*/
+    });
     filterList("#itemsToFilter li");
     calendar.render();
+    $.getJSON(`/trainerdata`, function (data) {
+      let trainer_names = data.map(person => `${person.name} (${person.email})`)
+      autocomplete(document.querySelectorAll(".myInput"), trainer_names);
+    });
   });
 });

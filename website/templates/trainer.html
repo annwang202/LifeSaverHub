@@ -63,24 +63,24 @@ Trainers are gifted a CCAS shirt once they have worked 5 events with us
         <h3 align="center">Volunteer Application</h1>
         <form id = "trainer_form" action="/submit-trainer" method="POST">
           <input type="hidden" name="trainer_form" value="1">
-          <label for="trainer_name">Please provide your full name (for ACT 34 clearance):</label>
+          <label for="trainer_name">Please provide your full name (for ACT 34 clearance)*:</label>
           <input type="text" id="trainer_name" name="trainer_name" maxlength="50" required /><br />
-          <label for="trainer_nickname">Enter your preferred name:</label>
+          <label for="trainer_nickname">Enter your preferred name*:</label>
           <input type="text" id="trainer_nickname" name="trainer_nickname" maxlength="50" required/><br />
-          <label for="trainer_bd">Please provide your date of birth (for ACT 34 clearance):</label>
+          <label for="trainer_bd">Please provide your date of birth (for ACT 34 clearance)*:</label>
           <input id = "trainer_bd" type="date" name="trainer_bd" required /><br />
-          <label for="trainer_pronouns">Preferred pronouns:</label>
+          <label for="trainer_pronouns">Preferred pronouns*:</label>
           <input type="text" id="trainer_pronouns" name="trainer_pronouns" maxlength="50" required/><br />
           <label for="trainer_race">Race/ethnicity (optional)</label>
           <input type="text" id="trainer_race" name="trainer_race" maxlength="100"></br>
           <label for="how_did_you_hear">How did you hear about us?</label>
           <input type="textarea" id="how_did_you_hear" name="how_did_you_hear" maxlength="200" rows="2"
           cols="50"></br>
-          <label for="trainer_phone">Phone Number:</label>
+          <label for="trainer_phone">Phone Number*:</label>
           <input type="text" id="trainer_phone" name="trainer_phone" maxlength="16" required><br />
-          <label for="text_or_call">Do you prefer texts or calls?</label>
+          <label for="text_or_call">Do you prefer texts or calls?*</label>
           <input type="text" id="text_or_call" name="text_or_call" maxlength="16" required><br />
-          <label for="trainer_email">Email:</label>
+          <label for="trainer_email">Email*:</label>
           <input type="text" id="trainer_email" name="trainer_email" maxlength="50" required /><br />
         </br>
           <label for="trainer_education">Are you a student? If so, what level of education are you pursuing?</label>
@@ -105,7 +105,7 @@ Trainers are gifted a CCAS shirt once they have worked 5 events with us
           <label for="relevant_experience">Any other relevant experience?</label>
           <input type="textarea" id="relevant_experience" name="relevant_experience" maxlength="500" rows="4"
           cols="50"><br />
-          <input type="checkbox" id="heartsaver_instructor_interest">
+          <input type="checkbox" id="heartsaver_instructor_interest" name="heartsaver_instructor_interest">
           <label for="heartsaver_instructor_interest">Interest in becoming a Heartsaver Instructor?</label><br>
           <label for="trainer_availability">Describe your availability</label>
           <input type="textarea" id="trainer_availability" name="trainer_availability" maxlength="500" rows="4"

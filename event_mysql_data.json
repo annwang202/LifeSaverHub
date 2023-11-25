@@ -5,54 +5,76 @@
         "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-11-15T16:00:00",
+        "end": "2023-12-26T20:07:00",
         "eventDisplay": "background",
         "eventTextColor": "#000000",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "04:00 PM",
-          "formattedStartDate": "11/15/2023 01:00 PM",
+          "formattedEndTime": "08:07 PM",
+          "formattedStartDate": "12/26/2023 07:07 PM",
           "trainerTrue": false
         },
         "id": 2,
-        "start": "2023-11-15T13:00:00",
-        "title": "Fake organization"
+        "start": "2023-12-26T19:07:00",
+        "title": "Fake organization 1"
       },
       {
         "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-11-20T16:00:00",
+        "end": "2023-12-21T20:07:00",
         "eventDisplay": "background",
         "eventTextColor": "#000000",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "04:00 PM",
-          "formattedStartDate": "11/20/2023 01:00 PM",
+          "formattedEndTime": "08:07 PM",
+          "formattedStartDate": "12/21/2023 07:07 PM",
           "trainerTrue": false
         },
         "id": 3,
-        "start": "2023-11-20T13:00:00",
-        "title": "Fake organization"
+        "start": "2023-12-21T19:07:00",
+        "title": "Fake organization 1"
       },
       {
         "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-11-13T16:00:00",
+        "end": "2023-12-04T19:07:00",
         "eventDisplay": "background",
         "eventTextColor": "#000000",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "04:00 PM",
-          "formattedStartDate": "11/13/2023 01:00 PM",
+          "formattedEndTime": "07:07 PM",
+          "formattedStartDate": "12/04/2023 05:07 PM",
           "trainerTrue": false
         },
         "id": 1,
-        "start": "2023-11-13T13:00:00",
-        "title": "Fake organization"
+        "start": "2023-12-04T17:07:00",
+        "title": "Fake organization 1"
       }
     ],
     "id": 1
+  },
+  {
+    "events": [
+      {
+        "color": "#ffa04c",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2023-12-07T17:11:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#000000",
+        "extendedProps": {
+          "eventId": 2,
+          "formattedEndTime": "05:11 PM",
+          "formattedStartDate": "12/07/2023 05:11 PM",
+          "trainerTrue": false
+        },
+        "id": 4,
+        "start": "2023-12-07T17:11:00",
+        "title": "Fake organization 2"
+      }
+    ],
+    "id": 2
   }
 ]

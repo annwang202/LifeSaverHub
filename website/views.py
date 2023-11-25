@@ -1,11 +1,13 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Event, EventDate, Trainer, TrainerDate
+from .models import Event, EventDate, Trainer, TrainerDate, Assignment
 from . import db
 import json
 from datetime import datetime
 from sqlalchemy import asc
 from werkzeug.utils import secure_filename
+import re
+from sqlalchemy.orm import joinedload
 
 views = Blueprint('views', __name__)
 black = "#000000"
@@ -21,12 +23,14 @@ def home():
         if event.backup_dates:
             event.backup_dates.sort(key=lambda date: date.start_date)
     trainers = Trainer.query.all()
+    assignments = Assignment.query.options(joinedload(Assignment.event_request)).all()
     '''
     for trainer in trainers:
         if trainer.gen_avail:
             trainer.gen_avail.sort(key=lambda date: date.start_date)
     '''
-    return render_template("home.html", user=current_user, events=events, trainers = trainers, event_colors = event_colors,trainer_colors=trainer_colors)
+    trainers_data = [{'id': trainer.id, 'name': trainer.name, 'gen_avail': trainer.gen_avail} for trainer in trainers]
+    return render_template("home.html", user=current_user, events=events, trainers = trainers, assignments=assignments,trainers_data=trainers_data,event_colors = event_colors,trainer_colors=trainer_colors)
 
 @views.route('/trainee', methods=['GET', 'POST'])
 @login_required
@@ -47,7 +51,11 @@ def trainer_info():
         if trainer.gen_avail:
             trainer.gen_avail.sort(key=lambda date: date.start_date)
     '''
-    return render_template("trainer_info.html", user=current_user, trainers = trainers,trainer_colors=trainer_colors)
+    #trainers_data = [{'id': trainer.id, 'name': trainer.name, 'gen_avail': trainer.gen_avail} for trainer in trainers]
+    trainers_data = []
+    for trainer in trainers:
+        trainers_data.append(trainer.name)
+    return render_template("trainer_info.html", user=current_user, trainers = trainers,trainers_data=trainers_data,trainer_colors=trainer_colors)
 
 
 @views.route('/submit-event', methods=['GET', 'POST'])
@@ -80,9 +88,10 @@ def submit_event():
             new_event = Event(name=name,email=email,phone=phone,title=title, training_types=training_types_string,
                               mission=mission,learners=learners,place=place,chairs_tables=chairs_tables,cultural=cultural,
                               content_concerns=content_concerns,music=music,photos=photos,other_info=other_info,status=status)
-            backup_eventDates = create_event_dates(backup_dates,backup_starts,backup_ends)
-            for eventDate in backup_eventDates:
-                new_event.backup_dates.append(eventDate)
+            if backup_dates[0]:
+                backup_eventDates = create_event_dates(backup_dates,backup_starts,backup_ends)
+                for eventDate in backup_eventDates:
+                    new_event.backup_dates.append(eventDate)
             preferred_eventDates = create_event_dates(preferred_date,preferred_start,preferred_end)
             new_event.preferred_date.append(preferred_eventDates[0])
             db.session.add(new_event)  # adding the event to the database
@@ -111,7 +120,7 @@ def submit_trainer():
             ls_skills_background_string = ', '.join(ls_skills_background)
             relevant_experience = request.form["relevant_experience"]
             get_heartsaver_instructor_interest = request.form.get('heartsaver_instructor_interest')
-            if get_heartsaver_instructor_interest == 'on':
+            if get_heartsaver_instructor_interest.lower() == 'on':
                 heartsaver_instructor_interest = 'Yes'
             else:
                 heartsaver_instructor_interest = 'No'
@@ -153,6 +162,49 @@ def submit_trainer():
             db.session.commit()
             flash('Trainer added to list!', category='success')
     return redirect(url_for('views.trainer'))
+
+@views.route('/submit-assignment', methods=['GET', 'POST'])
+@login_required
+def submit_assignment():
+    if request.method == 'POST':
+        try:
+            print("Ok lets go")
+            if request.form.get("create-assignment"): #get training availability form submission
+                print("form gotten")
+                event_id = request.form["assignment-event-id"]
+                start_date = datetime.fromisoformat(request.form["assignment-start-date"])
+                end_date = datetime.fromisoformat(request.form["assignment-end-date"])
+                formatted_start_date = request.form["assignment-formatted-start-date"]
+                formatted_end_time = request.form["assignment-formatted-end-time"]
+                trainer_name_and_emails = request.form.getlist("trainer-slot[]")
+                trainer_roles = request.form.getlist("trainer-role[]")
+                event = Event.query.get(event_id)
+                for trainer, role in zip(trainer_name_and_emails, trainer_roles):
+                    # Split by spaces and parentheses
+                    split = re.split(r'\s\(|\)', trainer)
+
+                    # Remove empty strings from the result
+                    result = list(filter(None, split))
+                    trainer_name = result[0]
+                    trainer_email = result[1]
+                    print(trainer_name)
+                    print(trainer_email)
+                    cur_trainer = Trainer.query.filter(Trainer.nickname == trainer_name, Trainer.email == trainer_email).first()
+                    print(cur_trainer)
+                    new_assignment = Assignment(start_date = start_date,
+                                                end_date=end_date,
+                                                formatted_start_date=formatted_start_date,
+                                                formatted_end_time=formatted_end_time,
+                                                trainer_role=role,status="Tentative")
+                    new_assignment.event_request.append(event)
+                    new_assignment.trainer.append(cur_trainer)
+                    db.session.add(new_assignment)  # adding the note to the database
+                    print(new_assignment)
+                db.session.commit()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            db.session.rollback()  # Rollback the transaction in case of an error
+    return redirect(url_for('views.home'))
 
 @views.route('/update-event', methods=['GET', 'POST'])
 @login_required
@@ -245,7 +297,6 @@ def event_mysql_to_json():
 
     return json_data
 
-'''
 @views.route('/trainerdata')
 def trainer_mysql_to_json():
     # Assuming you have a SQLAlchemy model for the table you want to export
@@ -259,6 +310,7 @@ def trainer_mysql_to_json():
     sources_list = []
     for trainer in data:
         event_list = []
+        '''
         for slot in trainer.gen_avail:
             time_dict = {
                 'id': slot.id,
@@ -277,9 +329,9 @@ def trainer_mysql_to_json():
                 # Add other attributes here as needed
             }
             event_list.append(time_dict)
-        trainer_dict = {'events':event_list,'id':trainer.id}
+        '''
+        trainer_dict = {'events':event_list,'id':trainer.id,'full-name':trainer.name,'name':trainer.nickname,'email':trainer.email}
         sources_list.append(trainer_dict)
-
     # Convert the data to JSON
     json_data = jsonify(sources_list).get_data(as_text=True)
 
@@ -290,7 +342,6 @@ def trainer_mysql_to_json():
     return json_data
 '''
 ############
-'''
 @views.route('/icsfinalcalendar')
 def create_ics():
     from .models import User, Event, EventDate,Trainer,TrainerDate
@@ -325,7 +376,7 @@ def create_ics():
         ics_file.write(ics_content)
     return ics_file
 '''
-####
+
 def create_event_dates(dates,starts,ends):
     event_dates = []
     for date, start_time, end_time in zip(dates, starts, ends):

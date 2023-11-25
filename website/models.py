@@ -18,14 +18,17 @@ preferred_event_date_association = db.Table('preferred_event_date_association',
     db.Column('event_date_id', db.Integer, db.ForeignKey('event_date.id'))
 )
 
-trainer_date_association = db.Table('trainer_date_association',
-    db.Column('trainer_id', db.Integer, db.ForeignKey('trainer.id')),
-    db.Column('trainer_date_id', db.Integer, db.ForeignKey('trainer_date.id'))
-)
-
 trainer_event_association = db.Table('trainer_event_association',
     db.Column('trainer_id', db.Integer, db.ForeignKey('trainer.id')),
     db.Column('event_id', db.Integer, db.ForeignKey('event.id'))
+)
+assignment_event_association = db.Table('assignment_event_association',
+    db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
+    db.Column('assignment_id', db.Integer, db.ForeignKey('assignment.id'))
+)
+assignment_trainer_association = db.Table('assignment_trainer_association',
+    db.Column('trainer_id', db.Integer, db.ForeignKey('trainer.id')),
+    db.Column('assignment_id', db.Integer, db.ForeignKey('assignment.id'))
 )
 
 class EventDate(db.Model):
@@ -37,7 +40,6 @@ class EventDate(db.Model):
     iso_formatted_start_date = db.Column(db.String(100))
     iso_formatted_end_date = db.Column(db.String(100))
     # Define a relationship with the Event model
-    events = db.relationship('Event', secondary=event_date_association,order_by='EventDate.start_date')
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,8 +60,6 @@ class Event(db.Model):
     photos = db.Column(db.String(200))
     other_info = db.Column(db.String(1500))
     status = db.Column(db.String(100))
-    final_date = db.relationship('EventDate', secondary=event_date_association, back_populates='events')
-    trainers = db.relationship('Trainer', secondary=trainer_event_association, back_populates='events')
     admin_notes = db.Column(db.String(500))
 
 class Trainer(db.Model):
@@ -85,7 +85,7 @@ class Trainer(db.Model):
     documents = db.Column(db.String(256))
     status = db.Column(db.String(100))
     
-    events = db.relationship('Event', secondary=trainer_event_association)
+    events = db.relationship('Assignment', secondary=assignment_trainer_association)
     admin_notes = db.Column(db.String(1500))
 
 class TrainerDate(db.Model):
@@ -96,5 +96,16 @@ class TrainerDate(db.Model):
     formatted_end_time = db.Column(db.String(100))
     iso_formatted_start_date = db.Column(db.String(100))
     iso_formatted_end_date = db.Column(db.String(100))
-    # Define a relationship with the Event model
-    trainers = db.relationship('Trainer', secondary=trainer_date_association,order_by='TrainerDate.start_date')
+
+class Assignment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.DateTime(timezone=True))
+    end_date = db.Column(db.DateTime(timezone=True))
+    formatted_start_date = db.Column(db.String(100))
+    formatted_end_time = db.Column(db.String(100))
+    iso_formatted_start_date = db.Column(db.String(100))
+    iso_formatted_end_date = db.Column(db.String(100))
+    event_request = db.relationship('Event', secondary=assignment_event_association)
+    trainer = db.relationship('Trainer',secondary=assignment_trainer_association,back_populates='events')
+    trainer_role = db.Column(db.String(50))
+    status = db.Column(db.String(100))

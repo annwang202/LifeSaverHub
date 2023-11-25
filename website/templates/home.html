@@ -95,7 +95,7 @@
         <p><strong>Backup dates: </strong></br>{% for date in event.backup_dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}</br>
           {% endfor %}</p>
         <div class="event-details">
-          <button id="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'event')">Show/Hide details</button>
+          <button name="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'event')">Show/Hide details</button>
           <div id="event_details_{{ event.id }}" style="display:none;">
             <p>Contact name: {{event.name}}</br>
             Email: {{event.email}}</br>
@@ -141,6 +141,62 @@
   </div>
   <div class="box">
     <!-- List of scheduled events + create/edit event function -->
+    <ul class="list-group list-group-flush" id="itemsToFilter">
+      {% for assignment in assignments %}
+      <li
+        id="assignment_{{assignment.id}}"
+        class="list-group-item"
+        data-type="{{assignment.status}}"
+        style="border-color: {{ trainer_colors[(assignment.id - 1) % trainer_colors|length][0] }}; border-width: 3px;"
+      >
+        <input
+          type="checkbox"
+          class="assignment-checkbox"
+          assignment-id = "{{ assignment.id }}"
+          value = "{{assignment.status}}"
+        >
+        <strong>{{assignment.event_request[0].title}}</strong>
+        <p><strong>Date: </strong></br>{{assignment.formatted_start_date}} - {{assignment.formatted_end_time}}</p>
+        <p><strong>Trainers: </strong></br>{% for trainer in assignment.trainer %} {{trainer.nickname}} ({{trainer.email}})</br>{% endfor %}</p>
+        <div class="assignment-details">
+          <button name="detail_{{assignment.id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'assignment')">Show/Hide details</button>
+          <div id="assignment_detail_{{ assignment.id }}" style="display:none;">
+            <p>Contact name: {{assignment.event_request[0].name}}</br>
+            Email: {{assignment.event_request[0].email}}</br>
+            Phone: {{assignment.event_request[0].phone}}</br>
+            Desired training types: {{assignment.event_request[0].training_types}}</br>
+            Mission: {{assignment.event_request[0].mission}}</br>
+            Learners: {{assignment.event_request[0].learners}}</br>
+            Location: {{assignment.event_request[0].place}}</br>
+            Chairs/tables: {{assignment.event_request[0].chairs_tables}}</br>
+            Cultural considerations: {{assignment.event_request[0].cultural}}</br>
+            Content concerns: {{assignment.event_request[0].content_concerns}}</br>
+            Music: {{assignment.event_request[0].music}}</br>
+            Photography permission: {{assignment.event_request[0].photos}}</br>
+            Additional info: {{assignment.event_request[0].other_info}}
+          </p>
+          </div>
+        </div>
+    <div class="update-status"><strong>Status:</strong> {{assignment.status}}</div>
+        <button name="{{assignment.id}}"class="update-assignment-option" onClick="showOrHideDropdown(this.name,'update_div')">Update event status</button>
+        <div id="update_div_{{ assignment.id }}" style="display:none;">
+          <form id="update_assignment_form_{{ assignment.id }}"  name="update_form" action="/update-assignment" method="POST">
+            <input type="hidden" name="update_form" value="1">
+            <input type="hidden" name="update_id" value="{{assignment.id}}">
+            <select name="assignment_status" id="assignment_status_{{assignment.id}}">
+              <option value="none" selected disabled hidden>Select a status</option>
+              <option value="Tentative">Tentative</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Happened">Happened</option>
+              <option value="Canceled">Canceled</option>
+            </select>
+            <button type="submit" form = "update_assignment_form_{{ assignment.id }}" id="update_assignment_submit_{{ assignment.id }}" class="btn btn-primary">Update assignment</button>
+          </form>
+        </div>
+        <p>Admin notes: {{assignment.event_request.admin_notes}}</p>
+      </li> 
+      {% endfor %}
+    </ul>
   </div>
   <div class="modal fade" id="detail-expand">
     <div class="modal-dialog">
@@ -154,8 +210,29 @@
         </div>
         <!-- Modal body -->
         <div class="modal-body">
-          <div class="time" style="font-weight: bold">Event Time</div>
-          <div class="description"></div>
+          <form id="create-assignment" autocomplete="off" name="create-assignment" action="/submit-assignment" method="POST">
+            <input type="hidden" name="create-assignment" value="1">
+            <div class="time" style="font-weight: bold">Event Time</div>
+            <div class="description"></div>
+            <input type="hidden" id="assignment-event-id" name="assignment-event-id" value="">
+            <input type="hidden" id="assignment-start-date" name="assignment-start-date" value="">
+            <input type="hidden" id="assignment-end-date" name="assignment-end-date" value="">
+            <input type="hidden" id="assignment-formatted-start-date" name="assignment-formatted-start-date" value="">
+            <input type="hidden" id="assignment-formatted-end-time" name="assignment-formatted-end-time" value="">
+            <div id="assign-trainers">
+              <div id="trainer-slots">
+                <div class="trainer-search">
+                  <div class="autocomplete" style="width:300px;">
+                    Trainer
+                    <input id="myInput" class="myInput" type="text" name="trainer-slot[]" placeholder="Search for trainers">
+                    <input id="role" type="text" name="trainer-role[]" placeholder="Trainer role">
+                  </div>
+                </div>
+              </div>
+              <button type="button" id="add-trainer-slot">Add more trainers</button>
+            </div>
+            <button type="submit" form = "create-assignment" id="assignment_submit" class="btn btn-primary">Create tentative event</button>
+          </form>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">

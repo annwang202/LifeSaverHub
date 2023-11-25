@@ -1,242 +1,44 @@
 [
   {
-    "events": [
-      {
-        "color": "#044080",
-        "displayEventEnd": true,
-        "end": "2023-11-16T17:36:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "05:36 PM",
-          "formattedStartDate": "2023-11-16 09:35 AM",
-          "trainerId": 1,
-          "trainerTrue": true
-        },
-        "id": 2,
-        "start": "2023-11-16T09:35:00",
-        "title": "Tom"
-      },
-      {
-        "color": "#044080",
-        "displayEventEnd": true,
-        "end": "2023-11-06T17:36:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "05:36 PM",
-          "formattedStartDate": "2023-11-06 09:35 AM",
-          "trainerId": 1,
-          "trainerTrue": true
-        },
-        "id": 1,
-        "start": "2023-11-06T09:35:00",
-        "title": "Tom"
-      }
-    ],
-    "id": 1
+    "email": "johndoe@fakeemail.com",
+    "events": [],
+    "full-name": "John Doe II",
+    "id": 1,
+    "name": "John Doe"
   },
   {
-    "events": [
-      {
-        "color": "#0889d4",
-        "displayEventEnd": true,
-        "end": "2023-11-27T17:36:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "05:36 PM",
-          "formattedStartDate": "2023-11-27 07:36 AM",
-          "trainerId": 2,
-          "trainerTrue": true
-        },
-        "id": 4,
-        "start": "2023-11-27T07:36:00",
-        "title": "Jane"
-      },
-      {
-        "color": "#0889d4",
-        "displayEventEnd": true,
-        "end": "2023-11-08T17:36:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "05:36 PM",
-          "formattedStartDate": "2023-11-08 07:36 AM",
-          "trainerId": 2,
-          "trainerTrue": true
-        },
-        "id": 3,
-        "start": "2023-11-08T07:36:00",
-        "title": "Jane"
-      }
-    ],
-    "id": 2
+    "email": "janedoe@fakeemail.com",
+    "events": [],
+    "full-name": "Jane Doe II",
+    "id": 2,
+    "name": "Jane Doe"
   },
   {
-    "events": [
-      {
-        "color": "#8dcbd9",
-        "displayEventEnd": true,
-        "end": "2023-11-13T19:36:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "07:36 PM",
-          "formattedStartDate": "2023-11-13 08:36 AM",
-          "trainerId": 3,
-          "trainerTrue": true
-        },
-        "id": 5,
-        "start": "2023-11-13T08:36:00",
-        "title": "Abby"
-      },
-      {
-        "color": "#8dcbd9",
-        "displayEventEnd": true,
-        "end": "2023-11-06T19:36:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "07:36 PM",
-          "formattedStartDate": "2023-11-06 08:36 AM",
-          "trainerId": 3,
-          "trainerTrue": true
-        },
-        "id": 7,
-        "start": "2023-11-06T08:36:00",
-        "title": "Abby"
-      },
-      {
-        "color": "#8dcbd9",
-        "displayEventEnd": true,
-        "end": "2023-11-29T19:36:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "07:36 PM",
-          "formattedStartDate": "2023-11-29 08:36 AM",
-          "trainerId": 3,
-          "trainerTrue": true
-        },
-        "id": 6,
-        "start": "2023-11-29T08:36:00",
-        "title": "Abby"
-      }
-    ],
-    "id": 3
+    "email": "joshdoe@fakeemail.com",
+    "events": [],
+    "full-name": "Josh Doe II",
+    "id": 3,
+    "name": "Josh Doe"
   },
   {
-    "events": [
-      {
-        "color": "#5bde81",
-        "displayEventEnd": true,
-        "end": "2023-11-13T18:37:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "06:37 PM",
-          "formattedStartDate": "2023-11-13 09:37 AM",
-          "trainerId": 4,
-          "trainerTrue": true
-        },
-        "id": 9,
-        "start": "2023-11-13T09:37:00",
-        "title": "Trainer 3"
-      },
-      {
-        "color": "#5bde81",
-        "displayEventEnd": true,
-        "end": "2023-11-09T18:37:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "06:37 PM",
-          "formattedStartDate": "2023-11-09 09:37 AM",
-          "trainerId": 4,
-          "trainerTrue": true
-        },
-        "id": 8,
-        "start": "2023-11-09T09:37:00",
-        "title": "Trainer 3"
-      },
-      {
-        "color": "#5bde81",
-        "displayEventEnd": true,
-        "end": "2023-11-27T18:37:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "06:37 PM",
-          "formattedStartDate": "2023-11-27 09:37 AM",
-          "trainerId": 4,
-          "trainerTrue": true
-        },
-        "id": 10,
-        "start": "2023-11-27T09:37:00",
-        "title": "Trainer 3"
-      }
-    ],
-    "id": 4
+    "email": "anniewang@fakeemail.com",
+    "events": [],
+    "full-name": "Ann Wang",
+    "id": 4,
+    "name": "Annie Wang"
   },
   {
-    "events": [
-      {
-        "color": "#018a78",
-        "displayEventEnd": true,
-        "end": "2023-11-21T18:38:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "06:38 PM",
-          "formattedStartDate": "2023-11-21 08:38 AM",
-          "trainerId": 5,
-          "trainerTrue": true
-        },
-        "id": 12,
-        "start": "2023-11-21T08:38:00",
-        "title": "Trainer 4"
-      },
-      {
-        "color": "#018a78",
-        "displayEventEnd": true,
-        "end": "2023-11-07T18:38:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "06:38 PM",
-          "formattedStartDate": "2023-11-07 08:38 AM",
-          "trainerId": 5,
-          "trainerTrue": true
-        },
-        "id": 11,
-        "start": "2023-11-07T08:38:00",
-        "title": "Trainer 4"
-      }
-    ],
-    "id": 5
+    "email": "bananamilkshake@fakeemail.com",
+    "events": [],
+    "full-name": "Banana Milkshake",
+    "id": 5,
+    "name": "Banana"
   },
   {
-    "events": [
-      {
-        "color": "#daf763",
-        "displayEventEnd": true,
-        "end": "2023-11-09T16:39:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "04:39 PM",
-          "formattedStartDate": "2023-11-09 09:39 AM",
-          "trainerId": 6,
-          "trainerTrue": true
-        },
-        "id": 13,
-        "start": "2023-11-09T09:39:00",
-        "title": "Trainer 5"
-      },
-      {
-        "color": "#daf763",
-        "displayEventEnd": true,
-        "end": "2023-11-20T16:39:00",
-        "extendedProps": {
-          "description": " ",
-          "formattedEndTime": "04:39 PM",
-          "formattedStartDate": "2023-11-20 09:39 AM",
-          "trainerId": 6,
-          "trainerTrue": true
-        },
-        "id": 14,
-        "start": "2023-11-20T09:39:00",
-        "title": "Trainer 5"
-      }
-    ],
-    "id": 6
+    "email": "megstallion@fakeemail.com",
+    "events": [],
+    "full-name": "Megan Thee Stallion",
+    "id": 6,
+    "name": "Meg Stallion"
   }
 ]

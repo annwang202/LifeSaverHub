@@ -73,6 +73,9 @@
       document.getElementById("add-date-time").addEventListener("click", function () {
       const dateTimesContainer = document.getElementById("availability");
       const dateTimeEntry = document.querySelector(".backup-date-time").cloneNode(true);
+      dateTimeEntry.querySelectorAll('input[type="date"], input[type="time"]').forEach(function (input) {
+                input.value = '';
+                });
       dateTimesContainer.appendChild(dateTimeEntry);
     });
     </script>
