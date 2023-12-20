@@ -1,70 +1,54 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
-<style>
-  .form-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .form-container form {
-    margin: 0 20px; /* Adjust the margin as needed */
-  }
-</style>
 <div class="form-container">
-<div id="submit_event">
-  <h3 align="center">Request a Training Event</h1>
+<div id="submit_event" style="max-width: 850px; font-weight: bold;">
+  <div style="text-align: center;"><h2>Request a Training Event</h2></div>
   <form id = "event_form" action="/submit-event" method="POST">
     <input type="hidden" name="event_form" value="1">
-    <label for="event_name">Name of Person Making the Request:</label>
-    <input type="text" id="event_name" name="event_name" maxlength="50" required /><br />
-  </br>
-    <label for="event_email">Email:</label>
-    <input type="text" id="event_email" name="event_email" maxlength="50" required /><br />
-  </br>
-    <label for="event_phone">Phone Number:</label>
+    <label for="event_name">Name of Person Making the Request*:</label>
+    <input type="text" id="event_name" name="event_name" maxlength="50" required/><br />
+    <label for="event_email">Email*:</label>
+    <input type="text" id="event_email" name="event_email" maxlength="50" required/><br />
+    <label for="event_phone">Phone Number*:</label>
     <input type="text" id="event_phone" name="event_phone" maxlength="16" required>
-  </br>
-    <label for="event_title">Your Organization:</label>
-    <input type="text" id="event_title" name="event_title" maxlength="50" required /><br />
-  </br>
-    <label for="training_types">Type of Training Requested (select any that apply):</label>
+    <label for="event_title">Your Organization*:</label>
+    <input type="text" id="event_title" name="event_title" maxlength="50" required/><br /><br>
+    <label for="training_types" style="font-weight: normal;">Type of Training Requested (select any that apply):</label>
 </br>
 <div id = training_types>
     <input type="checkbox" id="classroom_cpr_aed" name="training_type[]" value="Hands-only Adult CPR/AED - Classroom setting">
-    <label for="classroom_cpr_aed">Hands-only Adult CPR/AED - Classroom setting (45-60 minutes)</label><br>
+    <label for="classroom_cpr_aed" style="font-weight: normal;">Hands-only Adult CPR/AED - Classroom setting (45-60 minutes)</label><br>
     <input type="checkbox" id="fair_cpr_aed" name="training_type[]" value="Hands-only Adult CPR/AED - Street/Health Fair">
-    <label for="fair_cpr_aed">Hands-only Adult CPR/AED - Street/Health Fair (teach a skill in 5 minutes)</label><br>
+    <label for="fair_cpr_aed" style="font-weight: normal;">Hands-only Adult CPR/AED - Street/Health Fair (teach a skill in 5 minutes)</label><br>
     <input type="checkbox" id="heartsaver" name="training_type[]" value="Heartsaver CPR/AED/FA">
-    <label for="heartsaver">Heartsaver CPR/AED/FA (AHA Certification, $17/person, 2 hours)</label><br>
+    <label for="heartsaver" style="font-weight: normal;">Heartsaver CPR/AED/FA (AHA Certification, $17/person, 2 hours)</label><br>
     <input type="checkbox" id="child_infant_cpr" name="training_type[]" value="Child/Infant CPR">
-    <label for="child_infant_cpr">Child/Infant CPR (30 compressions:2 breaths. If added to adult training, 30 minutes. Otherwise, 60 minutes.)</label><br>
+    <label for="child_infant_cpr" style="font-weight: normal;">Child/Infant CPR (30 compressions:2 breaths. If added to adult training, 30 minutes. Otherwise, 60 minutes.)</label><br>
     <input type="checkbox" id="narcan" name="training_type[]" value="Narcan">
-    <label for="narcan">Narcan (5-10 minutes)</label><br>
+    <label for="narcan" style="font-weight: normal;">Narcan (5-10 minutes)</label><br>
     <input type="checkbox" id="hemorrhage_informal" name="training_type[]" value="Hemorrhage Control - Informal">
-    <label for="hemorrhage_informal">Hemorrhage Control - Informal (20 minutes)</label><br>
+    <label for="hemorrhage_informal" style="font-weight: normal;">Hemorrhage Control - Informal (20 minutes)</label><br>
     <input type="checkbox" id="hemorrhage_formal" name="training_type[]" value="Hemorrhage Control - Formal STB">
-    <label for="hemorrhage_informal">Hemorrhage Control - Formal STB (60 minutes, free certificate and official powerpoint)</label><br>
+    <label for="hemorrhage_informal" style="font-weight: normal;">Hemorrhage Control - Formal STB (60 minutes, free certificate and official powerpoint)</label><br>
+    <input type="checkbox" id="idk" name="training_type[]" value="I don't know">
+    <label for="idk" style="font-weight: normal;">I don't know</label><br>
   </div>
   </br>
     <div id="availability">
       <div class="preferred-date-time">
-        <label for="event_date">Preferred Date:</label>
-        <input type="date" name="date" required /><br />
-        <label for="event_date">Start time:</label>
-        <input type="time" name="start_time" required /><br />
-        <label for="event_date">End Time:</label>
-        <input type="time" name="end_time" required /><br />
+        <label for="event_date">Preferred Date*:</label>
+        <input type="date" name="date" required />
+        <input type="time" name="start_time" required />
+        <label for="event_date" style="font-weight: normal;">to</label>
+        <input type="time" name="end_time" required />
       </br>
       </div>
-      <label for="event_date">Back-up Date:</label>
       <div class="backup-date-time">
-        <label for="event_date">Date:</label>
-        <input type="date" name="date[]" /><br />
-        <label for="event_date">Start time:</label>
-        <input type="time" name="start_time[]"/><br />
-        <label for="event_date">End Time:</label>
-        <input type="time" name="end_time[]"/><br />
+        <label for="event_date" style="font-weight: normal;">Back-up Date:</label>
+        <input type="date" name="date[]" />
+        <input type="time" name="start_time[]"/>
+        <label for="event_date" style="font-weight: normal;">to</label>
+        <input type="time" name="end_time[]"/>
       </br>
       </div>
     </div>
@@ -81,87 +65,91 @@
     </script>
     <br />
   </br>
-  <label for="event_mission"><strong>What is your group's mission?</strong></label><br />
+  <div style="text-align: left;">
+  <label for="event_mission">1. What is your group's mission?*</label><br />
     <textarea
       id="event_mission"
       name="event_mission"
-      rows="4"
-      cols="50"
+      rows="3"
+      cols="100"
       maxlength="500"
       required
-    ></textarea>
-    <label for="event_learners"><strong>About how many learners will there be? What is their age range? Any medical backgrounds?</strong></label><br />
+    ></textarea><br><br />
+    <label for="num_learners">2. Approximately how many learners will there be?*</label>
+      <input type="number" id="num_learners" name="num_learners" min="1" required style="width: 8ch;"><br><br />
+    <label for="event_learners">2b. What is their age range? Any medical backgrounds?*</label><br />
     <textarea
       id="event_learners"
       name="event_learners"
-      rows="4"
-      cols="50"
+      rows="3"
+      cols="100"
       maxlength="500"
       required
-    ></textarea>
-    <label for="event_place"><strong>Where will the event be? Is there parking?</strong></label><br />
+    ></textarea><br><br />
+    <label for="event_place">3. Where will the event be? Is there parking?*</label><br />
     <textarea
       id="event_place"
       name="event_place"
-      rows="4"
-      cols="50"
+      rows="3"
+      cols="100"
       maxlength="500"
       required
-    ></textarea>
-    <label for="event_chairs_tables"><strong>Will there be tables and chairs?</strong></label><br />
+    ></textarea><br><br />
+    <label for="event_chairs_tables">4. Will there be tables and chairs?*</label><br />
     <textarea
       id="event_chairs_tables"
       name="event_chairs_tables"
-      rows="4"
-      cols="50"
+      rows="3"
+      cols="100"
       maxlength="300"
       required
-    ></textarea>
-    <label for="event_cultural"><strong>Any cultural considerations we should account for? We strive for racial concordance goals when possible - what should we be mindful of?
-</strong></label><br />
+    ></textarea><br><br />
+    <label for="event_cultural" style="font-weight: normal;">5. Any cultural considerations we should account for? We strive for racial concordance goals when possible - what should we be mindful of?
+</label><br />
     <textarea
       id="event_cultural"
       name="event_cultural"
-      rows="4"
-      cols="50"
+      rows="3"
+      cols="100"
       maxlength="500"
-    ></textarea>
-    <label for="event_content_concerns"><strong>We generally teach hands-only CPR but would recommend rescue breathing for children. We also generally discuss Narcan. For AED instruction, we teach to take the clothes off of a patient. Our trainings include both male and female mannequins. Please let us know if you have any concerns over any of these topics.
-    </strong></label><br />
+    ></textarea><br><br />
+    <label for="event_content_concerns" style="font-weight: normal;">6. We generally teach hands-only CPR but would recommend rescue breathing for children. We also generally discuss Narcan. For AED instruction, we teach to take the clothes off of a patient. Our trainings include both male and female mannequins. Please let us know if you have any concerns over any of these topics.
+    </label><br />
         <textarea
           id="event_content_concerns"
           name="event_content_concerns"
-          rows="4"
-          cols="50"
+          rows="3"
+          cols="100"
           maxlength="500"
-        ></textarea>
-    <label for="event_music"><strong>Sometimes we play music- any preference or anything to stay away from?
-    </strong></label><br />
+        ></textarea><br><br />
+    <label for="event_music" style="font-weight: normal;">7. Sometimes we play music- any preference or anything to stay away from?
+    </label><br />
         <textarea
           id="event_music"
           name="event_music"
-          rows="2"
-          cols="50"
+          rows="3"
+          cols="100"
           maxlength="300"
-        ></textarea>
-    <label for="event_photos"><strong>Permission to take photos for our social media? Any accounts we should tag?
-    </strong></label><br />
+        ></textarea><br><br />
+    <label for="event_photos" style="font-weight: normal;">8. Permission to take photos for our social media? Any accounts we should tag?
+    </label><br />
         <textarea
           id="event_photos"
           name="event_photos"
-          rows="4"
-          cols="50"
+          rows="3"
+          cols="100"
           maxlength="200"
-        ></textarea>
-    <label for="event_other_info"><strong>Any other information we should know?</strong></label><br />
+        ></textarea><br><br />
+    <label for="event_other_info" style="font-weight: normal;">9. Any other information we should know?</label><br />
     <textarea
       id="event_other_info"
       name="event_other_info"
-      rows="4"
-      cols="50"
+      rows="3"
+      cols="100"
       maxlength="1500"
     ></textarea
     ><br />
+  </div>
     <div align="center">
       <button type="submit" form = "event_form" class="btn btn-primary">Submit Event</button>
     </div>

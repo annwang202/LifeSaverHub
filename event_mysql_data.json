@@ -5,52 +5,55 @@
         "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-12-26T20:07:00",
+        "end": "2023-11-13T12:00:00",
         "eventDisplay": "background",
         "eventTextColor": "#000000",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "08:07 PM",
-          "formattedStartDate": "12/26/2023 07:07 PM",
+          "formattedEndTime": "12:00 PM",
+          "formattedStartDate": "11/13/2023 11:00 AM",
+          "numLearners": 50,
           "trainerTrue": false
         },
         "id": 2,
-        "start": "2023-12-26T19:07:00",
-        "title": "Fake organization 1"
+        "start": "2023-11-13T11:00:00",
+        "title": "Fake Organization 1"
       },
       {
         "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-12-21T20:07:00",
+        "end": "2023-11-20T12:00:00",
         "eventDisplay": "background",
         "eventTextColor": "#000000",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "08:07 PM",
-          "formattedStartDate": "12/21/2023 07:07 PM",
+          "formattedEndTime": "12:00 PM",
+          "formattedStartDate": "11/20/2023 11:00 AM",
+          "numLearners": 50,
           "trainerTrue": false
         },
         "id": 3,
-        "start": "2023-12-21T19:07:00",
-        "title": "Fake organization 1"
+        "start": "2023-11-20T11:00:00",
+        "title": "Fake Organization 1"
       },
       {
         "color": "#f7c95e",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-12-04T19:07:00",
+        "end": "2023-11-06T12:00:00",
         "eventDisplay": "background",
         "eventTextColor": "#000000",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "07:07 PM",
-          "formattedStartDate": "12/04/2023 05:07 PM",
+          "formattedEndTime": "12:00 PM",
+          "formattedStartDate": "11/06/2023 10:00 AM",
+          "numLearners": 50,
           "trainerTrue": false
         },
         "id": 1,
-        "start": "2023-12-04T17:07:00",
-        "title": "Fake organization 1"
+        "start": "2023-11-06T10:00:00",
+        "title": "Fake Organization 1"
       }
     ],
     "id": 1
@@ -61,20 +64,103 @@
         "color": "#ffa04c",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2023-12-07T17:11:00",
+        "end": "2023-11-14T11:00:00",
         "eventDisplay": "background",
         "eventTextColor": "#000000",
         "extendedProps": {
           "eventId": 2,
-          "formattedEndTime": "05:11 PM",
-          "formattedStartDate": "12/07/2023 05:11 PM",
+          "formattedEndTime": "11:00 AM",
+          "formattedStartDate": "11/14/2023 09:00 AM",
+          "numLearners": 30,
           "trainerTrue": false
         },
         "id": 4,
-        "start": "2023-12-07T17:11:00",
-        "title": "Fake organization 2"
+        "start": "2023-11-14T09:00:00",
+        "title": "Fake Organization 2"
       }
     ],
     "id": 2
+  },
+  {
+    "events": [
+      {
+        "color": "#ff724f",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2023-11-10T16:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#FFFFFF",
+        "extendedProps": {
+          "eventId": 3,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "11/10/2023 02:00 PM",
+          "numLearners": 15,
+          "trainerTrue": false
+        },
+        "id": 5,
+        "start": "2023-11-10T14:00:00",
+        "title": "Fake Organization 3"
+      }
+    ],
+    "id": 3
+  },
+  {
+    "events": [
+      {
+        "color": "#f34e57",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2023-11-30T12:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#FFFFFF",
+        "extendedProps": {
+          "eventId": 4,
+          "formattedEndTime": "12:00 PM",
+          "formattedStartDate": "11/30/2023 10:00 AM",
+          "numLearners": 30,
+          "trainerTrue": false
+        },
+        "id": 7,
+        "start": "2023-11-30T10:00:00",
+        "title": "Fake Organization Name 4"
+      },
+      {
+        "color": "#f34e57",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2023-12-01T12:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#FFFFFF",
+        "extendedProps": {
+          "eventId": 4,
+          "formattedEndTime": "12:00 PM",
+          "formattedStartDate": "12/01/2023 10:00 AM",
+          "numLearners": 30,
+          "trainerTrue": false
+        },
+        "id": 8,
+        "start": "2023-12-01T10:00:00",
+        "title": "Fake Organization Name 4"
+      },
+      {
+        "color": "#f34e57",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2023-11-29T12:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#FFFFFF",
+        "extendedProps": {
+          "eventId": 4,
+          "formattedEndTime": "12:00 PM",
+          "formattedStartDate": "11/29/2023 10:00 AM",
+          "numLearners": 30,
+          "trainerTrue": false
+        },
+        "id": 6,
+        "start": "2023-11-29T10:00:00",
+        "title": "Fake Organization Name 4"
+      }
+    ],
+    "id": 4
   }
 ]

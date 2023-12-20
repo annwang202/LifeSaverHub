@@ -1,13 +1,15 @@
-#submit_event {
-    display: block;
-    margin-bottom: 20px; 
-    justify-content: center; /* Centers vertically */
-    align-items: center; /* Centers horizontally */
-    text-align: center;
-  }
-
 #add-date-time {
     margin: 10px;
+}
+
+.logo {
+  color: white;
+  display: inline-block;
+  margin-right: 5em;
+}
+
+.navbar-nav a {
+  margin-right: 30px; /* Adjust the value as needed */
 }
 
 .schedule_container {
@@ -51,17 +53,35 @@
     max-width: none !important;
 }
 
+.form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.form-container form {
+  margin: 0 20px; /* Adjust the margin as needed */
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  padding: 5px;
+}
 
 .list-group-item{
-    margin: 10px !important;
+    margin: 2px !important;
     padding: 10px !important;
     font-size: small;
 }
 
 #trainerInfoFilter {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 2px;
+    grid-template-columns: repeat(8, 1fr);
+    grid-gap: 0px;
 }
 
 body{
@@ -79,6 +99,14 @@ body{
     border-width: 10px !important;
 }
 
+.email {
+  font-size:smaller;
+  padding: 4px;
+  margin: 4px;
+}
+
+
+/*filtering*/
 .filterSection li {
     list-style: none;
     margin: 0px;
@@ -155,3 +183,14 @@ body{
     background-color: DodgerBlue !important;
     color: #ffffff;
   }
+
+  /*flash messages*/
+  .alert-danger{
+    color:white;
+    background-color: red;
+  }
+
+  /*admin-notes*/ 
+  textarea[readonly] {
+    border: none;
+}

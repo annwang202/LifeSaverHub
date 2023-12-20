@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const trainerBoxes = document.querySelectorAll(".list-group-item");
     trainerBoxes.forEach(function (box) {
         var status = box.getAttribute("data-type");
-        if (status === "New"){
+        if (status === "Suspended"){
             box.style.borderColor = "#e3b1b1";
         }
         else if (status === "Team Lead"){

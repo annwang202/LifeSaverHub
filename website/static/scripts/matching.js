@@ -1,5 +1,79 @@
-import { filterList } from './base.js';
-import { autocomplete } from './base.js';
+function deleteTrainerSlot(button,search_class) {
+  var slot = button.closest(search_class);
+  slot.parentNode.removeChild(slot);
+}
+function addTrainerSlot(search_class,container) {
+  const slotsContainer = document.getElementById(container);
+  const slotEntry = document.querySelector(search_class).cloneNode(true);
+  const input = slotEntry.querySelector('input[type="text"]');
+  input.value = "";
+  //delete slot button
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className = "delete-slot";
+  deleteButton.textContent = "X";
+  deleteButton.addEventListener("click", function () {
+    deleteTrainerSlot(this,search_class);
+  });
+  // Append the button to the slot
+  slotEntry.appendChild(deleteButton);
+
+  slotsContainer.appendChild(slotEntry);
+  $.getJSON(`/trainerdata`, function (data) {
+    let trainer_names = data
+      .filter((person) => person.status !== "Suspended")
+      .map((person) => `${person.name} (${person.email})`);
+    autocomplete(document.querySelectorAll(".myInput"), trainer_names);
+  });
+  return input;
+}
+function showEditModalfunction({
+  eventId,
+  title,
+  learners,
+  startDate,
+  endDate,
+  formatted_start_date,
+  formatted_end_time,
+  eventStatus,
+  trainers,
+} = {}) {
+  var modal = $("#update-assignment");
+  modal.find(".modal-title").text(title);
+  modal.find(".time").text(`${formatted_start_date} - ${formatted_end_time}`);
+  modal.find(".numLearners").text(`Estimated learners: ${learners}`);
+  var borderColor = "grey";
+  var currStatus = document.querySelector("#current-status");
+  currStatus.value = eventStatus;
+  currStatus.textContent = eventStatus;
+  modal.find(".modal-content").css("border-color", borderColor);
+  $("#update-assignment-event-id").val(eventId);
+  $("#update-assignment-start-date").val(startDate);
+  $("#update-assignment-end-date").val(endDate);
+  $("#update-assignment-formatted-start-date").val(formatted_start_date);
+  $("#update-assignment-formatted-end-time").val(formatted_end_time);
+  //delete all previously copied slots
+  const trainerSlotsContainer = document.getElementById("update-trainer-slots");
+  const currentSlots =
+    trainerSlotsContainer.querySelectorAll(".update-trainer-search");
+  // Remove all but the first slot
+  for (let i = 1; i < currentSlots.length; i++) {
+    trainerSlotsContainer.removeChild(currentSlots[i]);
+  }
+  //copy the correct number of slots
+  console.log("trainers length:" + trainers.length)
+  for (let j = 1; j < trainers.length; j++) {
+    addTrainerSlot(".update-trainer-search","update-trainer-slots");
+    console.log("addTrainerSlot called")
+  }
+  const newSlots = trainerSlotsContainer.querySelectorAll(".update-trainer-search");
+  for (index = 0; index < newSlots.length; index++) {
+    let slot = newSlots[index];
+    let input = slot.querySelector('input[type="text"]');
+    input.value = trainers[index];
+  }
+  modal.modal();
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   function fetchDataAndInitializeCalendar() {
@@ -24,6 +98,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .text(
               `${event.extendedProps.formattedStartDate} - ${event.extendedProps.formattedEndTime}`
             );
+          modal
+            .find(".numLearners")
+            .text(`Estimated learners: ${event.extendedProps.numLearners}`);
           var borderColor = event.borderColor
             ? event.borderColor
             : event.backgroundColor;
@@ -31,8 +108,26 @@ document.addEventListener("DOMContentLoaded", function () {
           $("#assignment-event-id").val(event.extendedProps.eventId);
           $("#assignment-start-date").val(event.startStr);
           $("#assignment-end-date").val(event.endStr);
-          $("#assignment-formatted-start-date").val(event.extendedProps.formattedStartDate)
-          $("#assignment-formatted-end-time").val(event.extendedProps.formattedEndTime)
+          $("#assignment-formatted-start-date").val(
+            event.extendedProps.formattedStartDate
+          );
+          $("#assignment-formatted-end-time").val(
+            event.extendedProps.formattedEndTime
+          );
+          //delete all previously copied slots
+          const trainerSlotsContainer =
+            document.getElementById("trainer-slots");
+          const currentSlots =
+            trainerSlotsContainer.querySelectorAll(".trainer-search");
+          // Remove all but the first slot
+          for (let i = 1; i < currentSlots.length; i++) {
+            trainerSlotsContainer.removeChild(currentSlots[i]);
+          }
+          //copy the correct number of slots
+          var defaultSlots = Math.ceil(event.extendedProps.numLearners / 10);
+          for (var i = 2; i < defaultSlots; i++) {
+            addTrainerSlot(".trainer-search","trainer-slots");
+          }
           modal.modal();
         },
       });
@@ -165,18 +260,14 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
     //add autocomplete to additional inputs
-    document.getElementById("add-trainer-slot").addEventListener("click", function () {
-      const slotsContainer = document.getElementById("trainer-slots");
-      const slotEntry = document.querySelector(".trainer-search").cloneNode(true);
-      slotEntry.querySelectorAll('input[type="text"]').forEach(function (input) {
-        input.value = '';
-      });
-      slotsContainer.appendChild(slotEntry);
-      $.getJSON(`/trainerdata`, function (data) {
-        let trainer_names = data.map(person => `${person.name} (${person.email})`)
-        autocomplete(document.querySelectorAll(".myInput"), trainer_names);
-      });
-    });
+    document
+      .getElementById("add-trainer-slot")
+      .addEventListener("click", function() {
+        addTrainerSlot(".trainer-search","trainer-slots");});
+    document
+      .getElementById("update-add-trainer-slot")
+      .addEventListener("click", function() {
+        addTrainerSlot(".update-trainer-search","update-trainer-slots");});
     // Event listener for checkbox change
     const eventCheckboxes = document.querySelectorAll(".event-checkbox");
     eventCheckboxes.forEach(function (checkbox) {
@@ -189,7 +280,9 @@ document.addEventListener("DOMContentLoaded", function () {
     filterList("#itemsToFilter li");
     calendar.render();
     $.getJSON(`/trainerdata`, function (data) {
-      let trainer_names = data.map(person => `${person.name} (${person.email})`)
+      let trainer_names = data
+        .filter((person) => person.status !== "Suspended")
+        .map((person) => `${person.name} (${person.email})`);
       autocomplete(document.querySelectorAll(".myInput"), trainer_names);
     });
   });

@@ -16,7 +16,7 @@
     />
     <link rel="stylesheet" type="text/css" href="{{url_prefix}}/static/styles/web.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="module" src="{{url_prefix}}/static/scripts/base.js"></script>
+    <script src="{{url_prefix}}/static/scripts/base.js"></script>
     <script src="
 https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
 "></script>
@@ -45,6 +45,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbar">
+        <h2 class="logo">LifeSaverHub v0.1.0</h2>
         <div class="navbar-nav">
           {% if user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
@@ -59,11 +60,10 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
         </div>
       </div>
     </nav>
-
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %} {% if category ==
     'error' %}
-    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+    <div class="alert alert-danger alter-dismissable fade show" role="alert" style="text-align: center; font-weight: bold; font-size: large;">
       {{ message }}
       <button type="button" class="close" data-dismiss="alert">
         <span aria-hidden="true">&times;</span>

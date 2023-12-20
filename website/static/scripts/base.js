@@ -1,4 +1,4 @@
-export function filterList(filter_selector) {
+function filterList(filter_selector) {
   // get all of our list items
   var itemsToFilter = document.querySelectorAll(filter_selector);
 
@@ -91,7 +91,7 @@ export function filterList(filter_selector) {
   }
 }
 
-export function autocomplete(inputs, arr) {
+function autocomplete(inputs, arr) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/
   console.log("autocomplete function called");

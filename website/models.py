@@ -18,10 +18,7 @@ preferred_event_date_association = db.Table('preferred_event_date_association',
     db.Column('event_date_id', db.Integer, db.ForeignKey('event_date.id'))
 )
 
-trainer_event_association = db.Table('trainer_event_association',
-    db.Column('trainer_id', db.Integer, db.ForeignKey('trainer.id')),
-    db.Column('event_id', db.Integer, db.ForeignKey('event.id'))
-)
+
 assignment_event_association = db.Table('assignment_event_association',
     db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
     db.Column('assignment_id', db.Integer, db.ForeignKey('assignment.id'))
@@ -51,6 +48,7 @@ class Event(db.Model):
     preferred_date = db.relationship('EventDate', secondary=preferred_event_date_association)
     backup_dates = db.relationship('EventDate', secondary=event_date_association)
     mission = db.Column(db.String(500))
+    num_learners = db.Column(db.Integer)
     learners = db.Column(db.String(500))
     place = db.Column(db.String(500))
     chairs_tables = db.Column(db.String(300))
@@ -103,9 +101,6 @@ class Assignment(db.Model):
     end_date = db.Column(db.DateTime(timezone=True))
     formatted_start_date = db.Column(db.String(100))
     formatted_end_time = db.Column(db.String(100))
-    iso_formatted_start_date = db.Column(db.String(100))
-    iso_formatted_end_date = db.Column(db.String(100))
     event_request = db.relationship('Event', secondary=assignment_event_association)
     trainer = db.relationship('Trainer',secondary=assignment_trainer_association,back_populates='events')
     trainer_role = db.Column(db.String(50))
-    status = db.Column(db.String(100))

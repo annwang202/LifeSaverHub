@@ -14,7 +14,7 @@
                 <label>Team Lead</label>
             </li>
             <li>
-                <input checked="true" type="checkbox" value="Suspended"/>
+                <input type="checkbox" value="Suspended"/>
                 <label>Suspended</label>
             </li>
         </ul>
@@ -23,11 +23,29 @@
           <li
             id="trainer_{{trainer.id}}"
             data-type="{{trainer.status}}"
-            class="list-group-item"
+            class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %}"
             style="display: inline-block; border-width: 3px;"
           >
-          <h5>{{trainer.nickname}}</h5>
-          <p>Pronouns: {{trainer.pronouns}}</p>
+          <strong>{{trainer.nickname}}</strong><br>
+          {{trainer.pronouns}}
+          <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
+            <button id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')">Edit trainer</button></div>
+          <div id="update_div_{{ trainer.name }}" style="display:none;">
+            <form id="update_form_{{ trainer.name }}"  name="update_trainer_form" action="/update-trainer" method="POST">
+              <input type="hidden" name="update_trainer_form" value="1">
+              <input type="hidden" name="update_id" value="{{trainer.id}}">
+              <strong>Update status:</strong><br>
+              <select name="status" id="status_{{trainer.name}}">
+                <option value="none" selected disabled hidden>{{trainer.status}}</option>
+                <option value="New">New</option>
+                <option value="Team Lead">Team Lead</option>
+                <option value="Suspended">Suspended</option>
+              </select><br>
+              <strong>Update admin notes:</strong><br>
+              <textarea id="admin_trainer_notes" name="admin_trainer_notes" rows="4" cols="50" style="font-size:10px;">{{trainer.admin_notes}}</textarea><br>
+              <button type="submit" form = "update_form_{{ trainer.name }}" id="update_submit_{{ trainer.name }}" class="btn btn-primary">Update trainer</button>
+            </form>
+          </div>
           <div class="trainer-details">
             <button id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer')">Show/Hide details</button>
             <div id="trainer_details_{{ trainer.id }}" style="display:none;">
@@ -44,33 +62,16 @@
               Relevant experience: {{trainer.relevant_exp}}</br>
               Heartsaver interest: {{trainer.heartsaver_interest}}</br>
               Other languages: {{trainer.languages}}</br>
+              <strong>General availability:</strong><br>
+              {{trainer.gen_avail}}<br>
+            <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
+            <strong>Other info:</strong><br>
+            {{ trainer.other_info }}<br>
+            <strong>Admin notes:</strong><br>
+            {{ trainer.admin_notes }}<br>
             </p>
             </div>
           </div>
-          <div class="update-status"><strong>Status:</strong> {{trainer.status}}</div>
-            <strong>General availability:</strong><br>
-              <div style="margin-left: 20px;">
-              {{trainer.gen_avail}}
-              </div>
-            <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
-            <strong>Other info:</strong><br>
-            <div style="margin-left: 20px;">{{ trainer.other_info }}</div>
-            <strong>Admin notes:</strong><br>
-            <div style="margin-left: 20px;">{{ trainer.admin_notes }}</div>
-            <button id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')">Update trainer status</button>
-            <div id="update_div_{{ trainer.name }}" style="display:none;">
-              <form id="update_form_{{ trainer.name }}"  name="update_trainer_form" action="/update-trainer" method="POST">
-                <input type="hidden" name="update_trainer_form" value="1">
-                <input type="hidden" name="update_id" value="{{trainer.id}}">
-                <select name="status" id="status_{{trainer.name}}">
-                  <option value="none" selected disabled hidden>Select a status</option>
-                  <option value="New">New</option>
-                  <option value="Team Lead">Team Lead</option>
-                  <option value="Suspended">Suspended</option>
-                </select>
-                <button type="submit" form = "update_form_{{ trainer.name }}" id="update_submit_{{ trainer.name }}" class="btn btn-primary">Update event</button>
-              </form>
-            </div>
           </li> 
           {% endfor %}
         </ul>

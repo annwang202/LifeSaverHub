@@ -1,34 +1,15 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<style>
-  .form-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .form-container form {
-    margin: 0 20px; /* Adjust the margin as needed */
-  }
-  .page-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: lightcoral;
-    color: white;
-    padding: 10px;
-  }
-</style>
-<script type="module" src="{{url_prefix}}/static/scripts/matching.js"></script>
+<script src="{{url_prefix}}/static/scripts/matching.js"></script>
+</br>
 <div class="page-title">
   <h2>LifeSaver Hub Scheduling</h2>
 </div>
-</br>
 <div class="schedule_container">
   <div class="box">
+    <h3>Requests</h3>
     <ul class="filterSection">
-      <strong>Show:</strong>
-    </br>
+      Show:
       <li>
           <input checked="true" type="checkbox" value="New"/>
           <label>New</label>
@@ -38,36 +19,23 @@
           <label>Confirmed</label>
       </li>
       <li>
-          <input checked="true" type="checkbox" value="Tentative"/>
-          <label>Tentative</label>
-      </li>
-      <li>
-        <input checked="true" type="checkbox" value="Scheduled"/>
-        <label>Scheduled</label>
-      </li>
-      <li>
-      </br>
-        <input checked="true" type="checkbox" value="Happened"/>
-        <label>Happened</label>
-      </li>
-      <li>
-        <input checked="true" type="checkbox" value="Canceled"/>
+        <input type="checkbox" value="Canceled"/>
         <label>Canceled</label>
       </li>
   </ul>
   <div id="checkAll-uncheckAll">
-    <input type= "button" onclick= 'check()' value= "View All"/>
-    <input type= "button" onclick= 'unCheck()' value= "View None"/>
+    <input type= "button" onclick= 'check(".event-checkbox")' value= "View All"/>
+    <input type= "button" onclick= 'unCheck(".event-checkbox")' value= "View None"/>
     <script>
       var trigger = new Event("change");
-      function check(){
-        var get= document.querySelectorAll(".event-checkbox");
+      function check(checkbox_class){
+        var get= document.querySelectorAll(checkbox_class);
         for(var i= 0; i<get.length; i++){
         get[i].checked= true;
         get[i].dispatchEvent(trigger);}
         }
-      function unCheck(){
-        var get= document.querySelectorAll(".event-checkbox");
+      function unCheck(checkbox_class){
+        var get= document.querySelectorAll(checkbox_class);
         for(var i= 0; i<get.length; i++){
         get[i].checked= false;
         get[i].dispatchEvent(trigger);
@@ -78,11 +46,12 @@
     <!-- Event List -->
     <ul class="list-group list-group-flush" id="itemsToFilter">
       {% for event in events %}
+      {% if event.status == "New" or event.status == "Confirmed" or event.status == "Canceled"%}
       <li
         id="event_{{event.id}}"
-        class="list-group-item"
+        class="list-group-item {% if event.status == 'Canceled' %} hideItem {% endif %}"
         data-type="{{event.status}}"
-        style="border-color: {{ event_colors[(event.id - 1) % event_colors|length][0] }}; border-width: 3px;"
+        style="border-width: 3px; {% if event.status != 'Canceled' %}border-color: {{ event_colors[(event.id - 1) % event_colors|length][0] }}; {% endif %}"
       >
         <strong>{{event.title}}</strong>
         <input
@@ -90,10 +59,10 @@
           class="event-checkbox"
           event-id = "{{ event.id }}"
           value = "{{event.status}}"
-        >
-        <p><strong>Preferred date: </strong></br>{% for preferred_date in event.preferred_date %} {{preferred_date.formatted_start_date}} - {{preferred_date.formatted_end_time}}{% endfor %}</p>
-        <p><strong>Backup dates: </strong></br>{% for date in event.backup_dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}</br>
-          {% endfor %}</p>
+        ><br>
+        <strong>Preferred date: </strong></br>{% for preferred_date in event.preferred_date %} {{preferred_date.formatted_start_date}} - {{preferred_date.formatted_end_time}}{% endfor %}<br>
+        <strong>Backup dates: </strong></br>{% for date in event.backup_dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}</br>
+          {% endfor %}
         <div class="event-details">
           <button name="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'event')">Show/Hide details</button>
           <div id="event_details_{{ event.id }}" style="display:none;">
@@ -102,7 +71,8 @@
             Phone: {{event.phone}}</br>
             Desired training types: {{event.training_types}}</br>
             Mission: {{event.mission}}</br>
-            Learners: {{event.learners}}</br>
+            # learners: {{event.num_learners}}</br>
+            About learners: {{event.learners}}</br>
             Location: {{event.place}}</br>
             Chairs/tables: {{event.chairs_tables}}</br>
             Cultural considerations: {{event.cultural}}</br>
@@ -113,26 +83,32 @@
           </p>
           </div>
         </div>
-    <div class="update-status"><strong>Status:</strong> {{event.status}}</div>
-        <button id="{{event.id}}"class="update-event-option" onClick="showOrHideDropdown(this.id,'update_div')">Update event status</button>
+        <div id="email-requester">
+          <form id = "email-requester-form" action="mailto: {{event.email}}?subject=CCAS: Event request confirmation" method="post" enctype="text/plain">
+            <input type="submit" class="email" value="Email contact">
+            </form>
+        </div>
+    <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{event.status}}</div>
+    <strong>Admin notes: </strong>{{event.admin_notes}}<br>
+        <button id="{{event.id}}"class="update-event-option" onClick="showOrHideDropdown(this.id,'update_div')">Edit request</button>
         <div id="update_div_{{ event.id }}" style="display:none;">
           <form id="update_form_{{ event.id }}"  name="update_form" action="/update-event" method="POST">
             <input type="hidden" name="update_form" value="1">
             <input type="hidden" name="update_id" value="{{event.id}}">
+            <strong>New status: </strong>
             <select name="status" id="status_{{event.id}}">
-              <option value="none" selected disabled hidden>Select a status</option>
+              <option value="{{event.status}}" selected hidden>{{event.status}}</option>
               <option value="New">New</option>
               <option value="Confirmed">Confirmed</option>
-              <option value="Tentative">Tentative</option>
-              <option value="Scheduled">Scheduled</option>
-              <option value="Happened">Happened</option>
               <option value="Canceled">Canceled</option>
-            </select>
+            </select><br>
+            <strong>New admin notes:</strong><br>
+            <textarea id="admin_event_notes" name="admin_event_notes" rows="4" cols="50" style="font-size:10px;">{{event.admin_notes}}</textarea><br>
             <button type="submit" form = "update_form_{{ event.id }}" id="update_submit_{{ event.id }}" class="btn btn-primary">Update event</button>
           </form>
         </div>
-        <p>Admin notes: {{event.admin_notes}}</p>
       </li> 
+      {% endif %}
       {% endfor %}
     </ul>
   </div>
@@ -140,61 +116,87 @@
     <!-- Calendar -->
   </div>
   <div class="box">
+    <h3>Assignments</h3>
+    <!-- view checkbox options -->
+    <ul class="filterSection">
+      Show:
+        <li>
+            <input checked="true" type="checkbox" value="Tentative"/>
+            <label>Tentative</label>
+        </li>
+        <li>
+          <input checked="true" type="checkbox" value="Scheduled"/>
+          <label>Scheduled</label>
+        </li>
+        <li>
+        </br>
+          <input type="checkbox" value="Happened"/>
+          <label>Happened</label>
+        </li>
+    </ul>
     <!-- List of scheduled events + create/edit event function -->
     <ul class="list-group list-group-flush" id="itemsToFilter">
-      {% for assignment in assignments %}
+      {% for assignment_table in assignments %}
+      {% if assignment_table %}
+      {% if assignment_table[0].event_request[0].status != "New" and assignment_table[0].event_request[0].status != "Confirmed" and assignment_table[0].event_request[0].status != "Canceled" %}
       <li
-        id="assignment_{{assignment.id}}"
-        class="list-group-item"
-        data-type="{{assignment.status}}"
-        style="border-color: {{ trainer_colors[(assignment.id - 1) % trainer_colors|length][0] }}; border-width: 3px;"
+        id="assignment_{{assignment_table[0].event_request[0].id}}"
+        class="list-group-item {% if assignment_table[0].event_request[0].status == 'Canceled' or assignment_table[0].event_request[0].status == 'Happened'%} hideItem {% endif %}"
+        data-type="{{assignment_table[0].event_request[0].status}}"
+        style="border-color: {{ trainer_colors[(assignment_table[0].event_request[0].id - 1) % trainer_colors|length][0] }}; border-width: 3px;"
       >
         <input
           type="checkbox"
           class="assignment-checkbox"
-          assignment-id = "{{ assignment.id }}"
-          value = "{{assignment.status}}"
+          assignment-id = "{{ assignment_table[0].event_request[0].id }}"
+          value = "{{assignment_table[0].event_request[0].status}}"
         >
-        <strong>{{assignment.event_request[0].title}}</strong>
-        <p><strong>Date: </strong></br>{{assignment.formatted_start_date}} - {{assignment.formatted_end_time}}</p>
-        <p><strong>Trainers: </strong></br>{% for trainer in assignment.trainer %} {{trainer.nickname}} ({{trainer.email}})</br>{% endfor %}</p>
+        <strong>{{assignment_table[0].event_request[0].title}}</strong><br>
+        <strong>Date: </strong></br>{{assignment_table[0].formatted_start_date}} - {{assignment_table[0].formatted_end_time}}<br>
+        <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for assignment in assignment_table %}<li> {{assignment.trainer[0].nickname}} - {{assignment.trainer_role}} </br> ({{assignment.trainer[0].email}})</li>{% endfor %}</ul></div>
         <div class="assignment-details">
-          <button name="detail_{{assignment.id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'assignment')">Show/Hide details</button>
-          <div id="assignment_detail_{{ assignment.id }}" style="display:none;">
-            <p>Contact name: {{assignment.event_request[0].name}}</br>
-            Email: {{assignment.event_request[0].email}}</br>
-            Phone: {{assignment.event_request[0].phone}}</br>
-            Desired training types: {{assignment.event_request[0].training_types}}</br>
-            Mission: {{assignment.event_request[0].mission}}</br>
-            Learners: {{assignment.event_request[0].learners}}</br>
-            Location: {{assignment.event_request[0].place}}</br>
-            Chairs/tables: {{assignment.event_request[0].chairs_tables}}</br>
-            Cultural considerations: {{assignment.event_request[0].cultural}}</br>
-            Content concerns: {{assignment.event_request[0].content_concerns}}</br>
-            Music: {{assignment.event_request[0].music}}</br>
-            Photography permission: {{assignment.event_request[0].photos}}</br>
-            Additional info: {{assignment.event_request[0].other_info}}
+          <button name="detail_{{assignment_table[0].id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'assignment')">Show/Hide event details</button>
+          <div id="assignment_detail_{{ assignment_table[0].id }}" style="display:none;">
+            <p>Contact name: {{assignment_table[0].event_request[0].name}}</br>
+            Email: {{assignment_table[0].event_request[0].email}}</br>
+            Phone: {{assignment_table[0].event_request[0].phone}}</br>
+            Desired training types: {{assignment_table[0].event_request[0].training_types}}</br>
+            Mission: {{assignment_table[0].event_request[0].mission}}</br>
+            # learners: {{assignment_table[0].event_request[0].num_learners}}</br>
+            Learners: {{assignment_table[0].event_request[0].learners}}</br>
+            Location: {{assignment_table[0].event_request[0].place}}</br>
+            Chairs/tables: {{assignment_table[0].event_request[0].chairs_tables}}</br>
+            Cultural considerations: {{assignment_table[0].event_request[0].cultural}}</br>
+            Content concerns: {{assignment_table[0].event_request[0].content_concerns}}</br>
+            Music: {{assignment_table[0].event_request[0].music}}</br>
+            Photography permission: {{assignment_table[0].event_request[0].photos}}</br>
+            Additional info: {{assignment_table[0].event_request[0].other_info}}
           </p>
           </div>
         </div>
-    <div class="update-status"><strong>Status:</strong> {{assignment.status}}</div>
-        <button name="{{assignment.id}}"class="update-assignment-option" onClick="showOrHideDropdown(this.name,'update_div')">Update event status</button>
-        <div id="update_div_{{ assignment.id }}" style="display:none;">
-          <form id="update_assignment_form_{{ assignment.id }}"  name="update_form" action="/update-assignment" method="POST">
-            <input type="hidden" name="update_form" value="1">
-            <input type="hidden" name="update_id" value="{{assignment.id}}">
-            <select name="assignment_status" id="assignment_status_{{assignment.id}}">
-              <option value="none" selected disabled hidden>Select a status</option>
-              <option value="Tentative">Tentative</option>
-              <option value="Scheduled">Scheduled</option>
-              <option value="Happened">Happened</option>
-              <option value="Canceled">Canceled</option>
-            </select>
-            <button type="submit" form = "update_assignment_form_{{ assignment.id }}" id="update_assignment_submit_{{ assignment.id }}" class="btn btn-primary">Update assignment</button>
-          </form>
+        <div id="email-trainers">
+          <form id = "email-form" action="mailto:{% for assignment in assignment_table %}{{assignment.trainer[0].email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Are you available to volunteer for this event?" method="post" enctype="text/plain">
+            <input type="submit" class="email" value="Email assigned trainers">
+            </form>
+            <form id = "email-all-form" action="mailto:{% for trainer in trainers %}{{trainer.email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Volunteers needed!" method="post" enctype="text/plain">
+              <input type="submit" class="email" value="Email all trainers">
+              </form>
         </div>
-        <p>Admin notes: {{assignment.event_request.admin_notes}}</p>
+    <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{assignment_table[0].event_request[0].status}}</div>
+    <strong>Admin notes:</strong><br>
+    <p>{{assignment_table[0].event_request[0].admin_notes}}</p>
+    <script>
+        let trainersArray_{{assignment_table[0].event_request[0].id}} = [];
+
+        {% for assignment in assignment_table %}
+            var trainerInfo = '{{assignment.trainer[0].nickname }} ({{assignment.trainer[0].email}})';
+            trainersArray_{{assignment_table[0].event_request[0].id}}.push(trainerInfo);
+        {% endfor %}
+    </script>
+        <button class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table[0].event_request[0].id }}, title : '{{ assignment_table[0].event_request[0].title }}', learners: {{ assignment_table[0].event_request[0].num_learners }} , startDate : '{{assignment_table[0].start_date }}', endDate :  '{{assignment_table[0].end_date}}' , formatted_start_date : '{{ assignment_table[0].formatted_start_date }}',formatted_end_time : '{{ assignment_table[0].formatted_end_time  }}',eventStatus : '{{ assignment_table[0].event_request[0].status }}',trainers : trainersArray_{{assignment_table[0].event_request[0].id}}})">Edit event</button>
       </li> 
+      {% endif %}
+      {% endif %}
       {% endfor %}
     </ul>
   </div>
@@ -213,6 +215,7 @@
           <form id="create-assignment" autocomplete="off" name="create-assignment" action="/submit-assignment" method="POST">
             <input type="hidden" name="create-assignment" value="1">
             <div class="time" style="font-weight: bold">Event Time</div>
+            <div class="numLearners"></div>
             <div class="description"></div>
             <input type="hidden" id="assignment-event-id" name="assignment-event-id" value="">
             <input type="hidden" id="assignment-start-date" name="assignment-start-date" value="">
@@ -221,17 +224,85 @@
             <input type="hidden" id="assignment-formatted-end-time" name="assignment-formatted-end-time" value="">
             <div id="assign-trainers">
               <div id="trainer-slots">
-                <div class="trainer-search">
-                  <div class="autocomplete" style="width:300px;">
-                    Trainer
-                    <input id="myInput" class="myInput" type="text" name="trainer-slot[]" placeholder="Search for trainers">
-                    <input id="role" type="text" name="trainer-role[]" placeholder="Trainer role">
+                <div class="leader-search" style="display: flex; align-items: center;">
+                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
+                    <p style="margin: 7px;">Leader</p>
+                    <input class="myInput" type="text" name="trainer-slot[]" placeholder="Search for trainers by name">
+                  </div>
+                </div>
+                <div class="trainer-search" style="display: flex; align-items: center;">
+                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
+                    <p style="margin: 7px;">Trainer</p>
+                    <input class="myInput" type="text" name="trainer-slot[]" placeholder="Search for trainers by name">
                   </div>
                 </div>
               </div>
               <button type="button" id="add-trainer-slot">Add more trainers</button>
             </div>
             <button type="submit" form = "create-assignment" id="assignment_submit" class="btn btn-primary">Create tentative event</button>
+          </form>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="update-assignment">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Modal Title</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form id="update-assignment-form" autocomplete="off" name="update-assignment-form" action="/update-assignment" method="POST">
+            <input type="hidden" name="update-assignment" value="1">
+            <div class="time" style="font-weight: bold">Event Time</div>
+            <div class="numLearners"></div>
+            <div class="description"></div>
+            <input type="hidden" id="update-assignment-event-id" name="update-assignment-event-id" value="">
+            <input type="hidden" id="update-assignment-start-date" name="update-assignment-start-date" value="">
+            <input type="hidden" id="update-assignment-end-date" name="update-assignment-end-date" value="">
+            <input type="hidden" id="update-assignment-formatted-start-date" name="update-assignment-formatted-start-date" value="">
+            <input type="hidden" id="update-assignment-formatted-end-time" name="update-assignment-formatted-end-time" value="">
+            <div id="assign-trainers">
+              <div id="update-trainer-slots">
+                <div class="update-leader-search" style="display: flex; align-items: center;">
+                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
+                    <p style="margin: 7px;">Leader</p>
+                    <input class="myInput" type="text" name="update-trainer-slot[]" placeholder="Search for trainers by name">
+                  </div>
+                </div>
+                <div class="update-trainer-search" style="display: flex; align-items: center;">
+                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
+                    <p style="margin: 7px;">Trainer</p>
+                    <input class="myInput" type="text" name="update-trainer-slot[]" placeholder="Search for trainers by name">
+                  </div>
+                </div>
+              </div>
+              <button type="button" id="update-add-trainer-slot">Add more trainers</button>
+            </div>
+            <strong>Status:</strong> 
+            <select name="update_assignment_status">
+              <option id="current-status" value="" selected hidden>Text content</option>
+              <option value="New">New</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Tentative">Tentative</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Happened">Happened</option>
+              <option value="Canceled">Canceled</option>
+            </select><br>
+            <strong>Admin notes:</strong><br>
+            <textarea id="admin_notes_input" name="admin_notes_input" rows="4" cols="50" style="font-size:10px;">Note</textarea><br>
+            <button type="submit" form = "update-assignment-form" id="update-assignment-submit" class="btn btn-primary">Update event</button>
           </form>
         </div>
         <!-- Modal footer -->

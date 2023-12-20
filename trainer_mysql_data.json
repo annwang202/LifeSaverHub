@@ -4,41 +4,79 @@
     "events": [],
     "full-name": "John Doe II",
     "id": 1,
-    "name": "John Doe"
+    "name": "John Doe",
+    "status": "Team Lead"
   },
   {
-    "email": "janedoe@fakeemail.com",
+    "email": "bobjoejr@fakeemail.com",
     "events": [],
-    "full-name": "Jane Doe II",
+    "full-name": "Bob Joe Jr.",
     "id": 2,
-    "name": "Jane Doe"
+    "name": "Bob Joe",
+    "status": "Suspended"
   },
   {
-    "email": "joshdoe@fakeemail.com",
+    "email": "megstallion@fakeemail.com",
     "events": [],
-    "full-name": "Josh Doe II",
+    "full-name": "Megan Thee Stallion",
     "id": 3,
-    "name": "Josh Doe"
+    "name": "Meg Stallion",
+    "status": "Team Lead"
   },
   {
     "email": "anniewang@fakeemail.com",
     "events": [],
     "full-name": "Ann Wang",
     "id": 4,
-    "name": "Annie Wang"
+    "name": "Annie Wang",
+    "status": "New"
   },
   {
-    "email": "bananamilkshake@fakeemail.com",
+    "email": "janedoe@fakeemail.com",
     "events": [],
-    "full-name": "Banana Milkshake",
+    "full-name": "Jane Doe II",
     "id": 5,
-    "name": "Banana"
+    "name": "Jane Doe",
+    "status": "New"
   },
   {
-    "email": "megstallion@fakeemail.com",
+    "email": "joshdoe@fakeemail.com",
     "events": [],
-    "full-name": "Megan Thee Stallion",
+    "full-name": "Josh Doe II",
     "id": 6,
-    "name": "Meg Stallion"
+    "name": "Josh Doe",
+    "status": "New"
+  },
+  {
+    "email": "johnnysmith@fakeemail.com",
+    "events": [],
+    "full-name": "John Smith III",
+    "id": 7,
+    "name": "Johnny Smith",
+    "status": "New"
+  },
+  {
+    "email": "bettywhite@fakeemail.com",
+    "events": [],
+    "full-name": "Betty White",
+    "id": 8,
+    "name": "Betty White",
+    "status": "New"
+  },
+  {
+    "email": "jimmyfallon@fakeemail.com",
+    "events": [],
+    "full-name": "James Thomas Fallon",
+    "id": 9,
+    "name": "Jimmy Fallon",
+    "status": "New"
+  },
+  {
+    "email": "mollymckay@fakeemail.com",
+    "events": [],
+    "full-name": "Molly McKay",
+    "id": 10,
+    "name": "Molly McKay",
+    "status": "New"
   }
 ]
