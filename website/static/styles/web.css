@@ -194,3 +194,8 @@ body{
   textarea[readonly] {
     border: none;
 }
+
+/*trainer application page*/
+.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr {
+  display: none;
+}

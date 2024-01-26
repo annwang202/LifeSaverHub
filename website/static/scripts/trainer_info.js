@@ -1,5 +1,3 @@
-import { filterList } from "./base.js";
-
 document.addEventListener("DOMContentLoaded", function () {
     filterList("#trainerInfoFilter li");
     
