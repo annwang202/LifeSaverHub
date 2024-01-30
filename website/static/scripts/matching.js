@@ -36,6 +36,7 @@ function showEditModalfunction({
   formatted_start_date,
   formatted_end_time,
   eventStatus,
+  leader,
   trainers,
 } = {}) {
   var modal = $("#update-assignment");
@@ -72,6 +73,9 @@ function showEditModalfunction({
     let input = slot.querySelector('input[type="text"]');
     input.value = trainers[index];
   }
+  const leadSlot = trainerSlotsContainer.querySelector(".update-leader-search");
+  let leadInput = leadSlot.querySelector('input[type="text"]');
+  leadInput.value = leader;
   modal.modal();
 }
 

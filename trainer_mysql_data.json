@@ -2,145 +2,17 @@
   {
     "email": "johndoe@fakeemail.com",
     "events": [],
-    "full-name": "John Doe II",
+    "full-name": "John Doe",
     "id": 1,
-    "name": "John Doe",
-    "status": "Team Lead"
-  },
-  {
-    "email": "bobjoejr@fakeemail.com",
-    "events": [],
-    "full-name": "Bob Joe Jr.",
-    "id": 2,
-    "name": "Bob Joe",
-    "status": "Suspended"
-  },
-  {
-    "email": "megstallion@fakeemail.com",
-    "events": [],
-    "full-name": "Megan Thee Stallion",
-    "id": 3,
-    "name": "Meg Stallion",
-    "status": "Team Lead"
-  },
-  {
-    "email": "anniewang@fakeemail.com",
-    "events": [],
-    "full-name": "Ann Wang",
-    "id": 4,
-    "name": "Annie Wang",
+    "name": "Johnny Doe",
     "status": "New"
   },
   {
     "email": "janedoe@fakeemail.com",
     "events": [],
     "full-name": "Jane Doe II",
-    "id": 5,
+    "id": 2,
     "name": "Jane Doe",
-    "status": "New"
-  },
-  {
-    "email": "joshdoe@fakeemail.com",
-    "events": [],
-    "full-name": "Josh Doe II",
-    "id": 6,
-    "name": "Josh Doe",
-    "status": "New"
-  },
-  {
-    "email": "johnnysmith@fakeemail.com",
-    "events": [],
-    "full-name": "John Smith III",
-    "id": 7,
-    "name": "Johnny Smith",
-    "status": "New"
-  },
-  {
-    "email": "bettywhite@fakeemail.com",
-    "events": [],
-    "full-name": "Betty White",
-    "id": 8,
-    "name": "Betty White",
-    "status": "New"
-  },
-  {
-    "email": "jimmyfallon@fakeemail.com",
-    "events": [],
-    "full-name": "James Thomas Fallon",
-    "id": 9,
-    "name": "Jimmy Fallon",
-    "status": "New"
-  },
-  {
-    "email": "mollymckay@fakeemail.com",
-    "events": [],
-    "full-name": "Molly McKay",
-    "id": 10,
-    "name": "Molly McKay",
-    "status": "New"
-  },
-  {
-    "email": "adsfa@asdfasd.com",
-    "events": [],
-    "full-name": "asdfads",
-    "id": 11,
-    "name": "asdfads",
-    "status": "New"
-  },
-  {
-    "email": "asdfad@asdfasdf.com",
-    "events": [],
-    "full-name": "adfads",
-    "id": 12,
-    "name": "adfads",
-    "status": "New"
-  },
-  {
-    "email": "adsfa@asdfasd.com",
-    "events": [],
-    "full-name": "asdfad",
-    "id": 13,
-    "name": "adsfad",
-    "status": "New"
-  },
-  {
-    "email": "adsfa@asdfasd.com",
-    "events": [],
-    "full-name": "adfads",
-    "id": 14,
-    "name": "asdfa",
-    "status": "New"
-  },
-  {
-    "email": "adfa@asdfasd.com",
-    "events": [],
-    "full-name": "asdfa",
-    "id": 15,
-    "name": "asdfads",
-    "status": "New"
-  },
-  {
-    "email": "asdfa@asdfasd.com",
-    "events": [],
-    "full-name": "adsfad",
-    "id": 16,
-    "name": "asdfasd",
-    "status": "New"
-  },
-  {
-    "email": "asdfadsf@asdfad.com",
-    "events": [],
-    "full-name": "adsfad",
-    "id": 17,
-    "name": "ASDdfsdf",
-    "status": "New"
-  },
-  {
-    "email": "asfasdfa@asdfad.com",
-    "events": [],
-    "full-name": "Example Trainer",
-    "id": 18,
-    "name": "Example Trainer",
-    "status": "New"
+    "status": "Team Lead"
   }
 ]

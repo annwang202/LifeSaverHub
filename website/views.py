@@ -36,7 +36,7 @@ def home():
             continue
         info = {"event":event,"trainers":[],"assignments":[]}
         for assignment in event_assignments:
-            trainer = Trainer.query.filter(Trainer.id == assignment.trainer_id)
+            trainer = Trainer.query.filter(Trainer.id == assignment.trainer_id).first()
             role = ""
             if (assignment.isLead):
                 role = "Team Lead"
@@ -162,7 +162,6 @@ def submit_trainer():
                     heartsaver_instructor_interest = 'Yes'
             else:
                 heartsaver_instructor_interest = 'No'
-            trainer_availability = request.form["trainer_availability"]
             '''
             date_entries = request.form.getlist("date[]")  # Retrieve multiple date entries
             start_times = request.form.getlist("start_time[]")  # Retrieve multiple start times
@@ -182,7 +181,7 @@ def submit_trainer():
                                   race_ethnicity=trainer_race, how_did_you_hear=how_did_you_hear,
                                   phone=trainer_phone, text_or_call=text_or_call, email=trainer_email, education=trainer_education,
                                   lifesaver_skills=ls_skills_background_string, relevant_exp=relevant_experience,
-                                  heartsaver_interest=heartsaver_instructor_interest, gen_avail=trainer_availability, hrs_per_month=preferred_hrs_per_month,
+                                  heartsaver_interest=heartsaver_instructor_interest, hrs_per_month=preferred_hrs_per_month,
                                   languages=trainer_languages, other_info=other_info, status="New")
             '''
             for date, start_time, end_time in zip(date_entries, start_times, end_times):
@@ -221,12 +220,12 @@ def submit_assignment():
                 trainer_name_and_emails = request.form.getlist(
                     "trainer-slot[]")
                 team_lead = request.form["leader-slot"]
+                event = Event.query.get(event_id)
                 lead_assignment=create_assignment(trainer=team_lead,event=event,start_date=start_date,end_date=end_date,
                                                            formatted_start_date=formatted_start_date,
                                                            formatted_end_time=formatted_end_time,isLead=True)
                 db.session.add(lead_assignment)
                 print(lead_assignment)
-                event = Event.query.get(event_id)
                 for trainer in trainer_name_and_emails:
                         new_assignment = create_assignment(trainer=trainer,event=event,start_date=start_date,end_date=end_date,
                                                            formatted_start_date=formatted_start_date,
@@ -396,8 +395,6 @@ def delete_event():
 
 @views.route('/eventdata')
 def event_mysql_to_json():
-    # Assuming you have a SQLAlchemy model for the table you want to export
-    # Replace 'YourModel' with the actual name of your SQLAlchemy model
     from .models import User, Event, EventDate
 
     # Query the data from the database
@@ -486,7 +483,35 @@ def trainer_mysql_to_json():
 
     return json_data
 
-
+@views.route('/trainer_availability', methods=['POST'])
+def trainer_availability():
+    print("Hello")
+    if request.method == 'POST':
+        try:
+            json_data = request.get_json()[0]
+            times = json_data.get('events')
+            print("Posting:",json_data)
+            for slot in times:
+                name = slot['extendedProps']['trainerName']
+                start_date = datetime.strptime(slot['startStr'], '%Y-%m-%dT%H:%M:%S%z')
+                end_date = datetime.strptime(slot['endStr'], '%Y-%m-%dT%H:%M:%S%z')
+                iso_formatted_start_date = slot['startStr']
+                iso_formatted_end_date = slot['endStr']
+                formatted_start_time = start_date.strftime('%A, %I:%M %p')
+                formatted_end_time = end_date.strftime('%A, %I:%M %p')
+                new_availability = TrainerDate(trainerName=name,start_date=start_date,
+                                               end_date=end_date,iso_formatted_start_date=iso_formatted_start_date,
+                                               iso_formatted_end_date=iso_formatted_end_date,formatted_start_time=formatted_start_time,
+                                               formatted_end_time=formatted_end_time)
+                db.session.add(new_availability)
+            db.session.commit()
+            print('Received JSON Data:', json_data)
+            return jsonify(json_data)
+        except Exception as e:
+            print(str(e))
+            return jsonify({'status': 'error', 'message': str(e)})
+    else:
+        print('request.method is not POST. It is: ', request.method)
 '''
 ############
 @views.route('/icsfinalcalendar')

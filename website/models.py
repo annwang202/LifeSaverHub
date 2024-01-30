@@ -79,9 +79,10 @@ class Trainer(db.Model):
 
 class TrainerDate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    trainerName = db.Column(db.String(50))
     start_date = db.Column(db.DateTime(timezone=True))
     end_date = db.Column(db.DateTime(timezone=True))
-    formatted_start_date = db.Column(db.String(100))
+    formatted_start_time = db.Column(db.String(100))
     formatted_end_time = db.Column(db.String(100))
     iso_formatted_start_date = db.Column(db.String(100))
     iso_formatted_end_date = db.Column(db.String(100))
