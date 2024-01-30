@@ -136,66 +136,64 @@
     </ul>
     <!-- List of scheduled events + create/edit event function -->
     <ul class="list-group list-group-flush" id="itemsToFilter">
-      {% for assignment_table in assignments %}
+      {% for assignment_table in assignments_by_event %}
       {% if assignment_table %}
-      {% if assignment_table[0].event_request[0].status != "New" and assignment_table[0].event_request[0].status != "Confirmed" and assignment_table[0].event_request[0].status != "Canceled" %}
       <li
-        id="assignment_{{assignment_table[0].event_request[0].id}}"
-        class="list-group-item {% if assignment_table[0].event_request[0].status == 'Canceled' or assignment_table[0].event_request[0].status == 'Happened'%} hideItem {% endif %}"
-        data-type="{{assignment_table[0].event_request[0].status}}"
-        style="border-color: {{ trainer_colors[(assignment_table[0].event_request[0].id - 1) % trainer_colors|length][0] }}; border-width: 3px;"
+        id="assignment_{{assignment_table['event'].id}}"
+        class="list-group-item {% if assignment_table['event'].status == 'Canceled' or assignment_table['event'].status == 'Happened'%} hideItem {% endif %}"
+        data-type="{{assignment_table['event'].status}}"
+        style="border-color: {{ trainer_colors[(assignment_table['event'].id - 1) % trainer_colors|length][0] }}; border-width: 3px;"
       >
         <input
           type="checkbox"
           class="assignment-checkbox"
-          assignment-id = "{{ assignment_table[0].event_request[0].id }}"
-          value = "{{assignment_table[0].event_request[0].status}}"
+          assignment-id = "{{ assignment_table['event'].id }}"
+          value = "{{assignment_table['event'].status}}"
         >
-        <strong>{{assignment_table[0].event_request[0].title}}</strong><br>
-        <strong>Date: </strong></br>{{assignment_table[0].formatted_start_date}} - {{assignment_table[0].formatted_end_time}}<br>
-        <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for assignment in assignment_table %}<li> {{assignment.trainer[0].nickname}} - {{assignment.trainer_role}} </br> ({{assignment.trainer[0].email}})</li>{% endfor %}</ul></div>
+        <strong>{{assignment_table['event'].title}}</strong><br>
+        <strong>Date: </strong></br>{{assignment_table['assignments'][0].formatted_start_date}} - {{assignment_table['assignments'][0].formatted_end_time}}<br>
+        <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for trainer in assignment_table['trainers'] %}<li> {{trainer["trainer"].nickname}} - {{trainer["role"]}} </br> ({{trainer["trainer"].email}})</li>{% endfor %}</ul></div>
         <div class="assignment-details">
-          <button name="detail_{{assignment_table[0].id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'assignment')">Show/Hide event details</button>
-          <div id="assignment_detail_{{ assignment_table[0].id }}" style="display:none;">
-            <p>Contact name: {{assignment_table[0].event_request[0].name}}</br>
-            Email: {{assignment_table[0].event_request[0].email}}</br>
-            Phone: {{assignment_table[0].event_request[0].phone}}</br>
-            Desired training types: {{assignment_table[0].event_request[0].training_types}}</br>
-            Mission: {{assignment_table[0].event_request[0].mission}}</br>
-            # learners: {{assignment_table[0].event_request[0].num_learners}}</br>
-            Learners: {{assignment_table[0].event_request[0].learners}}</br>
-            Location: {{assignment_table[0].event_request[0].place}}</br>
-            Chairs/tables: {{assignment_table[0].event_request[0].chairs_tables}}</br>
-            Cultural considerations: {{assignment_table[0].event_request[0].cultural}}</br>
-            Content concerns: {{assignment_table[0].event_request[0].content_concerns}}</br>
-            Music: {{assignment_table[0].event_request[0].music}}</br>
-            Photography permission: {{assignment_table[0].event_request[0].photos}}</br>
-            Additional info: {{assignment_table[0].event_request[0].other_info}}
+          <button name="detail_{{assignment_table['event'].id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'assignment')">Show/Hide event details</button>
+          <div id="assignment_detail_{{ assignment_table['event'].id }}" style="display:none;">
+            <p>Contact name: {{assignment_table['event'].name}}</br>
+            Email: {{assignment_table['event'].email}}</br>
+            Phone: {{assignment_table['event'].phone}}</br>
+            Desired training types: {{assignment_table['event'].training_types}}</br>
+            Mission: {{assignment_table['event'].mission}}</br>
+            # learners: {{assignment_table['event'].num_learners}}</br>
+            Learners: {{assignment_table['event'].learners}}</br>
+            Location: {{assignment_table['event'].place}}</br>
+            Chairs/tables: {{assignment_table['event'].chairs_tables}}</br>
+            Cultural considerations: {{assignment_table['event'].cultural}}</br>
+            Content concerns: {{assignment_table['event'].content_concerns}}</br>
+            Music: {{assignment_table['event'].music}}</br>
+            Photography permission: {{assignment_table['event'].photos}}</br>
+            Additional info: {{assignment_table['event'].other_info}}
           </p>
           </div>
         </div>
         <div id="email-trainers">
-          <form id = "email-form" action="mailto:{% for assignment in assignment_table %}{{assignment.trainer[0].email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Are you available to volunteer for this event?" method="post" enctype="text/plain">
+          <form id = "email-form" action="mailto:{% for trainer in assignment_table['trainers'] %}{{trainer['trainer'].email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Are you available to volunteer for this event?" method="post" enctype="text/plain">
             <input type="submit" class="email" value="Email assigned trainers">
             </form>
             <form id = "email-all-form" action="mailto:{% for trainer in trainers %}{{trainer.email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Volunteers needed!" method="post" enctype="text/plain">
               <input type="submit" class="email" value="Email all trainers">
               </form>
         </div>
-    <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{assignment_table[0].event_request[0].status}}</div>
+    <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{assignment_table['event'].status}}</div>
     <strong>Admin notes:</strong><br>
-    <p>{{assignment_table[0].event_request[0].admin_notes}}</p>
+    <p>{{assignment_table['event'].admin_notes}}</p>
     <script>
-        let trainersArray_{{assignment_table[0].event_request[0].id}} = [];
+        let trainersArray_{{assignment_table['event'].id}} = [];
 
-        {% for assignment in assignment_table %}
-            var trainerInfo = '{{assignment.trainer[0].nickname }} ({{assignment.trainer[0].email}})';
-            trainersArray_{{assignment_table[0].event_request[0].id}}.push(trainerInfo);
+        {% for trainer in assignment_table["trainers"] %}
+            var trainerInfo = '{{trainer["trainer"].nickname }} ({{trainer["trainer"].email}})';
+            trainersArray_{{assignment_table['event'].id}}.push(trainerInfo);
         {% endfor %}
     </script>
-        <button class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table[0].event_request[0].id }}, title : '{{ assignment_table[0].event_request[0].title }}', learners: {{ assignment_table[0].event_request[0].num_learners }} , startDate : '{{assignment_table[0].start_date }}', endDate :  '{{assignment_table[0].end_date}}' , formatted_start_date : '{{ assignment_table[0].formatted_start_date }}',formatted_end_time : '{{ assignment_table[0].formatted_end_time  }}',eventStatus : '{{ assignment_table[0].event_request[0].status }}',trainers : trainersArray_{{assignment_table[0].event_request[0].id}}})">Edit event</button>
+        <button class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table['event'].id }}, title : '{{ assignment_table['event'].title }}', learners: {{ assignment_table['event'].num_learners }} , startDate : '{{assignment_table['assignments'][0].start_date }}', endDate :  '{{assignment_table['assignments'][0].end_date}}' , formatted_start_date : '{{ assignment_table['assignments'][0].formatted_start_date }}',formatted_end_time : '{{ assignment_table['assignments'][0].formatted_end_time  }}',eventStatus : '{{ assignment_table['event'].status }}',trainers : trainersArray_{{assignment_table['event'].id}}})">Edit event</button>
       </li> 
-      {% endif %}
       {% endif %}
       {% endfor %}
     </ul>
@@ -227,13 +225,13 @@
                 <div class="leader-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Leader</p>
-                    <input class="leadInput" type="text" name="trainer-slot[]" placeholder="Search for trainers by name">
+                    <input class="leaderInput" type="text" name="leader-slot" placeholder="Search for Team Leads by name">
                   </div>
                 </div>
                 <div class="trainer-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Trainer</p>
-                    <input class="myInput" type="text" name="trainer-slot[]" placeholder="Search for trainers by name">
+                    <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Search for trainers by name">
                   </div>
                 </div>
               </div>

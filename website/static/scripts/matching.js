@@ -283,11 +283,11 @@ document.addEventListener("DOMContentLoaded", function () {
       let trainer_names = data
         .filter((person) => person.status !== "Suspended")
         .map((person) => `${person.name} (${person.email})`);
-      let lead_names = data
-        .filter((person) => person.status === "Team Lead")
-        .map((person) => `${person.name} (${person.email})`);
-      autocomplete(document.querySelectorAll(".myInput"), trainer_names);
-      autocomplete(document.querySelectorAll(".leadInput"), lead_names);
+      let leader_names = data
+      .filter((person) => person.status === "Team Lead")
+      .map((person) => `${person.name} (${person.email})`);
+      autocomplete(document.querySelectorAll(".trainerInput"), trainer_names);
+      autocomplete(document.querySelectorAll(".leaderInput"), leader_names);
     });
   });
 });

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Event, EventDate, Trainer, TrainerDate, Assignment,assignment_event_association,assignment_trainer_association
+from .models import Event, EventDate, Trainer, TrainerDate, Assignment
 from . import db
 import json
 from datetime import datetime
@@ -21,23 +21,30 @@ trainer_colors = [["#044080", white], ["#0889d4", white], ["#8dcbd9", white], ["
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    assignments = []
     events = (
         Event.query
         .join(Event.preferred_date).order_by(EventDate.start_date)
     )
-    for event in events:
-        if event.backup_dates:
-            event.backup_dates.sort(key=lambda date: date.start_date)
-        assignments.append(Assignment.query
-            .join(assignment_event_association)  # Join the association table
-            .join(Event)  # Join the Event model
-            .join(assignment_trainer_association)
-            .join(Trainer)
-            .filter(Event.id == event.id)  # Filter by the specific event request
-            .options(joinedload(Assignment.trainer))  # Optionally load the associated trainers
-            .all())
+    assignments = Assignment.query.all()
     trainers = Trainer.query.all()
+
+    #for loading scheduled assignments column
+    assignments_by_event = []
+    for event in events:
+        event_assignments = event.assignments.all()
+        if (not event_assignments):
+            continue
+        info = {"event":event,"trainers":[],"assignments":[]}
+        for assignment in event_assignments:
+            trainer = Trainer.query.filter(Trainer.id == assignment.trainer_id)
+            role = ""
+            if (assignment.isLead):
+                role = "Team Lead"
+            else:
+                role = "Trainer"
+            info["trainers"].append({"trainer":trainer,"role":role})
+            info["assignments"].append(assignment)
+        assignments_by_event.append(info)
     '''
     assignments = Assignment.query.options(
         joinedload(Assignment.event_request)).all()
@@ -47,7 +54,7 @@ def home():
     '''
     trainers_data = [{'id': trainer.id, 'name': trainer.name,
                       'gen_avail': trainer.gen_avail} for trainer in trainers]
-    return render_template("home.html", user=current_user, events=events, trainers=trainers, assignments=assignments, trainers_data=trainers_data, event_colors=event_colors, trainer_colors=trainer_colors)
+    return render_template("home.html", user=current_user, events=events, trainers=trainers, assignments=assignments, assignments_by_event=assignments_by_event, trainers_data=trainers_data, event_colors=event_colors, trainer_colors=trainer_colors)
 
 
 @views.route('/trainee', methods=['GET', 'POST'])
@@ -110,7 +117,7 @@ def submit_event():
             other_info = request.form.get("event_other_info")
             status = "New"
             new_event = Event(name=name, email=email, phone=phone, title=title, training_types=training_types_string,
-                              mission=mission, num_learners=num_learners,learners=learners, place=place, chairs_tables=chairs_tables, cultural=cultural,
+                              mission=mission, num_learners=num_learners, learners=learners, place=place, chairs_tables=chairs_tables, cultural=cultural,
                               content_concerns=content_concerns, music=music, photos=photos, other_info=other_info, status=status)
             if backup_dates[0] and backup_starts[0] and backup_ends[0]:
                 backup_eventDates = create_event_dates(
@@ -155,6 +162,7 @@ def submit_trainer():
                     heartsaver_instructor_interest = 'Yes'
             else:
                 heartsaver_instructor_interest = 'No'
+            trainer_availability = request.form["trainer_availability"]
             '''
             date_entries = request.form.getlist("date[]")  # Retrieve multiple date entries
             start_times = request.form.getlist("start_time[]")  # Retrieve multiple start times
@@ -174,7 +182,7 @@ def submit_trainer():
                                   race_ethnicity=trainer_race, how_did_you_hear=how_did_you_hear,
                                   phone=trainer_phone, text_or_call=text_or_call, email=trainer_email, education=trainer_education,
                                   lifesaver_skills=ls_skills_background_string, relevant_exp=relevant_experience,
-                                  heartsaver_interest=heartsaver_instructor_interest, hrs_per_month=preferred_hrs_per_month,
+                                  heartsaver_interest=heartsaver_instructor_interest, gen_avail=trainer_availability, hrs_per_month=preferred_hrs_per_month,
                                   languages=trainer_languages, other_info=other_info, status="New")
             '''
             for date, start_time, end_time in zip(date_entries, start_times, end_times):
@@ -212,34 +220,17 @@ def submit_assignment():
                 formatted_end_time = request.form["assignment-formatted-end-time"]
                 trainer_name_and_emails = request.form.getlist(
                     "trainer-slot[]")
+                team_lead = request.form["leader-slot"]
+                lead_assignment=create_assignment(trainer=team_lead,event=event,start_date=start_date,end_date=end_date,
+                                                           formatted_start_date=formatted_start_date,
+                                                           formatted_end_time=formatted_end_time,isLead=True)
+                db.session.add(lead_assignment)
+                print(lead_assignment)
                 event = Event.query.get(event_id)
                 for trainer in trainer_name_and_emails:
-                    # Split by spaces and parentheses
-                    if (trainer):
-                        split = re.split(r'\s\(|\)', trainer)
-
-                        # Remove empty strings from the result
-                        result = list(filter(None, split))
-                        if(len(result)<2):
-                            flash('Trainer ' + trainer + ' not found!', category='error')
-                            continue
-                        trainer_name = result[0]
-                        trainer_email = result[1]
-                        print(trainer_name)
-                        print(trainer_email)
-                        cur_trainer = Trainer.query.filter(
-                            Trainer.nickname == trainer_name, Trainer.email == trainer_email).first()
-                        if (not cur_trainer):
-                            continue
-                        print(cur_trainer)
-                        event.status = "Tentative" #only change event status to Tentative if there is a trainer to assign to it
-                        new_assignment = Assignment(start_date=start_date,
-                                                    end_date=end_date,
-                                                    formatted_start_date=formatted_start_date,
-                                                    formatted_end_time=formatted_end_time,
-                                                    trainer_role=cur_trainer.status)
-                        new_assignment.event_request.append(event)
-                        new_assignment.trainer.append(cur_trainer)
+                        new_assignment = create_assignment(trainer=trainer,event=event,start_date=start_date,end_date=end_date,
+                                                           formatted_start_date=formatted_start_date,
+                                                           formatted_end_time=formatted_end_time,isLead=False)
                         # adding the note to the database
                         db.session.add(new_assignment)
                         print(new_assignment)
@@ -250,6 +241,33 @@ def submit_assignment():
     return redirect(url_for('views.home'))
 
 
+def create_assignment(trainer,event,start_date,end_date,formatted_start_date,formatted_end_time,isLead):
+    if (trainer):
+        split = re.split(r'\s\(|\)', trainer)
+        result = list(filter(None, split))
+        if (len(result) < 2):
+            flash('Trainer ' + trainer + ' not found!', category='error')
+            return None
+        trainer_name = result[0]
+        trainer_email = result[1]
+        print(trainer_name)
+        print(trainer_email)
+        cur_trainer = Trainer.query.filter(
+            Trainer.nickname == trainer_name, Trainer.email == trainer_email).first()
+        if (not cur_trainer):
+            return None
+        print(cur_trainer)
+        # only change event status to Tentative if there is a trainer to assign to it
+        event.status = "Tentative"
+        new_assignment = Assignment(start_date=start_date,
+                                    end_date=end_date,
+                                    formatted_start_date=formatted_start_date,
+                                    formatted_end_time=formatted_end_time,
+                                    event_id=event.id, trainer_id=cur_trainer.id,
+                                    trainer_status=cur_trainer.status,isLead=isLead)
+        return new_assignment
+
+
 @views.route('/update-event', methods=['GET', 'POST'])
 @login_required
 def update_event():
@@ -257,7 +275,7 @@ def update_event():
         if request.form.get("update_form"):  # get event form submission
             update_id = request.form.get('update_id')
             new_status = request.form.get('status')
-            new_admin_notes= request.form.get('admin_event_notes')
+            new_admin_notes = request.form.get('admin_event_notes')
             event = Event.query.get(update_id)
             if event:
                 # Update the event status
@@ -274,20 +292,21 @@ def update_event():
 @login_required
 def update_trainer():
     if request.method == 'POST':
-            if request.form.get("update_trainer_form"):  # get event form submission
-                update_id = request.form.get('update_id')
-                new_status = request.form.get('status')
-                new_admin_notes= request.form.get('admin_trainer_notes')
-                trainer = Trainer.query.get(update_id)
-                if trainer:
-                    # Update the event status
-                    trainer.status = new_status
-                    trainer.admin_notes = new_admin_notes
-                    db.session.commit()
-                    flash('Trainer updated!', category='success')
-                else:
-                    flash('Trainer not found or could not be updated.', category='error')
+        if request.form.get("update_trainer_form"):  # get event form submission
+            update_id = request.form.get('update_id')
+            new_status = request.form.get('status')
+            new_admin_notes = request.form.get('admin_trainer_notes')
+            trainer = Trainer.query.get(update_id)
+            if trainer:
+                # Update the event status
+                trainer.status = new_status
+                trainer.admin_notes = new_admin_notes
+                db.session.commit()
+                flash('Trainer updated!', category='success')
+            else:
+                flash('Trainer not found or could not be updated.', category='error')
     return redirect(url_for('views.trainer_info'))
+
 
 @views.route('/update-assignment', methods=['GET', 'POST'])
 @login_required
@@ -301,63 +320,48 @@ def update_assignment():
                 new_status = request.form.get('update_assignment_status')
                 print("new status: " + new_status)
                 new_admin_notes = request.form.get('admin_notes_input')
-                trainer_name_and_emails = request.form.getlist("update-trainer-slot[]")
+                team_lead = request.form["update-leader-slot"]
+                trainer_name_and_emails = request.form.getlist(
+                    "update-trainer-slot[]")
                 print(trainer_name_and_emails)
                 date_format = '%Y-%m-%d %H:%M:%S'
-                start_date = datetime.strptime(request.form.get("update-assignment-start-date"), date_format)
-                end_date =  datetime.strptime(request.form.get("update-assignment-end-date"), date_format)
-                formatted_start_date = request.form.get("update-assignment-formatted-start-date")
-                formatted_end_time = request.form.get("update-assignment-formatted-end-time")
+                start_date = datetime.strptime(request.form.get(
+                    "update-assignment-start-date"), date_format)
+                end_date = datetime.strptime(request.form.get(
+                    "update-assignment-end-date"), date_format)
+                formatted_start_date = request.form.get(
+                    "update-assignment-formatted-start-date")
+                formatted_end_time = request.form.get(
+                    "update-assignment-formatted-end-time")
                 event = Event.query.get(int(event_id))
                 if event:
                     # Update the event status
                     print("updating event")
                     remove_asgs = Assignment.query \
-                        .join(assignment_event_association)\
-                        .join(Event)\
-                        .join(assignment_trainer_association)\
-                        .join(Trainer)\
-                        .filter(Event.id == event.id)\
-                        .options(joinedload(Assignment.trainer))\
+                        .filter(Assignment.event_id == event.id)\
                         .all()
                     for assignment in remove_asgs:
                         db.session.delete(assignment)
                         db.session.commit()
-                    if (new_status != 'New' and new_status != 'Confirmed' and new_status !='Canceled'):
+                    if (new_status != 'New' and new_status != 'Confirmed' and new_status != 'Canceled'):
+                        lead_assignment=create_assignment(trainer=team_lead,event=event,start_date=start_date,end_date=end_date,
+                                            formatted_start_date=formatted_start_date,
+                                           formatted_end_time=formatted_end_time,isLead=True)
+                        db.session.add(lead_assignment)
+                        print(lead_assignment)
                         for trainer in trainer_name_and_emails:
-                        # Split by spaces and parentheses
-                            if (trainer):
-                                split = re.split(r'\s\(|\)', trainer)
-                                    # Remove empty strings from the result
-                                result = list(filter(None, split))
-                                if(len(result)<2):
-                                    flash('Trainer ' + trainer + ' not found!', category='error')
-                                    continue
-                                trainer_name = result[0]
-                                trainer_email = result[1]
-                                print(trainer_name)
-                                print(trainer_email)
-                                cur_trainer = Trainer.query.filter(
-                                    Trainer.nickname == trainer_name, Trainer.email == trainer_email).first()
-                                if (not cur_trainer):
-                                    continue
-                                print(cur_trainer)
-                                new_assignment = Assignment(start_date=start_date,
-                                                                end_date=end_date,
-                                                                formatted_start_date=formatted_start_date,
-                                                                formatted_end_time=formatted_end_time,
-                                                                trainer_role=cur_trainer.status)
-                                new_assignment.event_request.append(event)
-                                new_assignment.trainer.append(cur_trainer)
-                                    # adding the note to the database
-                                db.session.add(new_assignment)
-                                db.session.commit()
+                            new_assignment = create_assignment(trainer=trainer,event=event,start_date=start_date,end_date=end_date,
+                                                            formatted_start_date=formatted_start_date,
+                                                            formatted_end_time=formatted_end_time,isLead=False)
+                            db.session.add(new_assignment)
+                            print(new_assignment)
                     event.status = new_status
                     event.admin_notes = new_admin_notes
                     db.session.commit()
                     flash('Event updated!', category='success')
                 else:
-                    flash('Event not found or could not be updated.', category='error')
+                    flash('Event not found or could not be updated.',
+                          category='error')
             else:
                 print("request.form.get(\"update_assignment\")is false")
         except Exception as e:
@@ -365,16 +369,12 @@ def update_assignment():
             db.session.rollback()  # Rollback the transaction in case of an error
     return redirect(url_for('views.home'))
 
+
 @views.route('/get_assignment_trainers/<int:event_id>', methods=['GET'])
 def get_trainers_count(event_id):
     trainers = Assignment.query \
-                    .join(assignment_event_association)\
-                    .join(Event)\
-                    .join(assignment_trainer_association)\
-                    .join(Trainer)\
-                    .filter(Event.id == event_id)\
-                    .options(joinedload(Assignment.trainer))\
-                    .all()
+        .filter(Assignment.event_id == event_id)\
+        .all()
     if trainers:
         current_trainers = []
         for trainer in trainers:
@@ -475,7 +475,7 @@ def trainer_mysql_to_json():
             event_list.append(time_dict)
         '''
         trainer_dict = {'events': event_list, 'id': trainer.id,
-                        'full-name': trainer.name, 'name': trainer.nickname, 'email': trainer.email, 'status':trainer.status}
+                        'full-name': trainer.name, 'name': trainer.nickname, 'email': trainer.email, 'status': trainer.status}
         sources_list.append(trainer_dict)
     # Convert the data to JSON
     json_data = jsonify(sources_list).get_data(as_text=True)
@@ -487,35 +487,6 @@ def trainer_mysql_to_json():
     return json_data
 
 
-@views.route('/trainer_availability', methods=['POST'])
-def trainer_availability():
-    print("Hello")
-    if request.method == 'POST':
-        try:
-            json_data = request.get_json()[0]
-            times = json_data.get('events')
-            print("Posting:",json_data)
-            for slot in times:
-                name = slot['extendedProps']['trainerName']
-                start_date = datetime.strptime(slot['startStr'], '%Y-%m-%dT%H:%M:%S%z')
-                end_date = datetime.strptime(slot['endStr'], '%Y-%m-%dT%H:%M:%S%z')
-                iso_formatted_start_date = slot['startStr']
-                iso_formatted_end_date = slot['endStr']
-                formatted_start_time = start_date.strftime('%A, %I:%M %p')
-                formatted_end_time = end_date.strftime('%A, %I:%M %p')
-                new_availability = TrainerDate(trainerName=name,start_date=start_date,
-                                               end_date=end_date,iso_formatted_start_date=iso_formatted_start_date,
-                                               iso_formatted_end_date=iso_formatted_end_date,formatted_start_time=formatted_start_time,
-                                               formatted_end_time=formatted_end_time)
-                db.session.add(new_availability)
-            db.session.commit()
-            print('Received JSON Data:', json_data)
-            return jsonify(json_data)
-        except Exception as e:
-            print(str(e))
-            return jsonify({'status': 'error', 'message': str(e)})
-    else:
-        print('request.method is not POST. It is: ', request.method)
 '''
 ############
 @views.route('/icsfinalcalendar')

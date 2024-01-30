@@ -19,15 +19,6 @@ preferred_event_date_association = db.Table('preferred_event_date_association',
 )
 
 
-assignment_event_association = db.Table('assignment_event_association',
-    db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
-    db.Column('assignment_id', db.Integer, db.ForeignKey('assignment.id'))
-)
-assignment_trainer_association = db.Table('assignment_trainer_association',
-    db.Column('trainer_id', db.Integer, db.ForeignKey('trainer.id')),
-    db.Column('assignment_id', db.Integer, db.ForeignKey('assignment.id'))
-)
-
 class EventDate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.DateTime(timezone=True))
@@ -59,6 +50,7 @@ class Event(db.Model):
     other_info = db.Column(db.String(1500))
     status = db.Column(db.String(100))
     admin_notes = db.Column(db.String(500))
+    assignments = db.relationship('Assignment', backref = 'event', cascade = 'all, delete-orphan', lazy = 'dynamic')
 
 class Trainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -82,16 +74,14 @@ class Trainer(db.Model):
     other_info = db.Column(db.String(1500))
     documents = db.Column(db.String(256))
     status = db.Column(db.String(100))
-    
-    events = db.relationship('Assignment', secondary=assignment_trainer_association)
+    assignments = db.relationship('Assignment', backref = 'trainer', cascade = 'all, delete-orphan', lazy = 'dynamic')
     admin_notes = db.Column(db.String(1500))
 
 class TrainerDate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    trainerName = db.Column(db.String(50))
     start_date = db.Column(db.DateTime(timezone=True))
     end_date = db.Column(db.DateTime(timezone=True))
-    formatted_start_time = db.Column(db.String(100))
+    formatted_start_date = db.Column(db.String(100))
     formatted_end_time = db.Column(db.String(100))
     iso_formatted_start_date = db.Column(db.String(100))
     iso_formatted_end_date = db.Column(db.String(100))
@@ -102,6 +92,9 @@ class Assignment(db.Model):
     end_date = db.Column(db.DateTime(timezone=True))
     formatted_start_date = db.Column(db.String(100))
     formatted_end_time = db.Column(db.String(100))
-    event_request = db.relationship('Event', secondary=assignment_event_association)
-    trainer = db.relationship('Trainer',secondary=assignment_trainer_association,back_populates='events')
-    trainer_role = db.Column(db.String(50))
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'),
+        nullable=False)
+    trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'),
+        nullable=False)
+    trainer_status = db.Column(db.String(50))
+    isLead = db.Column(db.Boolean,default=False)
