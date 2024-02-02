@@ -73,8 +73,11 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
         
-        $("#trainer_submit").click(function () {
-            // Send the selected events to the server when the form is submitted
+        document.getElementById('trainer_form').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const formData = new FormData(event.target);  
+          
+          // Send the selected events to the server when the form is submitted
             var trainerName = document.getElementById("trainer_name").value;
             if(trainerName.trim() != ""){
               var events = calendar.getEvents();
@@ -92,23 +95,27 @@ document.addEventListener("DOMContentLoaded", function () {
                       },    
                   };
                 })
-              let eventSource = [{events: eventPlainObjects}]
-              let jsonString = JSON.stringify(eventSource);
-              console.log('JSON Data to be sent:', jsonString);
+              let eventSourceData = {events: eventPlainObjects};
+              formData.append('eventSource', JSON.stringify(eventSourceData));
+              //let jsonString = JSON.stringify(eventSource);
+              //console.log('JSON Data to be sent:', jsonString);
               $.ajax({
-                  url: '/trainer_availability',  // Replace with your Flask endpoint
-                  type: 'POST',
-                  contentType: 'application/json',
-                  data: jsonString,
-                  dataType: 'json',
-                  success: function (response) {
-                      console.log('Events successfully sent to the server');
-                      events = [];  // Clear the selected events after submission
-                  },
-                  error: function (error) {
-                      console.error('Error sending events to the server:', error);
-                  }
-              });
+                url: '/submit-trainer',  // Replace with your server endpoint
+                type: 'POST',
+                contentType: false,  // Use false for FormData
+                processData: false,  // Use false for FormData
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    // Handle the success response from the server
+                    console.log('Data successfully sent to the server');
+                },
+                error: function (error) {
+                    // Handle errors
+                    console.error('Error sending data to the server:', error);
+                }
+            });
+            window.location.href = '/submit-trainer';
             }
         });
         calendar.id = "scheduler"

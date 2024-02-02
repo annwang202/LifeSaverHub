@@ -195,9 +195,29 @@ def submit_trainer():
                     start_date=trainer_date, end_date = end_date, formatted_start_date=formatted_trainer_date, formatted_end_time = formatted_end_time,iso_formatted_start_date=iso8601_start_date,iso_formatted_end_date=iso8601_end_date)
                 new_trainer.gen_avail.append(new_trainer_date)
             '''
-            db.session.add(new_trainer)  # adding the note to the database
+            db.session.add(new_trainer)
             db.session.commit()
             flash('Trainer added to list!', category='success')
+
+            
+            # collect trainerData
+            event_source_data = request.form.get('eventSource')
+            times = json.loads(event_source_data).get('events', [])
+            print("Posting:",times)
+            for slot in times:
+                name = slot.get('extendedProps').get('trainerName') 
+                start_date = datetime.strptime(slot.get('startStr'), '%Y-%m-%dT%H:%M:%S%z')
+                end_date = datetime.strptime(slot.get('endStr'), '%Y-%m-%dT%H:%M:%S%z')
+                iso_formatted_start_date = slot.get('startStr')
+                iso_formatted_end_date = slot.get('endStr')
+                formatted_start_time = start_date.strftime('%A, %I:%M %p')
+                formatted_end_time = end_date.strftime('%A, %I:%M %p')
+                new_availability = TrainerDate(trainerName=name,start_date=start_date,
+                                               end_date=end_date,iso_formatted_start_date=iso_formatted_start_date,
+                                               iso_formatted_end_date=iso_formatted_end_date,formatted_start_time=formatted_start_time,
+                                               formatted_end_time=formatted_end_time,trainer_id = new_trainer.id)
+                db.session.add(new_availability)
+            db.session.commit()
     return redirect(url_for('views.trainer'))
 
 
