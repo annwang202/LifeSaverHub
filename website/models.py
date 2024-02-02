@@ -70,7 +70,7 @@ class Trainer(db.Model):
     gen_avail = db.Column(db.String(500))
     hrs_per_month = db.Column(db.Integer)
     languages = db.Column(db.String(50))
-    #gen_avail = db.relationship('TrainerDate', secondary=trainer_date_association)
+    availabilities = db.relationship('TrainerDate', backref = 'trainer', cascade = 'all, delete-orphan', lazy = 'dynamic')
     other_info = db.Column(db.String(1500))
     documents = db.Column(db.String(256))
     status = db.Column(db.String(100))

@@ -196,6 +196,6 @@ body{
 }
 
 /*trainer application page*/
-.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr {
+#scheduler .fc-header-toolbar.fc-toolbar.fc-toolbar-ltr {
   display: none;
 }

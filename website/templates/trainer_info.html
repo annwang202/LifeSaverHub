@@ -4,11 +4,14 @@
     <div class="trainer-info-container">
         <ul class="filterSection">
             <strong>Show:</strong>
-          </br>
             <li>
                 <input checked="true" type="checkbox" value="New"/>
                 <label>New</label>
             </li>
+            <li>
+              <input checked="true" type="checkbox" value="Basic Trainer">
+              <label>Basic Trainer</label>
+          </li>
             <li>
                 <input checked="true" type="checkbox" value="Team Lead"/>
                 <label>Team Lead</label>
@@ -17,7 +20,25 @@
                 <input type="checkbox" value="Suspended"/>
                 <label>Suspended</label>
             </li>
+            &emsp;
+            <strong>Available on: </strong>
+            <select name="dayOfWeek" id="dayOfWeek">
+              <option value="" selected>Select day of week</option>
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+              <option value="Sunday">Sunday</option>
+            </select>
+            <label for= "start_time">From :</label>
+            <input type="time" name="start_time"/>
+            <label for= "end_time">To :</label>
+            <input type="time" name="end_time"/>
+            <button onClick="">Filter</button>
         </ul>
+        </div>
         <ul class="list-group list-group-flush" id="trainerInfoFilter">
           {% for trainer in trainers %}
           <li
@@ -38,6 +59,7 @@
               <select name="status" id="status_{{trainer.name}}">
                 <option value="none" selected disabled hidden>{{trainer.status}}</option>
                 <option value="New">New</option>
+                <option value="Basic Trainer">Basic Trainer</option>
                 <option value="Team Lead">Team Lead</option>
                 <option value="Suspended">Suspended</option>
               </select><br>

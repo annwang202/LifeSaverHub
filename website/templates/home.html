@@ -198,7 +198,7 @@
             }
         {% endfor %}
     </script>
-        <button class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table['event'].id }}, title : '{{ assignment_table['event'].title }}', learners: {{ assignment_table['event'].num_learners }} , startDate : '{{assignment_table['assignments'][0].start_date }}', endDate :  '{{assignment_table['assignments'][0].end_date}}' , formatted_start_date : '{{ assignment_table['assignments'][0].formatted_start_date }}',formatted_end_time : '{{ assignment_table['assignments'][0].formatted_end_time  }}',eventStatus : '{{ assignment_table['event'].status }}',leader:leader_{{assignment_table['event'].id}},trainers : trainersArray_{{assignment_table['event'].id}}})">Edit event</button>
+        <button class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table['event'].id }}, title : '{{ assignment_table['event'].title }}', learners: {{ assignment_table['event'].num_learners }} , startDate : '{{assignment_table['assignments'][0].start_date }}', endDate :  '{{assignment_table['assignments'][0].end_date}}' , formatted_start_date : '{{ assignment_table['assignments'][0].formatted_start_date }}',formatted_end_time : '{{ assignment_table['assignments'][0].formatted_end_time  }}',eventStatus : '{{ assignment_table['event'].status }}',adminNotes : '{{ assignment_table['event'].admin_notes }}',leader:leader_{{assignment_table['event'].id}},trainers : trainersArray_{{assignment_table['event'].id}}})">Edit event</button>
       </li> 
       {% endif %}
       {% endfor %}
@@ -282,13 +282,13 @@
                 <div class="update-leader-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Leader</p>
-                    <input class="updateLeader" type="text" name="update-leader-slot[]" placeholder="Search for trainers by name">
+                    <input class="leaderInput" type="text" name="update-leader-slot" placeholder="Search for trainers by name">
                   </div>
                 </div>
                 <div class="update-trainer-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Trainer</p>
-                    <input class="updateTrainer" type="text" name="update-trainer-slot[]" placeholder="Search for trainers by name">
+                    <input class="trainerInput" type="text" name="update-trainer-slot[]" placeholder="Search for trainers by name">
                   </div>
                 </div>
               </div>

@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function initializeSchedule() {
       return new Promise(function (resolve) {
         var id = 1;
-        var calendarEl = document.getElementById("calendar");
+        var calendarEl = document.getElementById("scheduler");
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: "timeGridWeek",
           navLinks: false,
@@ -60,16 +60,16 @@ document.addEventListener("DOMContentLoaded", function () {
             updateColumnHeaders();
         }
         });
-        $(".fc-day-number").each(function() { $(this).html(""); }); //remove day numbers
+        $("#scheduler .fc-day-number").each(function() { $(this).html(""); }); //remove day numbers
         
         //change headers to only show days of week
         function updateColumnHeaders() {
-            var columnHeaderCells = document.querySelectorAll('.fc-col-header-cell');
+            var columnHeaderCells = document.querySelectorAll('#scheduler .fc-col-header-cell');
             columnHeaderCells.forEach(function(cell) {
                 var date = cell.getAttribute('data-date');
                 var formattedDate = new Date(date);
                 var dayOfWeek = formattedDate.toLocaleDateString('en-US', { weekday: 'short' });
-                cell.querySelector('.fc-col-header-cell-cushion').textContent = dayOfWeek;
+                cell.querySelector('#scheduler .fc-col-header-cell-cushion').textContent = dayOfWeek;
             });
         }
         
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
               });
             }
         });
-
+        calendar.id = "scheduler"
         calendar.render();
         resolve({ calendar });
       });

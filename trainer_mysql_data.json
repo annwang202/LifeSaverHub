@@ -14,5 +14,29 @@
     "id": 2,
     "name": "Jane Doe",
     "status": "Team Lead"
+  },
+  {
+    "email": "megstallion@fakeemail.com",
+    "events": [],
+    "full-name": "Megan Jovon Ruth Pete",
+    "id": 3,
+    "name": "Megan Thee Stallion",
+    "status": "Basic Trainer"
+  },
+  {
+    "email": "fake@fake.com",
+    "events": [],
+    "full-name": "Ann Wang",
+    "id": 4,
+    "name": "Annie Wang",
+    "status": "Team Lead"
+  },
+  {
+    "email": "markwahlberg@fake.com",
+    "events": [],
+    "full-name": "Mark Wahlberg",
+    "id": 5,
+    "name": "Mark Wahlberg",
+    "status": "New"
   }
 ]

@@ -224,15 +224,16 @@ def submit_assignment():
                 lead_assignment=create_assignment(trainer=team_lead,event=event,start_date=start_date,end_date=end_date,
                                                            formatted_start_date=formatted_start_date,
                                                            formatted_end_time=formatted_end_time,isLead=True)
-                db.session.add(lead_assignment)
-                print(lead_assignment)
+                if(lead_assignment):
+                    db.session.add(lead_assignment)
+                    print(lead_assignment)
                 for trainer in trainer_name_and_emails:
                         new_assignment = create_assignment(trainer=trainer,event=event,start_date=start_date,end_date=end_date,
                                                            formatted_start_date=formatted_start_date,
                                                            formatted_end_time=formatted_end_time,isLead=False)
-                        # adding the note to the database
-                        db.session.add(new_assignment)
-                        print(new_assignment)
+                        if (new_assignment):
+                            db.session.add(new_assignment)
+                            print(new_assignment)
                 db.session.commit()
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -336,6 +337,7 @@ def update_assignment():
                 if event:
                     # Update the event status
                     print("updating event")
+                    # delete old assignments to create new assignmen
                     remove_asgs = Assignment.query \
                         .filter(Assignment.event_id == event.id)\
                         .all()
@@ -343,18 +345,26 @@ def update_assignment():
                         db.session.delete(assignment)
                         db.session.commit()
                     if (new_status != 'New' and new_status != 'Confirmed' and new_status != 'Canceled'):
+                        hasTrainer = False #if event has no trainer assigned, change event status to "New" or "Confirmed"
                         lead_assignment=create_assignment(trainer=team_lead,event=event,start_date=start_date,end_date=end_date,
                                             formatted_start_date=formatted_start_date,
                                            formatted_end_time=formatted_end_time,isLead=True)
-                        db.session.add(lead_assignment)
-                        print(lead_assignment)
+                        if (lead_assignment):
+                            db.session.add(lead_assignment)
+                            print(lead_assignment)
+                            hasTrainer = True
                         for trainer in trainer_name_and_emails:
                             new_assignment = create_assignment(trainer=trainer,event=event,start_date=start_date,end_date=end_date,
                                                             formatted_start_date=formatted_start_date,
                                                             formatted_end_time=formatted_end_time,isLead=False)
-                            db.session.add(new_assignment)
-                            print(new_assignment)
-                    event.status = new_status
+                            if(new_assignment):
+                                db.session.add(new_assignment)
+                                print(new_assignment)
+                                hasTrainer = True
+                    if (not hasTrainer and new_status != "New"):
+                        event.status = "Confirmed"
+                    else:
+                        event.status = new_status
                     event.admin_notes = new_admin_notes
                     db.session.commit()
                     flash('Event updated!', category='success')

@@ -91,7 +91,7 @@ function filterList(filter_selector) {
   }
 }
 
-function autocomplete(inputs, arr) {
+function autocomplete(inputs, full_arr) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/
   console.log("autocomplete function called");
@@ -99,6 +99,13 @@ function autocomplete(inputs, arr) {
   /*execute a function when someone writes in the text field:*/
   inputs.forEach(function (inp) {
     inp.addEventListener("input", function (e) {
+      /*Get already entered trainer names and remove them from dropdown list*/
+      var valuesArray = Array.from(document.querySelectorAll(".trainerInput, .leaderInput")).map(function(input) {
+        return input.value;
+       });
+
+      var arr = full_arr.filter(n => !valuesArray.includes(n))
+
       var a,
         b,
         i,
@@ -116,7 +123,7 @@ function autocomplete(inputs, arr) {
       /*append the DIV element as a child of the autocomplete container:*/
       this.parentNode.appendChild(a);
       /*for each item in the array...*/
-      console.log("iterating through autocomplete trainer array");
+      console.log("iterating through autocomplete array");
       for (i = 0; i < arr.length; i++) {
         console.log(arr[i]);
         /*check if the item starts with the same letters as the text field value:*/

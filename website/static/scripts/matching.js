@@ -19,11 +19,15 @@ function addTrainerSlot(search_class,container) {
   slotEntry.appendChild(deleteButton);
 
   slotsContainer.appendChild(slotEntry);
-  $.getJSON(`/trainerdata`, function (data) {
-    let trainer_names = data
-      .filter((person) => person.status !== "Suspended")
+    $.getJSON(`/trainerdata`, function (data) {
+      let trainer_names = data
+        .filter((person) => person.status !== "Suspended")
+        .map((person) => `${person.name} (${person.email})`);
+      let leader_names = data
+      .filter((person) => person.status === "Team Lead")
       .map((person) => `${person.name} (${person.email})`);
-    autocomplete(document.querySelectorAll(".myInput"), trainer_names);
+      autocomplete(document.querySelectorAll(".trainerInput"), trainer_names);
+      autocomplete(document.querySelectorAll(".leaderInput"), leader_names);
   });
   return input;
 }
@@ -36,6 +40,7 @@ function showEditModalfunction({
   formatted_start_date,
   formatted_end_time,
   eventStatus,
+  adminNotes,
   leader,
   trainers,
 } = {}) {
@@ -47,6 +52,10 @@ function showEditModalfunction({
   var currStatus = document.querySelector("#current-status");
   currStatus.value = eventStatus;
   currStatus.textContent = eventStatus;
+  var currAdminNote = document.querySelector("#admin_notes_input")
+  currAdminNote.value = adminNotes;
+  currAdminNote.textContent = adminNotes;
+
   modal.find(".modal-content").css("border-color", borderColor);
   $("#update-assignment-event-id").val(eventId);
   $("#update-assignment-start-date").val(startDate);
@@ -76,6 +85,7 @@ function showEditModalfunction({
   const leadSlot = trainerSlotsContainer.querySelector(".update-leader-search");
   let leadInput = leadSlot.querySelector('input[type="text"]');
   leadInput.value = leader;
+
   modal.modal();
 }
 
@@ -127,6 +137,11 @@ document.addEventListener("DOMContentLoaded", function () {
           for (let i = 1; i < currentSlots.length; i++) {
             trainerSlotsContainer.removeChild(currentSlots[i]);
           }
+          //clear slots
+          var inputElements = document.querySelectorAll(".trainerInput, .leaderInput");
+          inputElements.forEach(function(input) {
+              input.value = "";
+          });
           //copy the correct number of slots
           var defaultSlots = Math.ceil(event.extendedProps.numLearners / 10);
           for (var i = 2; i < defaultSlots; i++) {
@@ -282,6 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
       checkbox.addEventListener("change", updateTrainerSources);
     });
     filterList("#itemsToFilter li");
+    calendar.id = "calendar"
     calendar.render();
     $.getJSON(`/trainerdata`, function (data) {
       let trainer_names = data
