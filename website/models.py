@@ -70,7 +70,7 @@ class Trainer(db.Model):
     gen_avail = db.Column(db.String(500))
     hrs_per_month = db.Column(db.Integer)
     languages = db.Column(db.String(50))
-    availabilities = db.relationship('TrainerDate', backref = 'trainer', cascade = 'all, delete-orphan', lazy = 'dynamic')
+    #availabilities = db.relationship('TrainerDate', backref = 'trainer', cascade = 'all, delete-orphan', lazy = 'dynamic')
     other_info = db.Column(db.String(1500))
     documents = db.Column(db.String(256))
     status = db.Column(db.String(100))
@@ -86,6 +86,8 @@ class TrainerDate(db.Model):
     formatted_end_time = db.Column(db.String(100))
     iso_formatted_start_date = db.Column(db.String(100))
     iso_formatted_end_date = db.Column(db.String(100))
+    #trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'),
+     #       nullable=False)
 
 class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
