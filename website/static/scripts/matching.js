@@ -47,7 +47,7 @@ function showEditModalfunction({
   var modal = $("#update-assignment");
   modal.find(".modal-title").text(title);
   modal.find(".time").text(`${formatted_start_date} - ${formatted_end_time}`);
-  modal.find(".numLearners").html(`Estimated learners: ${learners}<br>Target # of trainers: ${learners/4}`);
+  modal.find(".numLearners").html(`Estimated learners: ${learners}<br>Target # of trainers: ${Math.ceil(learners/4)}`);
   var borderColor = "grey";
   var currStatus = document.querySelector("#current-status");
   currStatus.value = eventStatus;
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
           modal
             .find(".numLearners")
-            .text(`Estimated learners: ${event.extendedProps.numLearners}`);
+            .html(`Estimated learners: ${event.extendedProps.numLearners}<br>Target # of trainers: ${Math.ceil(event.extendedProps.numLearners/4)}`);
           var borderColor = event.borderColor
             ? event.borderColor
             : event.backgroundColor;
