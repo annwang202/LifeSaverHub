@@ -3,8 +3,8 @@ from flask_login import login_required, current_user
 from .models import Event, EventDate, Trainer, TrainerDate, Assignment
 from . import db
 import json
-from datetime import datetime
-from sqlalchemy import asc
+from datetime import datetime, time
+from sqlalchemy import asc, extract, Time
 from werkzeug.utils import secure_filename
 import re
 from sqlalchemy.orm import joinedload
@@ -208,12 +208,13 @@ def submit_trainer():
                 name = slot.get('extendedProps').get('trainerName') 
                 start_date = datetime.strptime(slot.get('startStr'), '%Y-%m-%dT%H:%M:%S%z')
                 end_date = datetime.strptime(slot.get('endStr'), '%Y-%m-%dT%H:%M:%S%z')
+                weekday = start_date.strftime('%A')
                 iso_formatted_start_date = slot.get('startStr')
                 iso_formatted_end_date = slot.get('endStr')
-                formatted_start_time = start_date.strftime('%A, %I:%M %p')
-                formatted_end_time = end_date.strftime('%A, %I:%M %p')
+                formatted_start_time = start_date.strftime('%I:%M %p')
+                formatted_end_time = end_date.strftime('%I:%M %p')
                 new_availability = TrainerDate(trainerName=name,start_date=start_date,
-                                               end_date=end_date,iso_formatted_start_date=iso_formatted_start_date,
+                                               end_date=end_date,weekday=weekday,iso_formatted_start_date=iso_formatted_start_date,
                                                iso_formatted_end_date=iso_formatted_end_date,formatted_start_time=formatted_start_time,
                                                formatted_end_time=formatted_end_time,trainer_id = new_trainer.id)
                 db.session.add(new_availability)
@@ -513,35 +514,25 @@ def trainer_mysql_to_json():
 
     return json_data
 
-@views.route('/trainer_availability', methods=['POST'])
-def trainer_availability():
+@views.route('/trainer_availability/<string:weekday>/<string:start>/<string:end>', methods=['GET'])
+def trainer_availability(weekday,start,end):
     print("Hello")
-    if request.method == 'POST':
-        try:
-            json_data = request.get_json()[0]
-            times = json_data.get('events')
-            print("Posting:",json_data)
-            for slot in times:
-                name = slot['extendedProps']['trainerName']
-                start_date = datetime.strptime(slot['startStr'], '%Y-%m-%dT%H:%M:%S%z')
-                end_date = datetime.strptime(slot['endStr'], '%Y-%m-%dT%H:%M:%S%z')
-                iso_formatted_start_date = slot['startStr']
-                iso_formatted_end_date = slot['endStr']
-                formatted_start_time = start_date.strftime('%A, %I:%M %p')
-                formatted_end_time = end_date.strftime('%A, %I:%M %p')
-                new_availability = TrainerDate(trainerName=name,start_date=start_date,
-                                               end_date=end_date,iso_formatted_start_date=iso_formatted_start_date,
-                                               iso_formatted_end_date=iso_formatted_end_date,formatted_start_time=formatted_start_time,
-                                               formatted_end_time=formatted_end_time)
-                db.session.add(new_availability)
-            db.session.commit()
-            print('Received JSON Data:', json_data)
-            return jsonify(json_data)
-        except Exception as e:
-            print(str(e))
-            return jsonify({'status': 'error', 'message': str(e)})
+    starttime = datetime.strptime(start,"%I:%M%p").time()
+    endtime = datetime.strptime(end,"%I:%M%p").time()
+    print(starttime)
+    print(endtime)
+    query = TrainerDate.query.filter(db.func.lower(TrainerDate.weekday) == weekday).all()
+
+    print(query)
+    if query:
+        result = []
+        for trainer_date in query:
+            if (trainer_date.start_date.time() <= starttime and trainer_date.end_date.time() >= endtime):
+                result.append({'trainer_id':trainer_date.trainer_id, 'name':trainer_date.trainerName, 'weekday':trainer_date.weekday,
+                           'start':trainer_date.start_date,'end':trainer_date.end_date})
+        return jsonify(result)
     else:
-        print('request.method is not POST. It is: ', request.method)
+        return jsonify({'error': 'Query failed'}), 404
 '''
 ############
 @views.route('/icsfinalcalendar')

@@ -82,6 +82,7 @@ class TrainerDate(db.Model):
     trainerName = db.Column(db.String(50))
     start_date = db.Column(db.DateTime(timezone=True))
     end_date = db.Column(db.DateTime(timezone=True))
+    weekday = db.Column(db.String(20))
     formatted_start_time = db.Column(db.String(100))
     formatted_end_time = db.Column(db.String(100))
     iso_formatted_start_date = db.Column(db.String(100))

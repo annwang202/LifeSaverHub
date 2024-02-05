@@ -54,5 +54,13 @@
     "id": 7,
     "name": "Donald Duck",
     "status": "New"
+  },
+  {
+    "email": "jaredpeters@fakeemail.com",
+    "events": [],
+    "full-name": "Jared Peters",
+    "id": 8,
+    "name": "Jared Peters",
+    "status": "New"
   }
 ]
