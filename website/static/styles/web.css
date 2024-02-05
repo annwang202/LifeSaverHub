@@ -64,6 +64,10 @@
   margin: 0 20px; /* Adjust the margin as needed */
 }
 
+.button-container{
+  display: inline-block;
+}
+
 .page-title {
   display: flex;
   align-items: center;

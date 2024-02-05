@@ -21,14 +21,20 @@
 https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
 "></script>
 <script>
-  function showOrHideDropdown(id,prefix)
+  function showOrHideDropdown(id,prefix,action)
     {
-      let el = document.getElementById(`${prefix}_${id}`)
+      let el = document.getElementById(`${prefix}_${id}`);
       if(el.style.display === "block"){
-        el.style.display = "none"
+        el.style.display = "none";
+        if (action === "expand"){
+          document.getElementById(id).innerHTML = "<strong>^</strong>";
+        }
       }
       else{
-        el.style.display = "block"
+        el.style.display = "block";
+        if (action === "expand"){
+          document.getElementById(id).innerHTML = "<strong>⌄</strong>";
+        }
       }
     }
 </script>

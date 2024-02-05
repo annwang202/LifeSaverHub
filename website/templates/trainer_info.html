@@ -22,16 +22,7 @@
             </li>
             &emsp;
             <strong>Available on: </strong>
-            <select name="dayOfWeek" id="dayOfWeek">
-              <option value="" selected>Select day of week</option>
-              <option value="Monday">Monday</option>
-              <option value="Tuesday">Tuesday</option>
-              <option value="Wednesday">Wednesday</option>
-              <option value="Thursday">Thursday</option>
-              <option value="Friday">Friday</option>
-              <option value="Saturday">Saturday</option>
-              <option value="Sunday">Sunday</option>
-            </select>
+            <input type="date" name="date"/>
             <label for= "start_time">From :</label>
             <input type="time" name="start_time"/>
             <label for= "end_time">To :</label>
@@ -50,7 +41,10 @@
           <strong>{{trainer.nickname}}</strong><br>
           {{trainer.pronouns}}
           <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
-            <button id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')">Edit trainer</button></div>
+            <div class = "button-container">
+              <button id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')"><strong>^</strong></button>
+              <button title="Edit trainer" id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit trainer"/></button></div>
+            </div>
           <div id="update_div_{{ trainer.name }}" style="display:none;">
             <form id="update_form_{{ trainer.name }}"  name="update_trainer_form" action="/update-trainer" method="POST">
               <input type="hidden" name="update_trainer_form" value="1">
@@ -69,7 +63,6 @@
             </form>
           </div>
           <div class="trainer-details">
-            <button id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer')">Show/Hide details</button>
             <div id="trainer_details_{{ trainer.id }}" style="display:none;">
               <p>
               Full name: {{trainer.name}}</br>

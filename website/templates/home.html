@@ -63,8 +63,34 @@
         <strong>Preferred date: </strong></br>{% for preferred_date in event.preferred_date %} {{preferred_date.formatted_start_date}} - {{preferred_date.formatted_end_time}}{% endfor %}<br>
         <strong>Backup dates: </strong></br>{% for date in event.backup_dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}</br>
           {% endfor %}
+    <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{event.status}}</div>
+    <strong>Admin notes: </strong>{{event.admin_notes}}<br>
+    <div class = "button-container">
+      <button id="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'event','expand')"><strong>^</strong></button> 
+      <button title="Edit request" id="{{event.id}}"class="update-event-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit request"/></button> 
+      <div id="email-requester" style="display: inline-block;">
+        <form id = "email-requester-form" action="mailto: {{event.email}}?subject=CCAS: Event request confirmation" method="post" enctype="text/plain">
+          <input type="submit" class="email" value="Email contact">
+          </form>
+      </div>
+    </div>
+        <div id="update_div_{{ event.id }}" style="display:none;">
+          <form id="update_form_{{ event.id }}"  name="update_form" action="/update-event" method="POST">
+            <input type="hidden" name="update_form" value="1">
+            <input type="hidden" name="update_id" value="{{event.id}}">
+            <strong>New status: </strong>
+            <select name="status" id="status_{{event.id}}">
+              <option value="{{event.status}}" selected hidden>{{event.status}}</option>
+              <option value="New">New</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Canceled">Canceled</option>
+            </select><br>
+            <strong>New admin notes:</strong><br>
+            <textarea id="admin_event_notes" name="admin_event_notes" rows="4" cols="50" style="font-size:10px;">{{event.admin_notes}}</textarea><br>
+            <button type="submit" form = "update_form_{{ event.id }}" id="update_submit_{{ event.id }}" class="btn btn-primary">Update event</button>
+          </form>
+        </div>
         <div class="event-details">
-          <button name="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'event')">Show/Hide details</button>
           <div id="event_details_{{ event.id }}" style="display:none;">
             <p>Contact name: {{event.name}}</br>
             Email: {{event.email}}</br>
@@ -82,30 +108,6 @@
             Additional info: {{event.other_info}}
           </p>
           </div>
-        </div>
-        <div id="email-requester">
-          <form id = "email-requester-form" action="mailto: {{event.email}}?subject=CCAS: Event request confirmation" method="post" enctype="text/plain">
-            <input type="submit" class="email" value="Email contact">
-            </form>
-        </div>
-    <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{event.status}}</div>
-    <strong>Admin notes: </strong>{{event.admin_notes}}<br>
-        <button id="{{event.id}}"class="update-event-option" onClick="showOrHideDropdown(this.id,'update_div')">Edit request</button>
-        <div id="update_div_{{ event.id }}" style="display:none;">
-          <form id="update_form_{{ event.id }}"  name="update_form" action="/update-event" method="POST">
-            <input type="hidden" name="update_form" value="1">
-            <input type="hidden" name="update_id" value="{{event.id}}">
-            <strong>New status: </strong>
-            <select name="status" id="status_{{event.id}}">
-              <option value="{{event.status}}" selected hidden>{{event.status}}</option>
-              <option value="New">New</option>
-              <option value="Confirmed">Confirmed</option>
-              <option value="Canceled">Canceled</option>
-            </select><br>
-            <strong>New admin notes:</strong><br>
-            <textarea id="admin_event_notes" name="admin_event_notes" rows="4" cols="50" style="font-size:10px;">{{event.admin_notes}}</textarea><br>
-            <button type="submit" form = "update_form_{{ event.id }}" id="update_submit_{{ event.id }}" class="btn btn-primary">Update event</button>
-          </form>
         </div>
       </li> 
       {% endif %}
@@ -152,38 +154,18 @@
         >
         <strong>{{assignment_table['event'].title}}</strong><br>
         <strong>Date: </strong></br>{{assignment_table['assignments'][0].formatted_start_date}} - {{assignment_table['assignments'][0].formatted_end_time}}<br>
-        <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for trainer in assignment_table['trainers'] %}<li> {{trainer["trainer"].nickname}} - {{trainer["role"]}} </br> ({{trainer["trainer"].email}})</li>{% endfor %}</ul></div>
+        <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for trainer in assignment_table['trainers'] %}<li> <u>{{trainer["role"]}}</u>: {{trainer["trainer"].nickname}}</br> (<i>{{trainer["trainer"].email}}</i>)</li>{% endfor %}</ul></div>
         <div class="assignment-details">
-          <button name="detail_{{assignment_table['event'].id}}"class="show-event-details" onClick="showOrHideDropdown(this.name,'assignment')">Show/Hide event details</button>
-          <div id="assignment_detail_{{ assignment_table['event'].id }}" style="display:none;">
-            <p>Contact name: {{assignment_table['event'].name}}</br>
-            Email: {{assignment_table['event'].email}}</br>
-            Phone: {{assignment_table['event'].phone}}</br>
-            Desired training types: {{assignment_table['event'].training_types}}</br>
-            Mission: {{assignment_table['event'].mission}}</br>
-            # learners: {{assignment_table['event'].num_learners}}</br>
-            Learners: {{assignment_table['event'].learners}}</br>
-            Location: {{assignment_table['event'].place}}</br>
-            Chairs/tables: {{assignment_table['event'].chairs_tables}}</br>
-            Cultural considerations: {{assignment_table['event'].cultural}}</br>
-            Content concerns: {{assignment_table['event'].content_concerns}}</br>
-            Music: {{assignment_table['event'].music}}</br>
-            Photography permission: {{assignment_table['event'].photos}}</br>
-            Additional info: {{assignment_table['event'].other_info}}
-          </p>
-          </div>
-        </div>
-        <div id="email-trainers">
-          <form id = "email-form" action="mailto:{% for trainer in assignment_table['trainers'] %}{{trainer['trainer'].email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Are you available to volunteer for this event?" method="post" enctype="text/plain">
-            <input type="submit" class="email" value="Email assigned trainers">
-            </form>
-            <form id = "email-all-form" action="mailto:{% for trainer in trainers %}{{trainer.email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Volunteers needed!" method="post" enctype="text/plain">
-              <input type="submit" class="email" value="Email all trainers">
+          <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{assignment_table['event'].status}}</div>
+          <strong>Admin notes:</strong><br>
+          <p>{{assignment_table['event'].admin_notes}}</p>
+            <form id = "email-form" style="display:inline-block;" action="mailto:{% for trainer in assignment_table['trainers'] %}{{trainer['trainer'].email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Are you available to volunteer for this event?" method="post" enctype="text/plain">
+              <input type="submit" class="email" value="Email assigned trainers">
               </form>
+              <form id = "email-all-form" style="display:inline-block;" action="mailto:{% for trainer in trainers %}{{trainer.email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Volunteers needed!" method="post" enctype="text/plain">
+                <input type="submit" class="email" value="Email all trainers" style="background-color: red;">
+                </form>
         </div>
-    <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{assignment_table['event'].status}}</div>
-    <strong>Admin notes:</strong><br>
-    <p>{{assignment_table['event'].admin_notes}}</p>
     <script>
         let trainersArray_{{assignment_table['event'].id}} = [];
         let leader_{{assignment_table['event'].id}} = "";
@@ -198,7 +180,27 @@
             }
         {% endfor %}
     </script>
-        <button class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table['event'].id }}, title : '{{ assignment_table['event'].title }}', learners: {{ assignment_table['event'].num_learners }} , startDate : '{{assignment_table['assignments'][0].start_date }}', endDate :  '{{assignment_table['assignments'][0].end_date}}' , formatted_start_date : '{{ assignment_table['assignments'][0].formatted_start_date }}',formatted_end_time : '{{ assignment_table['assignments'][0].formatted_end_time  }}',eventStatus : '{{ assignment_table['event'].status }}',adminNotes : '{{ assignment_table['event'].admin_notes }}',leader:leader_{{assignment_table['event'].id}},trainers : trainersArray_{{assignment_table['event'].id}}})">Edit event</button>
+    <div class="button-container">
+      <button id="detail_{{assignment_table['event'].id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'assignment','expand')"><strong>^</strong></button>
+        <button title="Edit event" class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table['event'].id }}, title : '{{ assignment_table['event'].title }}', learners: {{ assignment_table['event'].num_learners }} , startDate : '{{assignment_table['assignments'][0].start_date }}', endDate :  '{{assignment_table['assignments'][0].end_date}}' , formatted_start_date : '{{ assignment_table['assignments'][0].formatted_start_date }}',formatted_end_time : '{{ assignment_table['assignments'][0].formatted_end_time  }}',eventStatus : '{{ assignment_table['event'].status }}',adminNotes : '{{ assignment_table['event'].admin_notes }}',leader:leader_{{assignment_table['event'].id}},trainers : trainersArray_{{assignment_table['event'].id}}})"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit event"/></button>
+    </div>
+        <div id="assignment_detail_{{ assignment_table['event'].id }}" style="display:none;">
+          <p>Contact name: {{assignment_table['event'].name}}</br>
+          Email: {{assignment_table['event'].email}}</br>
+          Phone: {{assignment_table['event'].phone}}</br>
+          Desired training types: {{assignment_table['event'].training_types}}</br>
+          Mission: {{assignment_table['event'].mission}}</br>
+          # learners: {{assignment_table['event'].num_learners}}</br>
+          Learners: {{assignment_table['event'].learners}}</br>
+          Location: {{assignment_table['event'].place}}</br>
+          Chairs/tables: {{assignment_table['event'].chairs_tables}}</br>
+          Cultural considerations: {{assignment_table['event'].cultural}}</br>
+          Content concerns: {{assignment_table['event'].content_concerns}}</br>
+          Music: {{assignment_table['event'].music}}</br>
+          Photography permission: {{assignment_table['event'].photos}}</br>
+          Additional info: {{assignment_table['event'].other_info}}
+        </p>
+        </div>
       </li> 
       {% endif %}
       {% endfor %}
