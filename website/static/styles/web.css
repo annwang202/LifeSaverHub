@@ -135,7 +135,7 @@ body{
 }
 
 .showItem {
-    display: list-item !important;
+    display: block !important;
 }
 .hideItem {
     display: none !important;

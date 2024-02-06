@@ -66,7 +66,7 @@
     <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{event.status}}</div>
     <strong>Admin notes: </strong>{{event.admin_notes}}<br>
     <div class = "button-container">
-      <button id="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'event','expand')"><strong>^</strong></button> 
+      <button id="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'event','expand')">&#128897;</button> 
       <button title="Edit request" id="{{event.id}}"class="update-event-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit request"/></button> 
       <div id="email-requester" style="display: inline-block;">
         <form id = "email-requester-form" action="mailto: {{event.email}}?subject=CCAS: Event request confirmation" method="post" enctype="text/plain">
@@ -181,7 +181,7 @@
         {% endfor %}
     </script>
     <div class="button-container">
-      <button id="detail_{{assignment_table['event'].id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'assignment','expand')"><strong>^</strong></button>
+      <button id="detail_{{assignment_table['event'].id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'assignment','expand')">&#128897;</button>
         <button title="Edit event" class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table['event'].id }}, title : '{{ assignment_table['event'].title }}', learners: {{ assignment_table['event'].num_learners }} , startDate : '{{assignment_table['assignments'][0].start_date }}', endDate :  '{{assignment_table['assignments'][0].end_date}}' , formatted_start_date : '{{ assignment_table['assignments'][0].formatted_start_date }}',formatted_end_time : '{{ assignment_table['assignments'][0].formatted_end_time  }}',eventStatus : '{{ assignment_table['event'].status }}',adminNotes : '{{ assignment_table['event'].admin_notes }}',leader:leader_{{assignment_table['event'].id}},trainers : trainersArray_{{assignment_table['event'].id}}})"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit event"/></button>
     </div>
         <div id="assignment_detail_{{ assignment_table['event'].id }}" style="display:none;">

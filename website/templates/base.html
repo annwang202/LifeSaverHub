@@ -27,13 +27,13 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
       if(el.style.display === "block"){
         el.style.display = "none";
         if (action === "expand"){
-          document.getElementById(id).innerHTML = "<strong>^</strong>";
+          document.getElementById(id).innerHTML = "&#128897;";
         }
       }
       else{
         el.style.display = "block";
         if (action === "expand"){
-          document.getElementById(id).innerHTML = "<strong>⌄</strong>";
+          document.getElementById(id).innerHTML = "&#128899;";
         }
       }
     }

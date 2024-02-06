@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
     <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
-    <div class="trainer-info-container">
+    <div id="trainer-info-container" class="trainer-info-container">
         <ul class="filterSection">
-            <strong>Show:</strong>
+            <strong>Status:</strong>
             <li>
                 <input checked="true" type="checkbox" value="New"/>
                 <label>New</label>
@@ -27,7 +27,8 @@
             <input type="time" name="start_time"/>
             <label for= "end_time">To :</label>
             <input type="time" name="end_time"/>
-            <button onClick="">Filter</button>
+            <button id = "clearButton">Clear</button>
+            <button id = "filterButton" onClick="">Filter</button>
         </ul>
         </div>
         <ul class="list-group list-group-flush" id="trainerInfoFilter">
@@ -42,7 +43,7 @@
           {{trainer.pronouns}}
           <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
             <div class = "button-container">
-              <button id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')"><strong>^</strong></button>
+              <button id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128897;</button>
               <button title="Edit trainer" id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit trainer"/></button></div>
             </div>
           <div id="update_div_{{ trainer.name }}" style="display:none;">

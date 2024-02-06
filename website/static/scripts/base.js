@@ -12,7 +12,6 @@ function filterList(filter_selector) {
     console.log("added event listener to:", checkBoxes[i]);
   }
 
-  // the event handler!
   function filterItems(e) {
     console.log("filterItems() called");
     var clickedItem = e.target;
@@ -27,18 +26,15 @@ function filterList(filter_selector) {
       );
       var trigger = new Event("change");
       boxesToUncheck.forEach(function (boxToUncheck) {
-        // Uncheck the checkboxes, if needed
+        // Uncheck the checkboxes
         console.log("checkbox value:", boxToUncheck.value);
         boxToUncheck.checked = false;
         boxToUncheck.dispatchEvent(trigger);
       });
       hideOrShowItems(clickedItem.value, "showItem", "hideItem");
-    } else {
-      // deal with the indeterminate state if needed
     }
   }
 
-  // add or remove classes to show or hide our content
   function hideOrShowItems(itemType, classToRemove, classToAdd) {
     for (var i = 0; i < itemsToFilter.length; i++) {
       var currentItem = itemsToFilter[i];
@@ -55,9 +51,6 @@ function filterList(filter_selector) {
     }
   }
 
-  //
-  // Helper functions for adding and removing class values
-  //
   function addClass(element, classToAdd) {
     var currentClassValue = element.className;
 

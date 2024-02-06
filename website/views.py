@@ -517,8 +517,8 @@ def trainer_mysql_to_json():
 @views.route('/trainer_availability/<string:weekday>/<string:start>/<string:end>', methods=['GET'])
 def trainer_availability(weekday,start,end):
     print("Hello")
-    starttime = datetime.strptime(start,"%I:%M%p").time()
-    endtime = datetime.strptime(end,"%I:%M%p").time()
+    starttime = datetime.strptime(start,"%H:%M").time()
+    endtime = datetime.strptime(end,"%H:%M").time()
     print(starttime)
     print(endtime)
     query = TrainerDate.query.filter(db.func.lower(TrainerDate.weekday) == weekday).all()

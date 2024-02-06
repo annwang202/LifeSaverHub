@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
               input.value = "";
           });
           //copy the correct number of slots
-          var defaultSlots = Math.ceil(event.extendedProps.numLearners / 10);
+          var defaultSlots = Math.ceil(event.extendedProps.numLearners / 4);
           for (var i = 2; i < defaultSlots; i++) {
             addTrainerSlot(".trainer-search","trainer-slots");
           }
