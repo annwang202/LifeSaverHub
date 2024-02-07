@@ -2,8 +2,9 @@
     %}
     <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
     <div id="trainer-info-container" class="trainer-info-container">
-        <ul class="filterSection">
-            <strong>Status:</strong>
+      <div class="trainerFilterSection">
+        <ul>
+            <strong>Status</strong>
             <li>
                 <input checked="true" type="checkbox" value="New"/>
                 <label>New</label>
@@ -19,18 +20,19 @@
             <li>
                 <input type="checkbox" value="Suspended"/>
                 <label>Suspended</label>
-            </li>
-            &emsp;
-            <strong>Available on: </strong>
-            <input type="date" name="date"/>
-            <label for= "start_time">From :</label>
-            <input type="time" name="start_time"/>
-            <label for= "end_time">To :</label>
-            <input type="time" name="end_time"/>
-            <button id = "clearButton">Clear</button>
+            </li></br>
+            <strong>Availability</strong></br>
+            <label for="date" style="font-size: x-small;">Date:</label></br>
+            <input type="date" name="date" style="font-size: smaller;"/></br>
+            <label for= "start_time" style="font-size: x-small;">From : &ensp;</label></br>
+            <input type="time" name="start_time"/></br>
+            <label for= "end_time" style="font-size: x-small;">To :&emsp;&emsp;</label></br>
+            <input type="time" name="end_time"/></br>
             <button id = "filterButton" onClick="">Filter</button>
+            <button id = "clearButton">Clear</button>
         </ul>
-        </div>
+      </div>
+      <div class="trainerList">
         <ul class="list-group list-group-flush" id="trainerInfoFilter">
           {% for trainer in trainers %}
           <li
@@ -91,5 +93,6 @@
           </li> 
           {% endfor %}
         </ul>
+      </div>
       </div>
 {% endblock %}>

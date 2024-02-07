@@ -36,11 +36,12 @@
 }
 
 .trainer-info-container {
+    display: grid;
     box-sizing: border-box !important;
     width: 100%  !important;
-    justify-content: center  !important; /* Centers vertically */
     align-items: center !important; /* Centers horizontally */
     max-width: none !important;
+    grid-template-columns: 1fr 6fr;
 }
 
 .login-container {
@@ -82,9 +83,13 @@
     font-size: small;
 }
 
+.trainerList {
+  height:100vh;
+}
+
 #trainerInfoFilter {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(10, 1fr);
     grid-gap: 0px;
 }
 
@@ -119,6 +124,20 @@ body{
     display: inline;
      
 }
+
+.trainerFilterSection li {
+  list-style: none;
+  margin: 0px;
+  padding: 2px;
+  font-size:10px;
+}
+
+.trainerFilterSection{
+  background-color: #edeef0;
+  height: 100vh;
+  padding-top: 20px;
+}
+
 .filterSection {
     margin: 0px;
     padding: 0px;
