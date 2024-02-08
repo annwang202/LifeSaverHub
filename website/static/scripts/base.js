@@ -1,4 +1,4 @@
-function filterList(filter_selector) {
+function filterEvents(filter_selector) {
   // get all of our list items
   var itemsToFilter = document.querySelectorAll(filter_selector);
 
@@ -17,7 +17,7 @@ function filterList(filter_selector) {
     var clickedItem = e.target;
 
     if (clickedItem.checked == true) {
-      hideOrShowItems(clickedItem.value, "hideItem", "showItem");
+      hideOrShowItems(itemsToFilter,"data-type",clickedItem.value, "hideItem", "showItem");
     } else if (clickedItem.checked == false) {
       console.log(clickedItem + "is unchecked.");
       console.log("clickedItem type:", clickedItem.value);
@@ -31,57 +31,57 @@ function filterList(filter_selector) {
         boxToUncheck.checked = false;
         boxToUncheck.dispatchEvent(trigger);
       });
-      hideOrShowItems(clickedItem.value, "showItem", "hideItem");
+      hideOrShowItems(itemsToFilter,"data-type",clickedItem.value, "showItem", "hideItem");
+    }
+  }
+}
+
+function hideOrShowItems(listItems,attribute,itemType,classToRemove, classToAdd) {
+  for (var i = 0; i < listItems.length; i++) {
+    var currentItem = listItems[i];
+    if (currentItem.getAttribute(attribute) == itemType) {
+      removeClass(currentItem, classToRemove);
+      addClass(currentItem, classToAdd);
+    } else {
+      console.log(
+        "currentItem " + attribute + ": ",
+        currentItem.getAttribute(attribute)
+      );
+      console.log("not equal to itemType:", itemType);
+    }
+  }
+}
+
+function addClass(element, classToAdd) {
+  var currentClassValue = element.className;
+
+  if (currentClassValue.indexOf(classToAdd) == -1) {
+    if (currentClassValue == null || currentClassValue === "") {
+      element.className = classToAdd;
+    } else {
+      element.className += " " + classToAdd;
+    }
+  }
+}
+
+function removeClass(element, classToRemove) {
+  var currentClassValue = element.className;
+
+  if (currentClassValue == classToRemove) {
+    element.className = "";
+    return;
+  }
+
+  var classValues = currentClassValue.split(" ");
+  var filteredList = [];
+
+  for (var i = 0; i < classValues.length; i++) {
+    if (classToRemove != classValues[i]) {
+      filteredList.push(classValues[i]);
     }
   }
 
-  function hideOrShowItems(itemType, classToRemove, classToAdd) {
-    for (var i = 0; i < itemsToFilter.length; i++) {
-      var currentItem = itemsToFilter[i];
-      if (currentItem.getAttribute("data-type") == itemType) {
-        removeClass(currentItem, classToRemove);
-        addClass(currentItem, classToAdd);
-      } else {
-        console.log(
-          "currentItem data-type:",
-          currentItem.getAttribute("data-type")
-        );
-        console.log("not equal to itemType:", itemType);
-      }
-    }
-  }
-
-  function addClass(element, classToAdd) {
-    var currentClassValue = element.className;
-
-    if (currentClassValue.indexOf(classToAdd) == -1) {
-      if (currentClassValue == null || currentClassValue === "") {
-        element.className = classToAdd;
-      } else {
-        element.className += " " + classToAdd;
-      }
-    }
-  }
-
-  function removeClass(element, classToRemove) {
-    var currentClassValue = element.className;
-
-    if (currentClassValue == classToRemove) {
-      element.className = "";
-      return;
-    }
-
-    var classValues = currentClassValue.split(" ");
-    var filteredList = [];
-
-    for (var i = 0; i < classValues.length; i++) {
-      if (classToRemove != classValues[i]) {
-        filteredList.push(classValues[i]);
-      }
-    }
-
-    element.className = filteredList.join(" ");
-  }
+  element.className = filteredList.join(" ");
 }
 
 function autocomplete(inputs, full_arr) {

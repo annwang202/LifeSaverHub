@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
     trainerCheckboxes.forEach(function (checkbox) {
       checkbox.addEventListener("change", updateTrainerSources);
     });
-    filterList("#itemsToFilter li");
+    filterEvents("#itemsToFilter li");
     calendar.id = "calendar"
     calendar.render();
     $.getJSON(`/trainerdata`, function (data) {
