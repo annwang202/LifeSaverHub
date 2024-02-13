@@ -66,7 +66,7 @@
     <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{event.status}}</div>
     <strong>Admin notes: </strong>{{event.admin_notes}}<br>
     <div class = "button-container">
-      <button id="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'event','expand')">&#128897;</button> 
+      <button title="Details" id="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'event','expand')">&#128899;</button> 
       <button title="Edit request" id="{{event.id}}"class="update-event-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit request"/></button> 
       <div id="email-requester" style="display: inline-block;">
         <form id = "email-requester-form" action="mailto: {{event.email}}?subject=CCAS: Event request confirmation" method="post" enctype="text/plain">
@@ -154,7 +154,7 @@
         >
         <strong>{{assignment_table['event'].title}}</strong><br>
         <strong>Date: </strong></br>{{assignment_table['assignments'][0].formatted_start_date}} - {{assignment_table['assignments'][0].formatted_end_time}}<br>
-        <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for trainer in assignment_table['trainers'] %}<li> <u>{{trainer["role"]}}</u>: {{trainer["trainer"].nickname}}</br> (<i>{{trainer["trainer"].email}}</i>)</li>{% endfor %}</ul></div>
+        <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for trainer in assignment_table['trainers'] %}<li> <u>{{trainer["role"]}}</u>: {{trainer["trainer"].nickname}}</br> (<i>ID: {{trainer["trainer"].id}}</i>)</li>{% endfor %}</ul></div>
         <div class="assignment-details">
           <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{assignment_table['event'].status}}</div>
           <strong>Admin notes:</strong><br>
@@ -171,7 +171,7 @@
         let leader_{{assignment_table['event'].id}} = "";
 
         {% for trainer in assignment_table["trainers"] %}
-            var trainerInfo = '{{trainer["trainer"].nickname }} ({{trainer["trainer"].email}})';
+            var trainerInfo = '{{trainer["trainer"].nickname }} (ID: {{trainer["trainer"].id}})';
             if ('{{trainer["role"]}}' === "Trainer"){
               trainersArray_{{assignment_table['event'].id}}.push(trainerInfo);
             }
@@ -181,7 +181,7 @@
         {% endfor %}
     </script>
     <div class="button-container">
-      <button id="detail_{{assignment_table['event'].id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'assignment','expand')">&#128897;</button>
+      <button title="Details" id="detail_{{assignment_table['event'].id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'assignment','expand')">&#128899;</button>
         <button title="Edit event" class="update-assignment-option" onClick="showEditModalfunction({eventId : {{ assignment_table['event'].id }}, title : '{{ assignment_table['event'].title }}', learners: {{ assignment_table['event'].num_learners }} , startDate : '{{assignment_table['assignments'][0].start_date }}', endDate :  '{{assignment_table['assignments'][0].end_date}}' , formatted_start_date : '{{ assignment_table['assignments'][0].formatted_start_date }}',formatted_end_time : '{{ assignment_table['assignments'][0].formatted_end_time  }}',eventStatus : '{{ assignment_table['event'].status }}',adminNotes : '{{ assignment_table['event'].admin_notes }}',leader:leader_{{assignment_table['event'].id}},trainers : trainersArray_{{assignment_table['event'].id}}})"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit event"/></button>
     </div>
         <div id="assignment_detail_{{ assignment_table['event'].id }}" style="display:none;">
@@ -223,13 +223,14 @@
             <div class="time" style="font-weight: bold">Event Time</div>
             <div class="numLearners"></div>
             <div class="description"></div>
-            <input type="hidden" id="assignment-event-id" name="assignment-event-id" value="">
-            <input type="hidden" id="assignment-start-date" name="assignment-start-date" value="">
-            <input type="hidden" id="assignment-end-date" name="assignment-end-date" value="">
-            <input type="hidden" id="assignment-formatted-start-date" name="assignment-formatted-start-date" value="">
-            <input type="hidden" id="assignment-formatted-end-time" name="assignment-formatted-end-time" value="">
-            <div id="assign-trainers">
-              <div id="trainer-slots">
+            <input type="hidden" id="assignment-event-id" name="event-id" value="hi">
+            <input type="hidden" id="assignment-start-date" name="start-date" value="">
+            <input type="hidden" id="assignment-end-date" name="end-date" value="">
+            <input type="hidden" id="assignment-formatted-start-date" name="formatted-start-date" value="">
+            <input type="hidden" id="assignment-formatted-end-time" name="formatted-end-time" value="">
+            <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Advanced search</a>
+            <div class="assign-trainers">
+              <div id="trainer-slots" class="trainer-slots">
                 <div class="leader-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Leader</p>
@@ -245,15 +246,12 @@
               </div>
               <button type="button" id="add-trainer-slot">Add more trainers</button>
             </div>
-            <button type="submit" form = "create-assignment" id="assignment_submit" class="btn btn-primary">Create tentative event</button>
-          </form>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
-          </button>
+          <button type="submit" form = "create-assignment" id="assignment_submit" class="btn btn-primary">Create tentative event</button>
         </div>
+      </form>
       </div>
     </div>
   </div>
@@ -274,23 +272,24 @@
             <div class="time" style="font-weight: bold">Event Time</div>
             <div class="numLearners"></div>
             <div class="description"></div>
-            <input type="hidden" id="update-assignment-event-id" name="update-assignment-event-id" value="">
-            <input type="hidden" id="update-assignment-start-date" name="update-assignment-start-date" value="">
-            <input type="hidden" id="update-assignment-end-date" name="update-assignment-end-date" value="">
-            <input type="hidden" id="update-assignment-formatted-start-date" name="update-assignment-formatted-start-date" value="">
-            <input type="hidden" id="update-assignment-formatted-end-time" name="update-assignment-formatted-end-time" value="">
-            <div id="assign-trainers">
-              <div id="update-trainer-slots">
-                <div class="update-leader-search" style="display: flex; align-items: center;">
+            <input type="hidden" id="update-assignment-event-id" name="event-id" value="">
+            <input type="hidden" id="update-assignment-start-date" name="start-date" value="">
+            <input type="hidden" id="update-assignment-end-date" name="end-date" value="">
+            <input type="hidden" id="update-assignment-formatted-start-date" name="formatted-start-date" value="">
+            <input type="hidden" id="update-assignment-formatted-end-time" name="formatted-end-time" value="">
+            <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Advanced search</a>
+            <div class="assign-trainers">
+              <div id="update-trainer-slots" class="trainer-slots">
+                <div class="update leader-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Leader</p>
-                    <input class="leaderInput" type="text" name="update-leader-slot" placeholder="Search for trainers by name">
+                    <input class="leaderInput" type="text" name="leader-slot" placeholder="Search for trainers by name">
                   </div>
                 </div>
-                <div class="update-trainer-search" style="display: flex; align-items: center;">
+                <div class="update trainer-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Trainer</p>
-                    <input class="trainerInput" type="text" name="update-trainer-slot[]" placeholder="Search for trainers by name">
+                    <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Search for trainers by name">
                   </div>
                 </div>
               </div>
@@ -308,17 +307,31 @@
             </select><br>
             <strong>Admin notes:</strong><br>
             <textarea id="admin_notes_input" name="admin_notes_input" rows="4" cols="50" style="font-size:10px;">Note</textarea><br>
-            <button type="submit" form = "update-assignment-form" id="update-assignment-submit" class="btn btn-primary">Update event</button>
           </form>
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
-          </button>
+          <button type="submit" form = "update-assignment-form" id="update-assignment-submit" class="btn btn-primary">Update event</button>
         </div>
       </div>
     </div>
+  </div>
+  <div class="modal fade" id="modal2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">2nd Modal title</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div><div class="container"></div>
+          <div class="modal-body advancedSearch">
+            <iframe src="/advancedsearch" id="advancedSearch" allowTransparency="true" frameborder="0" ></iframe>
+         </div>
+          <div class="modal-footer">
+            <button data-dismiss="modal" class="btn">Close</button>
+            <a id="selectBtn" href="#" class="btn btn-primary">Assign trainers</a>
+          </div>
+        </div>
+      </div>
   </div>
 </div>
 <div>

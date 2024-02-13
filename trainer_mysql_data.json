@@ -5,7 +5,7 @@
     "full-name": "Ann Wang",
     "id": 1,
     "name": "Annie Wang",
-    "status": "Basic Trainer"
+    "status": "Team Lead"
   },
   {
     "email": "johndoe@fakeemail.com",
@@ -61,6 +61,30 @@
     "full-name": "Jared Peters",
     "id": 8,
     "name": "Jared Peters",
+    "status": "New"
+  },
+  {
+    "email": "nancyburke@fake.com",
+    "events": [],
+    "full-name": "Nancy Burke",
+    "id": 9,
+    "name": "Nancy Burke",
+    "status": "New"
+  },
+  {
+    "email": "alliederubeis@fakeemail.com",
+    "events": [],
+    "full-name": "Alexandra DeRubeis",
+    "id": 10,
+    "name": "Allie Derubeis",
+    "status": "New"
+  },
+  {
+    "email": "elyssaallen@fakeemail.com",
+    "events": [],
+    "full-name": "Elyssa Allen",
+    "id": 11,
+    "name": "Elyssa Allen",
     "status": "New"
   }
 ]

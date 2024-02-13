@@ -41,7 +41,7 @@
     width: 100%  !important;
     align-items: center !important; /* Centers horizontally */
     max-width: none !important;
-    grid-template-columns: 1fr 6fr;
+    grid-template-columns: 1fr 9fr;
 }
 
 .login-container {
@@ -105,9 +105,19 @@ body{
 }
 
 .modal-content{
-    border-width: 10px !important;
+    border-width: 10px;
 }
 
+#advancedSearch{
+  height: 62vh !important;
+  width: 100% !important;
+  border: 0 !important;
+}
+
+.assign-trainers {
+  height: 50vh;
+  overflow-y: auto;
+}
 .email {
   font-size:smaller;
   padding: 4px;
@@ -125,6 +135,11 @@ body{
      
 }
 
+.trainerFilterSection ul {
+  padding-left: 10px;
+  padding-right:10px;
+}
+
 .trainerFilterSection li {
   list-style: none;
   margin: 0px;
@@ -136,6 +151,7 @@ body{
   background-color: #edeef0;
   height: 100vh;
   padding-top: 20px;
+  width:min-content;
 }
 
 .filterSection {
@@ -151,6 +167,17 @@ body{
 
 .event-checkbox {
   margin-left: 1px; /* Push the checkbox to the right side */
+}
+
+input.star { /*star checkboxes*/
+  border: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  opacity: 0;
 }
 
 .showItem {
@@ -221,4 +248,24 @@ body{
 /*trainer application page*/
 #scheduler .fc-header-toolbar.fc-toolbar.fc-toolbar-ltr {
   display: none;
+}
+
+/*advanced search star*/
+.starradio {
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 15px;
+  height: 15px;
+  background: url('unstarred.png') no-repeat;
+  background-size: cover;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.starradio:checked {
+  background: url('starred.png') no-repeat;
+  background-size: cover;
 }

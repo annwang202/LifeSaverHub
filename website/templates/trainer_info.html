@@ -41,11 +41,11 @@
             class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %}"
             style="display: inline-block; border-width: 3px;"
           >
-          <strong>{{trainer.nickname}}</strong><br>
+          <strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong><br>
           {{trainer.pronouns}}
           <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
             <div class = "button-container">
-              <button id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128897;</button>
+              <button title= "Details" id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128899;</button>
               <button title="Edit trainer" id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit trainer"/></button></div>
             </div>
           <div id="update_div_{{ trainer.name }}" style="display:none;">

@@ -8,6 +8,7 @@ from sqlalchemy import asc, extract, Time
 from werkzeug.utils import secure_filename
 import re
 from sqlalchemy.orm import joinedload
+import traceback
 
 views = Blueprint('views', __name__)
 black = "#000000"
@@ -55,6 +56,17 @@ def home():
     trainers_data = [{'id': trainer.id, 'name': trainer.name,
                       'gen_avail': trainer.gen_avail} for trainer in trainers]
     return render_template("home.html", user=current_user, events=events, trainers=trainers, assignments=assignments, assignments_by_event=assignments_by_event, trainers_data=trainers_data, event_colors=event_colors, trainer_colors=trainer_colors)
+
+
+@views.route('/advancedsearch', methods=['GET', 'POST'])
+@login_required
+def advancedsearch():
+    trainers = Trainer.query.all()
+    trainers_data = []
+    for trainer in trainers:
+        trainers_data.append(trainer.name)
+    return render_template("advancedSearch.html", user=current_user, trainers=trainers, trainers_data=trainers_data, trainer_colors=trainer_colors)
+
 
 
 @views.route('/trainee', methods=['GET', 'POST'])
@@ -231,13 +243,16 @@ def submit_assignment():
             # get training availability form submission
             if request.form.get("create-assignment"):
                 print("form gotten")
-                event_id = request.form["assignment-event-id"]
+                event_id = request.form["event-id"]
+                print(event_id)   
                 start_date = datetime.fromisoformat(
-                    request.form["assignment-start-date"])
+                    request.form["start-date"])
+                print("checkpoint 4")
                 end_date = datetime.fromisoformat(
-                    request.form["assignment-end-date"])
-                formatted_start_date = request.form["assignment-formatted-start-date"]
-                formatted_end_time = request.form["assignment-formatted-end-time"]
+                    request.form["end-date"])
+                print("checkpoint 5")
+                formatted_start_date = request.form["formatted-start-date"]
+                formatted_end_time = request.form["formatted-end-time"]
                 trainer_name_and_emails = request.form.getlist(
                     "trainer-slot[]")
                 team_lead = request.form["leader-slot"]
@@ -258,23 +273,23 @@ def submit_assignment():
                 db.session.commit()
         except Exception as e:
             print(f"An error occurred: {e}")
+            traceback.print_exc()
             db.session.rollback()  # Rollback the transaction in case of an error
     return redirect(url_for('views.home'))
 
 
 def create_assignment(trainer,event,start_date,end_date,formatted_start_date,formatted_end_time,isLead):
     if (trainer):
-        split = re.split(r'\s\(|\)', trainer)
-        result = list(filter(None, split))
-        if (len(result) < 2):
+        split = re.search(r'(.+?) \(ID: (\d+)\)', trainer)
+        if (not split or len(split.groups()) < 2):
             flash('Trainer ' + trainer + ' not found!', category='error')
             return None
-        trainer_name = result[0]
-        trainer_email = result[1]
+        trainer_name = split.group(1)
+        trainer_id = split.group(2)
         print(trainer_name)
-        print(trainer_email)
+        print(trainer_id)
         cur_trainer = Trainer.query.filter(
-            Trainer.nickname == trainer_name, Trainer.email == trainer_email).first()
+            Trainer.nickname == trainer_name, Trainer.id == trainer_id).first()
         if (not cur_trainer):
             return None
         print(cur_trainer)
@@ -336,25 +351,26 @@ def update_assignment():
     if request.method == 'POST':
         try:
             if request.form.get("update-assignment"):  # get event form submission
-                event_id = request.form.get('update-assignment-event-id')
+                event_id = request.form.get('event-id')
                 print("event_id: " + event_id)
                 new_status = request.form.get('update_assignment_status')
                 print("new status: " + new_status)
                 new_admin_notes = request.form.get('admin_notes_input')
-                team_lead = request.form["update-leader-slot"]
+                team_lead = request.form["leader-slot"]
                 trainer_name_and_emails = request.form.getlist(
-                    "update-trainer-slot[]")
+                    "trainer-slot[]")
                 print(trainer_name_and_emails)
                 date_format = '%Y-%m-%d %H:%M:%S'
                 start_date = datetime.strptime(request.form.get(
-                    "update-assignment-start-date"), date_format)
+                    "start-date"), date_format)
                 end_date = datetime.strptime(request.form.get(
-                    "update-assignment-end-date"), date_format)
+                    "end-date"), date_format)
                 formatted_start_date = request.form.get(
-                    "update-assignment-formatted-start-date")
+                    "formatted-start-date")
                 formatted_end_time = request.form.get(
-                    "update-assignment-formatted-end-time")
+                    "formatted-end-time")
                 event = Event.query.get(int(event_id))
+                hasTrainer = False
                 if event:
                     # Update the event status
                     print("updating event")
@@ -366,7 +382,7 @@ def update_assignment():
                         db.session.delete(assignment)
                         db.session.commit()
                     if (new_status != 'New' and new_status != 'Confirmed' and new_status != 'Canceled'):
-                        hasTrainer = False #if event has no trainer assigned, change event status to "New" or "Confirmed"
+                        #if event has no trainer assigned, change event status to "New" or "Confirmed"
                         lead_assignment=create_assignment(trainer=team_lead,event=event,start_date=start_date,end_date=end_date,
                                             formatted_start_date=formatted_start_date,
                                            formatted_end_time=formatted_end_time,isLead=True)
@@ -396,6 +412,7 @@ def update_assignment():
                 print("request.form.get(\"update_assignment\")is false")
         except Exception as e:
             print(f"An error occurred: {e}")
+            traceback.print_exc()
             db.session.rollback()  # Rollback the transaction in case of an error
     return redirect(url_for('views.home'))
 

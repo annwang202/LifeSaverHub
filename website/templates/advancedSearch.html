@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="{{url_prefix}}/static/styles/web.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="{{url_prefix}}/static/scripts/base.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
+"></script>
+<script>
+  function showOrHideDropdown(id,prefix,action)
+    {
+      let el = document.getElementById(`${prefix}_${id}`);
+      if(el.style.display === "block"){
+        el.style.display = "none";
+        if (action === "expand"){
+          document.getElementById(id).innerHTML = "&#128897;";
+        }
+      }
+      else{
+        el.style.display = "block";
+        if (action === "expand"){
+          document.getElementById(id).innerHTML = "&#128899;";
+        }
+      }
+    }
+  function disableCheckbox(radio){
+    var trainerId = radio.getAttribute("trainer");
+    var checkedCheckboxes = document.querySelectorAll(
+          ".trainer-checkbox"
+        );
+    checkedCheckboxes.forEach(function(box){
+      if(box.getAttribute("trainer")!=trainerId){
+        box.disabled = false;
+      }
+      else{
+        box.disabled = true;
+      }
+    })
+  }
+</script> 
+    <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
+  <body style="max-width: 100%;">
+    <div id="trainer-info-container" class="trainer-info-container">
+      <div class="trainerFilterSection">
+        <ul>
+            <strong>Status</strong>
+            <li>
+                <input checked="true" type="checkbox" value="New"/>
+                <label>New</label>
+            </li>
+            <li>
+              <input checked="true" type="checkbox" value="Basic Trainer">
+              <label>Basic Trainer</label>
+          </li>
+            <li>
+                <input checked="true" type="checkbox" value="Team Lead"/>
+                <label>Team Lead</label>
+            </li>
+            <li>
+                <input type="checkbox" value="Suspended"/>
+                <label>Suspended</label>
+            </li></br>
+            <strong>Availability</strong></br>
+            <label for="date" style="font-size: x-small;">Date:</label></br>
+            <input type="date" name="date" style="font-size: smaller;"/></br>
+            <label for= "start_time" style="font-size: x-small;">From : &ensp;</label></br>
+            <input type="time" name="start_time"/></br>
+            <label for= "end_time" style="font-size: x-small;">To :&emsp;&emsp;</label></br>
+            <input type="time" name="end_time"/></br>
+            <button id = "filterButton" onClick="">Filter</button>
+            <button id = "clearButton">Clear</button>
+        </ul>
+      </div>
+      <div class="rating">
+        <h2>Available trainers</h2>
+      <div class="trainerList">
+        <ul class="list-group list-group-flush" id="trainerInfoFilter">
+          {% for trainer in trainers %}
+          <li
+            id="trainer_{{trainer.id}}"
+            data-type="{{trainer.status}}"
+            class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %}"
+            style="display: inline-block; border-width: 3px;"
+          >
+          {% if trainer.status == "Team Lead"%}
+            <input title="Select as team lead" class="starradio" type="radio" name="stars" trainer="{{trainer.id}}" value="{{trainer.nickname}} (ID: {{trainer.id}})" onchange="disableCheckbox(this)" />
+          {% endif %}
+          <input
+          type="checkbox"
+          class="trainer-checkbox"
+          name="check"
+          trainer="{{trainer.id}}"
+          value="{{trainer.nickname}} (ID: {{trainer.id}})"
+        ><strong>{{trainer.nickname}}</strong><br>
+          {{trainer.pronouns}}
+          <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
+            <div class = "button-container">
+              <button title="Details" id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128899;</button>
+            </div>
+          <div class="trainer-details">
+            <div id="trainer_details_{{ trainer.id }}" style="display:none;">
+              <p>
+              Full name: {{trainer.name}}</br>
+              Date of birth: {{trainer.date}}</br>
+              Race/ethnicity: {{trainer.race_ethnicity}}</br>
+              How did you hear: {{trainer.how_did_you_hear}}</br>
+              Email: {{trainer.email}}</br>
+              Phone: {{trainer.phone}}</br>
+              Call or text: {{trainer.text_or_call}}</br>
+              Student? {{trainer.education}}</br>
+              Lifesaver skills: {{trainer.lifesaver_skills}}</br>
+              Relevant experience: {{trainer.relevant_exp}}</br>
+              Heartsaver interest: {{trainer.heartsaver_interest}}</br>
+              Other languages: {{trainer.languages}}</br>
+              <strong>General availability:</strong><br>
+              {{trainer.gen_avail}}<br>
+            <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
+            <strong>Other info:</strong><br>
+            {{ trainer.other_info }}<br>
+            <strong>Admin notes:</strong><br>
+            {{ trainer.admin_notes }}<br>
+            </p>
+            </div>
+          </div>
+          </li> 
+          {% endfor %}
+        </ul>
+      </div>
+      </div>
+    </body>

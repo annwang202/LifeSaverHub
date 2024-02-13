@@ -27,13 +27,13 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
       if(el.style.display === "block"){
         el.style.display = "none";
         if (action === "expand"){
-          document.getElementById(id).innerHTML = "&#128897;";
+          document.getElementById(id).innerHTML = "&#128899;";
         }
       }
       else{
         el.style.display = "block";
         if (action === "expand"){
-          document.getElementById(id).innerHTML = "&#128899;";
+          document.getElementById(id).innerHTML = "&#128897;";
         }
       }
     }
@@ -95,26 +95,5 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-
-    {% block javascript %}
-    <script type="text/javascript">
-      function deleteNote(noteId) {
-        fetch("/delete-note", {
-          method: "POST",
-          body: JSON.stringify({ noteId: noteId }),
-        }).then((_res) => {
-          window.location.href = "/";
-        });
-      }
-      function deleteEvent(eventId) {
-        fetch("/delete-event", {
-          method: "POST",
-          body: JSON.stringify({ eventId: eventId }),
-        }).then((_res) => {
-          window.location.href = "/";
-        });
-      }
-    </script>
-    {% endblock %}
   </body>
 </html>

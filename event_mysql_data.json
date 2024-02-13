@@ -180,5 +180,28 @@
       }
     ],
     "id": 4
+  },
+  {
+    "events": [
+      {
+        "color": "#c8006f",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-02-13T18:30:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#FFFFFF",
+        "extendedProps": {
+          "eventId": 5,
+          "formattedEndTime": "06:30 PM",
+          "formattedStartDate": "02/13/2024 04:30 PM",
+          "numLearners": 20,
+          "trainerTrue": false
+        },
+        "id": 10,
+        "start": "2024-02-13T16:30:00",
+        "title": "Sesame Street"
+      }
+    ],
+    "id": 5
   }
 ]
