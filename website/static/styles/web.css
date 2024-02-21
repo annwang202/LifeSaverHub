@@ -93,6 +93,12 @@
     grid-gap: 0px;
 }
 
+#advancedInfoFilter {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 0px;
+}
+
 body{
     margin: 0;
     justify-content: center; /* Centers vertically */
@@ -114,10 +120,12 @@ body{
   border: 0 !important;
 }
 
+
 .assign-trainers {
-  height: 50vh;
+  height: 20vh;
   overflow-y: auto;
 }
+
 .email {
   font-size:smaller;
   padding: 4px;
@@ -268,4 +276,35 @@ input.star { /*star checkboxes*/
 .starradio:checked {
   background: url('starred.png') no-repeat;
   background-size: cover;
+}
+
+/*status colors*/
+.New {
+  color: #ff8503;
+}
+
+.Confirmed {
+  color: #7f04d1;
+}
+
+.Tentative {
+  color: #039e72;
+}
+
+.Scheduled {
+  color: #03329e;
+}
+
+.Happened {
+  color: grey;
+}
+
+.Canceled {
+  color:grey;
+}
+
+/*availability summary*/
+
+.vis-timeline {
+  font-size: x-small !important;
 }

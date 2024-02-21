@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from .models import Event, EventDate, Trainer, TrainerDate, Assignment
 from . import db
 import json
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from sqlalchemy import asc, extract, Time
 from werkzeug.utils import secure_filename
 import re
@@ -67,6 +67,56 @@ def advancedsearch():
         trainers_data.append(trainer.name)
     return render_template("advancedSearch.html", user=current_user, trainers=trainers, trainers_data=trainers_data, trainer_colors=trainer_colors)
 
+@views.route('/availabilitySummary/<string:weekday>', methods=['GET', 'POST'])
+@login_required
+def availabilitySummary(weekday):
+    qsundays = TrainerDate.query.filter(TrainerDate.weekday == "Sunday").all()
+    qmondays = TrainerDate.query.filter(TrainerDate.weekday == "Monday").all()
+    qtuesdays = TrainerDate.query.filter(TrainerDate.weekday == "Tuesday").all()
+    qwednesdays = TrainerDate.query.filter(TrainerDate.weekday == "Wednesday").all()
+    qthursdays = TrainerDate.query.filter(TrainerDate.weekday == "Thursday").all()
+    qfridays = TrainerDate.query.filter(TrainerDate.weekday == "Friday").all()
+    qsaturdays = TrainerDate.query.filter(TrainerDate.weekday == "Saturday").all()
+
+    sundays = toDict(qsundays)
+    mondays = toDict(qmondays)
+    tuesdays = toDict(qtuesdays)
+    wednesdays = toDict(qwednesdays)
+    thursdays = toDict(qthursdays)
+    fridays = toDict(qfridays)
+    saturdays = toDict(qsaturdays)
+
+    weekday_dict = {"sunday": sundays, "monday": mondays, "tuesday": tuesdays, "wednesday": wednesdays,
+                    "thursday": thursdays, "friday": fridays, "saturday": saturdays}
+    
+    thisDay = weekday_dict[weekday]
+    start_date = thisDay[0]["start_date"]
+    start_time = start_date.replace(hour=0, minute=0, second=0)
+    end_time = start_time + timedelta(days=1)
+    print(start_time)
+    print(end_time)
+
+
+    trainer_ids = set([date["trainer_id"] for date in thisDay])
+
+    trainerData = []
+    for id in trainer_ids:
+        trainer = Trainer.query.get(id)
+        trainer_dict = {"id":trainer.id,"nickname":trainer.nickname}
+        trainerData.append(trainer_dict)
+
+    return render_template("availabilitySummary.html", availability=thisDay,trainerData=trainerData,start=start_time.isoformat(),end=end_time.isoformat())
+
+def toDict(query):
+    dayList = []
+    for date in query:
+        dict = {"id":date.id,"trainerName":date.trainerName,"start_date":date.start_date,"end_date":date.end_date,"weekday":date.weekday,
+                "formatted_start_time":date.formatted_start_time,"formatted_end_time":date.formatted_end_time,
+                "iso_formatted_start_date":date.iso_formatted_start_date,"iso_formatted_end_date":date.iso_formatted_end_date,
+                "trainer_id":date.trainer_id}
+        dayList.append(dict)
+    return dayList
+            
 
 
 @views.route('/trainee', methods=['GET', 'POST'])
@@ -245,14 +295,15 @@ def submit_assignment():
                 print("form gotten")
                 event_id = request.form["event-id"]
                 print(event_id)   
-                start_date = datetime.fromisoformat(
-                    request.form["start-date"])
+                request_date = datetime.strptime(request.form.get("start-date"),  "%Y-%m-%dT%H:%M:%S%z")
+                start_time = datetime.strptime(request.form["start_time"], "%H:%M")
                 print("checkpoint 4")
-                end_date = datetime.fromisoformat(
-                    request.form["end-date"])
+                end_time = datetime.strptime(request.form["end_time"], "%H:%M")
+                start_date = request_date.replace(hour=start_time.hour, minute=start_time.minute)
+                end_date = request_date.replace(hour=end_time.hour, minute=end_time.minute)
                 print("checkpoint 5")
-                formatted_start_date = request.form["formatted-start-date"]
-                formatted_end_time = request.form["formatted-end-time"]
+                formatted_start_date = start_date.strftime('%m/%d/%Y %I:%M %p')
+                formatted_end_time = end_date.strftime("%I:%M %p")
                 trainer_name_and_emails = request.form.getlist(
                     "trainer-slot[]")
                 team_lead = request.form["leader-slot"]
@@ -443,7 +494,7 @@ def delete_event():
 
 @views.route('/eventdata')
 def event_mysql_to_json():
-    from .models import User, Event, EventDate
+    from .models import Event
 
     # Query the data from the database
     data = Event.query.all()
@@ -481,6 +532,51 @@ def event_mysql_to_json():
 
     # Save the JSON data to a file (optional)
     with open('event_mysql_data.json', 'w') as json_file:
+        json_file.write(json_data)
+
+    return json_data
+
+@views.route('/assignmentdata')
+def assignment_mysql_to_json():
+    from .models import Event, Assignment
+
+    events = Event.query.all()
+    assignments = (
+        db.session.query(Assignment)
+        .group_by(Assignment.event_id)
+        .all()
+    )
+
+    # Convert the data to a list of dictionaries
+    sources_list = []
+    for assignment in assignments:
+        event_list = []
+        event = Event.query.get(assignment.event_id)
+        time_dict = {
+                'id': event.id,
+                'title': event.title,
+                'start': assignment.start_date.isoformat(),
+                'end': assignment.end_date.isoformat(),
+                'displayEventEnd': True,
+                'color': trainer_colors[(event.id - 1) % len(trainer_colors)][0],
+                'eventTextColor': trainer_colors[(event.id - 1) % len(trainer_colors)][0],
+                'extendedProps': {
+                    'trainerTrue': True,
+                    'formattedStartDate': assignment.formatted_start_date,
+                    'formattedEndTime': assignment.formatted_end_time,
+                    'eventId': event.id,
+                    'numLearners': event.num_learners
+                }
+            }
+        event_list.append(time_dict)
+        event_dict = {'events': event_list, 'id': event.id}
+        sources_list.append(event_dict)
+
+    # Convert the data to JSON
+    json_data = jsonify(sources_list).get_data(as_text=True)
+
+    # Save the JSON data to a file (optional)
+    with open('assignment_mysql_data.json', 'w') as json_file:
         json_file.write(json_data)
 
     return json_data

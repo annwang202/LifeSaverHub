@@ -102,3 +102,4 @@ class Assignment(db.Model):
         nullable=False)
     trainer_status = db.Column(db.String(50))
     isLead = db.Column(db.Boolean,default=False)
+    

@@ -1,3 +1,12 @@
+function numberSlots(container){
+  var slotNum = 2;
+  console.log("numberSlots() called");
+  const slotLabels = container.querySelectorAll(".slot-label");
+  slotLabels.forEach(function(label){
+    label.textContent = "Trainer " + slotNum++;
+  })
+}
+
 function deleteTrainerSlot(button,search_class) {
   var slot = button.closest(search_class);
   slot.parentNode.removeChild(slot);
@@ -6,15 +15,17 @@ function addTrainerSlot(search_class,container) {
   console.log("addtrainerslot called");
   const slotsContainer = document.getElementById(container);
   const slotEntry = document.querySelector(search_class).cloneNode(true);
+
   const input = slotEntry.querySelector('input[type="text"]');
   input.value = "";
-  //delete slot button
+  //add delete-slot button
   const deleteButton = document.createElement("button");
   deleteButton.type = "button";
   deleteButton.className = "delete-slot";
   deleteButton.textContent = "X";
   deleteButton.addEventListener("click", function () {
     deleteTrainerSlot(this,search_class);
+    numberSlots(slotsContainer);
   });
   // Append the button to the slot
   slotEntry.appendChild(deleteButton);
@@ -48,7 +59,8 @@ function showEditModalfunction({
   var modal = $("#update-assignment");
   modal.find(".modal-title").text(title);
   modal.find(".time").text(`${formatted_start_date} - ${formatted_end_time}`);
-  modal.find(".numLearners").html(`Estimated learners: ${learners}<br>Target # of trainers: ${Math.ceil(learners/4)}`);
+  modal.find(".numLearners").text(`${learners}`);
+  modal.find(".targetTrainers").text(`${Math.ceil(learners/4)}`)
   var borderColor = "grey";
   var currStatus = document.querySelector("#current-status");
   currStatus.value = eventStatus;
@@ -76,6 +88,7 @@ function showEditModalfunction({
   for (let j = 1; j < trainers.length; j++) {
     addTrainerSlot(".update.trainer-search","update-trainer-slots");
   }
+  numberSlots(trainerSlotsContainer);
   const newSlots = trainerSlotsContainer.querySelectorAll(".update.trainer-search");
   for (index = 0; index < newSlots.length; index++) {
     let slot = newSlots[index];
@@ -200,6 +213,7 @@ function initializeAdvancedSearch(iframeDocument,modal){
           const classSelector = "." + Array.from(modal1.querySelector(".trainer-search").classList).join(".");
           console.log(classSelector);
           addTrainerSlot(classSelector,slotContainer.id);
+          numberSlots(slotContainer);
           slots = modal1.querySelectorAll(".trainerInput");
           slots[j++].value = checkedCheckboxes[index].value;
         }
@@ -231,58 +245,90 @@ document.addEventListener("DOMContentLoaded", function () {
           right: "timeGridDay,dayGridMonth,timeGridWeek,multiMonthYear", // user can switch between the two
         },
         eventClick: function (info) {
-          var modal = $("#detail-expand");
           var event = info.event;
-          modal.find(".modal-title").text(event.title);
-          modal.find(".description").text(event.extendedProps.description);
-          modal
-            .find(".time")
-            .text(
-              `${event.extendedProps.formattedStartDate} - ${event.extendedProps.formattedEndTime}`
+          if(!info.event.extendedProps.trainerTrue){
+            var modal = $("#detail-expand");
+            modal.find(".modal-title").text(event.title);
+            modal.find(".description").text(event.extendedProps.description);
+            modal
+              .find(".time")
+              .text(
+                `${event.extendedProps.formattedStartDate} - ${event.extendedProps.formattedEndTime}`
+              );
+              modal.find(".numLearners").text(`${event.extendedProps.numLearners}`);
+              modal.find(".targetTrainers").text(`${Math.ceil(event.extendedProps.numLearners/4)}`)
+            var borderColor = event.borderColor
+              ? event.borderColor
+              : event.backgroundColor;
+            modal.find(".modal-content").css("border-color", borderColor);
+            $("#assignment-event-id").val(event.extendedProps.eventId);
+            $("#assignment-start-date").val(event.startStr);
+            $("#assignment-end-date").val(event.endStr);
+            $("#assignment-formatted-start-date").val(
+              event.extendedProps.formattedStartDate
             );
-          modal
-            .find(".numLearners")
-            .html(`Estimated learners: ${event.extendedProps.numLearners}<br>Target # of trainers: ${Math.ceil(event.extendedProps.numLearners/4)}`);
-          var borderColor = event.borderColor
-            ? event.borderColor
-            : event.backgroundColor;
-          modal.find(".modal-content").css("border-color", borderColor);
-          $("#assignment-event-id").val(event.extendedProps.eventId);
-          $("#assignment-start-date").val(event.startStr);
-          $("#assignment-end-date").val(event.endStr);
-          $("#assignment-formatted-start-date").val(
-            event.extendedProps.formattedStartDate
-          );
-          $("#assignment-formatted-end-time").val(
-            event.extendedProps.formattedEndTime
-          );
-          //delete all previously copied slots
-          const trainerSlotsContainer =
-            document.getElementById("trainer-slots");
-          const currentSlots =
-            trainerSlotsContainer.querySelectorAll(".trainer-search");
-          // Remove all but the first slot
-          for (let i = 1; i < currentSlots.length; i++) {
-            trainerSlotsContainer.removeChild(currentSlots[i]);
+            $("#assignment-formatted-end-time").val(
+              event.extendedProps.formattedEndTime
+            );
+            //copy request time into assigned time inputs fields
+            var startTimeInput = modal.find('input[name="start_time"]').get(0);
+            var endTimeInput = modal.find('input[name="end_time"]').get(0);
+            //parse the values into date objects
+            var parsedStart = new Date(event.start);
+            var parsedEnd = new Date(event.end);
+            const startHours = parsedStart.getHours();
+            const startMinutes = String(parsedStart.getMinutes()).padStart(2, '0');
+            const startTime = `${startHours}:${startMinutes}`;
+            const endHours = parsedEnd.getHours();
+            const endMinutes = String(parsedEnd.getMinutes()).padStart(2, '0');
+            const endTime = `${endHours}:${endMinutes}`;
+            startTimeInput.value = startTime;
+            endTimeInput.value = endTime;
+  
+            //delete all previously copied slots
+            const trainerSlotsContainer =
+              document.getElementById("trainer-slots");
+            const currentSlots =
+              trainerSlotsContainer.querySelectorAll(".trainer-search");
+            // Remove all but the first slot
+            for (let i = 1; i < currentSlots.length; i++) {
+              trainerSlotsContainer.removeChild(currentSlots[i]);
+            }
+            //clear slots
+            var inputElements = document.querySelectorAll(".trainerInput, .leaderInput");
+            inputElements.forEach(function(input) {
+                input.value = "";
+            });
+            //copy the correct number of slots
+            var defaultSlots = Math.ceil(event.extendedProps.numLearners / 4);
+            var numSlots = defaultSlots < 8 ? defaultSlots : 8;
+            for (var i = 2; i < numSlots; i++) {
+              addTrainerSlot(".trainer-search","trainer-slots");
+            }
+            numberSlots(trainerSlotsContainer);
+            //uncheck advanced search trainers
+            const checkboxes = iframeDocument.querySelectorAll(
+              ".trainer-checkbox"
+            );
+            checkboxes.forEach((checkbox) => {
+              checkbox.checked = false;
+            });
+            //get availabilitySummary
+            const weekdays = [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday",
+              "sunday",
+            ];
+            var availabilitySummaryIframe = document.getElementById("availabilitySummaryIframe");
+            availabilitySummaryIframe.src = "/availabilitySummary/" + weekdays[parsedStart.getDay()];
+            console.log(weekdays[parsedStart.getDay()]);
+
+            modal.modal();
           }
-          //clear slots
-          var inputElements = document.querySelectorAll(".trainerInput, .leaderInput");
-          inputElements.forEach(function(input) {
-              input.value = "";
-          });
-          //copy the correct number of slots
-          var defaultSlots = Math.ceil(event.extendedProps.numLearners / 4);
-          for (var i = 2; i < defaultSlots; i++) {
-            addTrainerSlot(".trainer-search","trainer-slots");
-          }
-          //uncheck advanced search trainers
-          const checkboxes = iframeDocument.querySelectorAll(
-            ".trainer-checkbox"
-          );
-          checkboxes.forEach((checkbox) => {
-            checkbox.checked = false;
-          });
-          modal.modal();
         },
       });
       resolve({ calendar });
@@ -358,24 +404,22 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("An error occurred during the data fetch:", error);
       });
     }
-    function updateTrainerSources() {
-      $.getJSON(`/trainerdata`, function (data) {
-        console.log("updateTrainerSources called");
+    function updateAssignmentSources() {
+      $.getJSON(`/assignmentdata`, function (data) {
+        console.log("updateAssignmentSources called");
         // Retrieve checked checkboxes
-        /*
         const checkedCheckboxes = document.querySelectorAll(
-          ".trainer-checkbox:checked"
+          ".assignment-checkbox:checked"
         );
         const uncheckedCheckboxes = document.querySelectorAll(
-          ".trainer-checkbox:not(:checked)"
+          ".assignment-checkbox:not(:checked)"
         );
 
-        const trainerIds = Array.from(checkedCheckboxes).map((checkbox) =>
-          checkbox.getAttribute("trainer-id")
+        const ids = Array.from(checkedCheckboxes).map((checkbox) =>
+          checkbox.getAttribute("assignment-id")
         );
-        console.log(trainerIds);
-        const hiddenTrainerIds = Array.from(uncheckedCheckboxes).map(
-          (checkbox) => checkbox.getAttribute("trainer-id")
+        const hiddenIds = Array.from(uncheckedCheckboxes).map(
+          (checkbox) => checkbox.getAttribute("assignment-id")
         );
 
         const removePromises = calendar.getEvents().map(function (event) {
@@ -391,11 +435,9 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Attempt to add events");
         Promise.all(removePromises).then(() => {
           // Add the updated event sources
-          // Add eventDates associated with each event
-          console.log("trainerIds", trainerIds);
           const addPromises = data.map((jsonsource) => {
             console.log("jsonsource", jsonsource);
-            if (trainerIds.includes(jsonsource.id.toString())) {
+            if (ids.includes(jsonsource.id.toString())) {
               const sourceArray = jsonsource;
               console.log("addEventSource called on:");
               console.log(sourceArray);
@@ -410,26 +452,30 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("calendar sources:");
             console.log(calendar.getEventSources());
           });
-        }); */
+        }); 
       });
     }
     //add autocomplete to additional inputs
     document
       .getElementById("add-trainer-slot")
       .addEventListener("click", function() {
-        addTrainerSlot(".trainer-search","trainer-slots");});
+        addTrainerSlot(".trainer-search","trainer-slots");
+        numberSlots(document.getElementById("trainer-slots"));
+      });
     document
       .getElementById("update-add-trainer-slot")
       .addEventListener("click", function() {
-        addTrainerSlot(".update.trainer-search","update-trainer-slots");});
+        addTrainerSlot(".update.trainer-search","update-trainer-slots");
+        numberSlots(document.getElementById("update-trainer-slots"));
+      });
     // Event listener for checkbox change
     const eventCheckboxes = document.querySelectorAll(".event-checkbox");
     eventCheckboxes.forEach(function (checkbox) {
       checkbox.addEventListener("change", updateEventSources);
     });
-    const trainerCheckboxes = document.querySelectorAll(".trainer-checkbox");
-    trainerCheckboxes.forEach(function (checkbox) {
-      checkbox.addEventListener("change", updateTrainerSources);
+    const assignmentCheckboxes = document.querySelectorAll(".assignment-checkbox");
+    assignmentCheckboxes.forEach(function (checkbox) {
+      checkbox.addEventListener("change", updateAssignmentSources);
     });
     //filter events
     filterEvents("#itemsToFilter li");

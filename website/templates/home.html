@@ -63,7 +63,7 @@
         <strong>Preferred date: </strong></br>{% for preferred_date in event.preferred_date %} {{preferred_date.formatted_start_date}} - {{preferred_date.formatted_end_time}}{% endfor %}<br>
         <strong>Backup dates: </strong></br>{% for date in event.backup_dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}</br>
           {% endfor %}
-    <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{event.status}}</div>
+          <strong>Status:</strong> <div class="update-status {{event.status}}" style="display: inline-block;"><strong>{{event.status}}</strong></div></br>
     <strong>Admin notes: </strong>{{event.admin_notes}}<br>
     <div class = "button-container">
       <button title="Details" id="details_{{event.id}}"class="show-event-details" onClick="showOrHideDropdown(this.id,'event','expand')">&#128899;</button> 
@@ -156,7 +156,7 @@
         <strong>Date: </strong></br>{{assignment_table['assignments'][0].formatted_start_date}} - {{assignment_table['assignments'][0].formatted_end_time}}<br>
         <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for trainer in assignment_table['trainers'] %}<li> <u>{{trainer["role"]}}</u>: {{trainer["trainer"].nickname}}</br> (<i>ID: {{trainer["trainer"].id}}</i>)</li>{% endfor %}</ul></div>
         <div class="assignment-details">
-          <div class="update-status" style="background-color: yellow;"><strong>Status:</strong> {{assignment_table['event'].status}}</div>
+          <strong>Status: </strong><div class="update-status {{assignment_table['event'].status}}" style="display: inline-block;"><strong>{{assignment_table['event'].status}}</strong></div></br>
           <strong>Admin notes:</strong><br>
           <p>{{assignment_table['event'].admin_notes}}</p>
             <form id = "email-form" style="display:inline-block;" action="mailto:{% for trainer in assignment_table['trainers'] %}{{trainer['trainer'].email}}{% if not loop.last %},{% endif %}{% endfor %}?subject=CCAS: Are you available to volunteer for this event?" method="post" enctype="text/plain">
@@ -207,7 +207,7 @@
     </ul>
   </div>
   <div class="modal fade" id="detail-expand">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">
@@ -220,35 +220,43 @@
         <div class="modal-body">
           <form id="create-assignment" autocomplete="off" name="create-assignment" action="/submit-assignment" method="POST">
             <input type="hidden" name="create-assignment" value="1">
-            <div class="time" style="font-weight: bold">Event Time</div>
-            <div class="numLearners"></div>
+            <strong>Request date:</strong>
+            <div class="time" style="display: inline-block;">Event Time</div></br>
+            <strong>Estimated learners: </strong><div class="numLearners" style="display: inline-block;"></div></br>
+            <strong>Target # of trainers: </strong><div class="targetTrainers" style="display: inline-block;"></div></br>
             <div class="description"></div>
             <input type="hidden" id="assignment-event-id" name="event-id" value="hi">
             <input type="hidden" id="assignment-start-date" name="start-date" value="">
             <input type="hidden" id="assignment-end-date" name="end-date" value="">
             <input type="hidden" id="assignment-formatted-start-date" name="formatted-start-date" value="">
             <input type="hidden" id="assignment-formatted-end-time" name="formatted-end-time" value="">
-            <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Advanced search</a>
+            <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Search for trainers</a>
             <div class="assign-trainers">
               <div id="trainer-slots" class="trainer-slots">
                 <div class="leader-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Leader</p>
-                    <input class="leaderInput" type="text" name="leader-slot" placeholder="Search for Team Leads by name">
+                    <input class="leaderInput" type="text" name="leader-slot" placeholder="Enter team lead">
                   </div>
                 </div>
                 <div class="trainer-search" style="display: flex; align-items: center;">
-                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
-                    <p style="margin: 7px;">Trainer</p>
-                    <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Search for trainers by name">
+                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;white-space: nowrap;">
+                    <label class = "slot-label" style="margin: 7px;">Trainer</label>
+                    <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Enter trainer">
                   </div>
                 </div>
               </div>
-              <button type="button" id="add-trainer-slot">Add more trainers</button>
+              <button type="button" id="add-trainer-slot">+</button></div><br>
             </div>
-        </div>
+            <div id="availabilitySummary" style="height: 40vh;">
+              <iframe src="/availabilitySummary/" id="availabilitySummaryIframe" allowTransparency="true" frameborder="0" style="width:100%; height:100%;"></iframe>
+            </div>
         <!-- Modal footer -->
         <div class="modal-footer">
+          <strong>Event time:&ensp;</strong>
+          <input type="time" name="start_time" required />
+          <label for="event_date" style="font-weight: normal;">to</label>
+          <input type="time" name="end_time" required />
           <button type="submit" form = "create-assignment" id="assignment_submit" class="btn btn-primary">Create tentative event</button>
         </div>
       </form>
@@ -277,23 +285,23 @@
             <input type="hidden" id="update-assignment-end-date" name="end-date" value="">
             <input type="hidden" id="update-assignment-formatted-start-date" name="formatted-start-date" value="">
             <input type="hidden" id="update-assignment-formatted-end-time" name="formatted-end-time" value="">
-            <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Advanced search</a>
+            <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Search for trainers</a>
             <div class="assign-trainers">
               <div id="update-trainer-slots" class="trainer-slots">
                 <div class="update leader-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
                     <p style="margin: 7px;">Leader</p>
-                    <input class="leaderInput" type="text" name="leader-slot" placeholder="Search for trainers by name">
+                    <input class="leaderInput" type="text" name="leader-slot" placeholder="Enter team lead">
                   </div>
                 </div>
                 <div class="update trainer-search" style="display: flex; align-items: center;">
                   <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
-                    <p style="margin: 7px;">Trainer</p>
-                    <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Search for trainers by name">
+                    <label id = "slot-label" style="margin: 7px;">Trainer</label>
+                    <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Enter trainer">
                   </div>
                 </div>
               </div>
-              <button type="button" id="update-add-trainer-slot">Add more trainers</button>
+              <button type="button" id="update-add-trainer-slot">+</button>
             </div>
             <strong>Status:</strong> 
             <select name="update_assignment_status">
@@ -316,8 +324,8 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modal2" data-backdrop="static">
-    <div class="modal-dialog">
+  <div class="modal fade" id="modal2">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">2nd Modal title</h4>

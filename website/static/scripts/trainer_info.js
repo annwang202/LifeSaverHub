@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var inputs = container.querySelectorAll(
     'input[type="date"], input[type="time"]'
   );
-  const trainerBoxes = document.querySelectorAll("#trainerInfoFilter li");
+  const trainerBoxes = document.querySelectorAll(".infoFilter li");
   var checkboxes = document.querySelectorAll(
     ".trainerFilterSection li input[type='checkbox']"
   );
@@ -25,11 +25,14 @@ document.addEventListener("DOMContentLoaded", function () {
   trainerBoxes.forEach(function (box) {
     var status = box.getAttribute("data-type");
     if (status === "New") {
-      box.style.borderColor = "#FCF55F";
+      box.style.borderColor = "#f5b642";
+      box.querySelector(".update-status").style.color = "#ff7d03";
     } else if (status === "Team Lead") {
       box.style.borderColor = "#94b581";
+      box.querySelector(".update-status").style.color = "#4c7a02";
     } else if (status === "Basic Trainer") {
       box.style.borderColor = "DodgerBlue";
+      box.querySelector(".update-status").style.color = "#044dba";
     }
   });
 });

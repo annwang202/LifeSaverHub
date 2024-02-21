@@ -124,4 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
     initializeSchedule();
+    const pronouns = ["She/Her/Hers","He/Him/His","They/Them/Theirs","She/They","He/They","They/She","They/Him","No preference"]
+    autocomplete(document.querySelectorAll(".pronounsInput"), pronouns);
 });

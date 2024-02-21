@@ -1,0 +1,44 @@
+[
+  {
+    "events": [
+      {
+        "color": "#044080",
+        "displayEventEnd": true,
+        "end": "2024-01-30T15:00:00",
+        "eventTextColor": "#044080",
+        "extendedProps": {
+          "eventId": 1,
+          "formattedEndTime": "03:00 PM",
+          "formattedStartDate": "01/30/2024 12:00 PM",
+          "numLearners": 20,
+          "trainerTrue": true
+        },
+        "id": 1,
+        "start": "2024-01-30T12:00:00",
+        "title": "Fake Organization 1"
+      }
+    ],
+    "id": 1
+  },
+  {
+    "events": [
+      {
+        "color": "#8dcbd9",
+        "displayEventEnd": true,
+        "end": "2024-01-30T14:00:00",
+        "eventTextColor": "#8dcbd9",
+        "extendedProps": {
+          "eventId": 3,
+          "formattedEndTime": "02:00 PM",
+          "formattedStartDate": "01/30/2024 12:00 PM",
+          "numLearners": 30,
+          "trainerTrue": true
+        },
+        "id": 3,
+        "start": "2024-01-30T12:00:00",
+        "title": "Fake Organization 3"
+      }
+    ],
+    "id": 3
+  }
+]

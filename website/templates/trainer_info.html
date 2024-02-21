@@ -7,19 +7,19 @@
             <strong>Status</strong>
             <li>
                 <input checked="true" type="checkbox" value="New"/>
-                <label>New</label>
+                <label style="color: #ff7d03; font-weight: bold;">New</label>
             </li>
             <li>
               <input checked="true" type="checkbox" value="Basic Trainer">
-              <label>Basic Trainer</label>
+              <label style="color: #044dba; font-weight: bold;">Basic Trainer</label>
           </li>
             <li>
                 <input checked="true" type="checkbox" value="Team Lead"/>
-                <label>Team Lead</label>
+                <label style="color: #4c7a02; font-weight: bold;">Team Lead</label>
             </li>
             <li>
                 <input type="checkbox" value="Suspended"/>
-                <label>Suspended</label>
+                <label style="font-weight: bold;">Suspended</label>
             </li></br>
             <strong>Availability</strong></br>
             <label for="date" style="font-size: x-small;">Date:</label></br>
@@ -33,21 +33,20 @@
         </ul>
       </div>
       <div class="trainerList">
-        <ul class="list-group list-group-flush" id="trainerInfoFilter">
+        <ul class="list-group list-group-flush infoFilter" id="trainerInfoFilter">
           {% for trainer in trainers %}
           <li
             id="trainer_{{trainer.id}}"
             data-type="{{trainer.status}}"
-            class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %}"
+            class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %} "
             style="display: inline-block; border-width: 3px;"
           >
-          <strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong><br>
-          {{trainer.pronouns}}
-          <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
+          <a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a><br>
+          {{trainer.pronouns}}</br>
+          <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{trainer.status}}</strong></div><br>
             <div class = "button-container">
               <button title= "Details" id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128899;</button>
               <button title="Edit trainer" id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit trainer"/></button></div>
-            </div>
           <div id="update_div_{{ trainer.name }}" style="display:none;">
             <form id="update_form_{{ trainer.name }}"  name="update_trainer_form" action="/update-trainer" method="POST">
               <input type="hidden" name="update_trainer_form" value="1">

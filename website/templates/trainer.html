@@ -65,14 +65,20 @@
           <input type="text" id="trainer_name" name="trainer_name" maxlength="50" required /><br />
           <label for="trainer_nickname" style="font-weight: bold;">Enter your preferred name*:</label>
           <input type="text" id="trainer_nickname" name="trainer_nickname" maxlength="50" required/><br />
-          <label for="trainer_bd" style="font-weight: bold;">Please provide your date of birth (for ACT 34 clearance)*:</label>
+          <label for="trainer_bd" style="font-weight: bold;">Please provide your date of birth (for ACT 34 clearance)*:</label></br>
           <input id = "trainer_bd" type="date" name="trainer_bd" required /><br />
-          <label for="trainer_pronouns" style="font-weight: bold;">Preferred pronouns*:</label>
-          <input type="text" id="trainer_pronouns" name="trainer_pronouns" maxlength="50" required/><br />
-          <label for="trainer_phone" style="font-weight: bold;">Phone Number*:</label>
+          <label for="trainer_pronouns" style="font-weight: bold;">Describe or select your preferred pronouns*:</label>
+          <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
+            <input class="pronounsInput" type="text" name="trainer_pronouns" placeholder="Enter or select pronouns" required>
+          </div>
+          <label for="trainer_phone" style="font-weight: bold;">Best phone number to reach you*:</label>
           <input type="text" id="trainer_phone" name="trainer_phone" maxlength="16" required><br />
-          <label for="text_or_call" style="font-weight: bold;">Do you prefer texts or calls?*</label>
-          <input type="text" id="text_or_call" name="text_or_call" maxlength="16" required><br />
+          <label for="text_or_call" style="font-weight: bold;">Do you prefer texts or calls?*</label></br>
+          <select name="text_or_call" id="text_or_call" required>
+            <option value="Select" selected disabled hidden>Select preference</option>
+            <option value="Texts">Texts</option>
+            <option value="Calls">Calls</option>
+          </select></br></br>
           <label for="trainer_email" style="font-weight: bold;">Email*:</label>
           <input type="text" id="trainer_email" name="trainer_email" maxlength="50" required /><br />
           <label for="trainer_race">Race/ethnicity (optional)</label>

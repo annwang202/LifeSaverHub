@@ -88,7 +88,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
       <div class="rating">
         <h2>Available trainers</h2>
       <div class="trainerList">
-        <ul class="list-group list-group-flush" id="trainerInfoFilter">
+        <ul class="list-group list-group-flush infoFilter" id="advancedInfoFilter">
           {% for trainer in trainers %}
           <li
             id="trainer_{{trainer.id}}"
@@ -105,7 +105,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
           name="check"
           trainer="{{trainer.id}}"
           value="{{trainer.nickname}} (ID: {{trainer.id}})"
-        ><strong>{{trainer.nickname}}</strong><br>
+        ><a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a><br>
           {{trainer.pronouns}}
           <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
             <div class = "button-container">
