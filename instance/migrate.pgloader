@@ -1,0 +1,7 @@
+load database
+    from 'database.db'
+    into postgresql://lsh_user:lsh_password@localhost/lifesaverhubdb
+
+with include drop, quote identifiers, create tables, create indexes, reset sequences
+
+set work_mem to '16MB', maintenance_work_mem to '512 MB';
