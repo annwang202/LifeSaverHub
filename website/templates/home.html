@@ -3,7 +3,6 @@
 <script src="{{url_prefix}}/static/scripts/matching.js"></script>
 </br>
 <div class="page-title">
-  <h2>LifeSaver Hub Scheduling</h2>
 </div>
 <div class="schedule_container">
   <div class="box">
@@ -207,7 +206,7 @@
     </ul>
   </div>
   <div class="modal fade" id="detail-expand">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">
@@ -329,19 +328,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           </div><div class="container"></div>
           <div class="modal-body advancedSearch">
-            <!-- Tab links -->
-              <div class="tab">
-                <button class="tablinks active" onclick="openTab(event, 'trainer-view')">Trainer View</button>
-                <button class="tablinks" onclick="openTab(event, 'calendar-view')">Calendar View</button>
-              </div>
-              <!-- Tab content -->
-              <div id="trainer-view" class="tabcontent">
-                <iframe src="/advancedsearch" id="advancedSearch" allowTransparency="true" frameborder="0" ></iframe>
-              </div>
-
-              <div id="calendar-view" class="tabcontent" style="display:none; height:100%;">
-                <iframe src="/availabilitySummary/" id="availabilitySummaryIframe" allowTransparency="true" frameborder="0" style="width:100%;height:62vh;"></iframe>
-              </div>
+            <iframe src="/advancedsearch" id="advancedSearch" allowTransparency="true" frameborder="0" ></iframe>
          </div>
           <div class="modal-footer">
             <button data-dismiss="modal" class="btn">Close</button>

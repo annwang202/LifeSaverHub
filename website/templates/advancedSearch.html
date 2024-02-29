@@ -51,6 +51,26 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
       }
     })
   }
+  function openTab(evt, tabId) {
+      // Declare all variables
+      var i, tabcontent, tablinks;
+
+      // Get all elements with class="tabcontent" and hide them
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      // Get all elements with class="tablinks" and remove the class "active"
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      document.getElementById(tabId).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
 </script> 
     <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
   <body style="max-width: 100%;">
@@ -85,60 +105,73 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
             <button id = "clearButton">Clear</button>
         </ul>
       </div>
-      <div class="rating">
-        <h2>Available trainers</h2>
-      <div class="trainerList">
-        <ul class="list-group list-group-flush infoFilter" id="advancedInfoFilter">
-          {% for trainer in trainers %}
-          <li
-            id="trainer_{{trainer.id}}"
-            data-type="{{trainer.status}}"
-            class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %}"
-            style="display: inline-block; border-width: 3px;"
-          >
-          {% if trainer.status == "Team Lead"%}
-            <input title="Select as team lead" class="starradio" type="radio" name="stars" trainer="{{trainer.id}}" value="{{trainer.nickname}} (ID: {{trainer.id}})" onchange="disableCheckbox(this)" />
-          {% endif %}
-          <input
-          type="checkbox"
-          class="trainer-checkbox"
-          name="check"
-          trainer="{{trainer.id}}"
-          value="{{trainer.nickname}} (ID: {{trainer.id}})"
-        ><a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a><br>
-          {{trainer.pronouns}}
-          <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
-            <div class = "button-container">
-              <button title="Details" id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128899;</button>
-            </div>
-          <div class="trainer-details">
-            <div id="trainer_details_{{ trainer.id }}" style="display:none;">
-              <p>
-              Full name: {{trainer.name}}</br>
-              Date of birth: {{trainer.date}}</br>
-              Race/ethnicity: {{trainer.race_ethnicity}}</br>
-              How did you hear: {{trainer.how_did_you_hear}}</br>
-              Email: {{trainer.email}}</br>
-              Phone: {{trainer.phone}}</br>
-              Call or text: {{trainer.text_or_call}}</br>
-              Student? {{trainer.education}}</br>
-              Lifesaver skills: {{trainer.lifesaver_skills}}</br>
-              Relevant experience: {{trainer.relevant_exp}}</br>
-              Heartsaver interest: {{trainer.heartsaver_interest}}</br>
-              Other languages: {{trainer.languages}}</br>
-              <strong>General availability:</strong><br>
-              {{trainer.gen_avail}}<br>
-            <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
-            <strong>Other info:</strong><br>
-            {{ trainer.other_info }}<br>
-            <strong>Admin notes:</strong><br>
-            {{ trainer.admin_notes }}<br>
-            </p>
-            </div>
+      <div class="modal-body advancedSearch">
+        <!-- Tab links -->
+          <div class="tab">
+            <button id="trainer-view-button" class="tablinks active" onclick="openTab(event, 'trainer-view')">Trainer View</button>
+            <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')">Calendar View</button>
           </div>
-          </li> 
-          {% endfor %}
-        </ul>
-      </div>
-      </div>
+          <h2>Available trainers</h2>
+          <!-- Tab content -->
+          <div id="trainer-view" class="tabcontent">
+            <div class="rating">
+              <div class="trainerList">
+                <ul class="list-group list-group-flush infoFilter" id="advancedInfoFilter">
+                  {% for trainer in trainers %}
+                  <li
+                    id="trainer_{{trainer.id}}"
+                    data-type="{{trainer.status}}"
+                    class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %}"
+                    style="display: inline-block; border-width: 3px;"
+                  >
+                  {% if trainer.status == "Team Lead"%}
+                    <input title="Select as team lead" class="starradio" type="radio" name="stars" trainer="{{trainer.id}}" value="{{trainer.nickname}} (ID: {{trainer.id}})" onchange="disableCheckbox(this)" />
+                  {% endif %}
+                  <input
+                  type="checkbox"
+                  class="trainer-checkbox"
+                  name="check"
+                  trainer="{{trainer.id}}"
+                  value="{{trainer.nickname}} (ID: {{trainer.id}})"
+                ><a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a><br>
+                  {{trainer.pronouns}}
+                  <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
+                    <div class = "button-container">
+                      <button title="Details" id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128899;</button>
+                    </div>
+                  <div class="trainer-details">
+                    <div id="trainer_details_{{ trainer.id }}" style="display:none;">
+                      <p>
+                      Full name: {{trainer.name}}</br>
+                      Date of birth: {{trainer.date}}</br>
+                      Race/ethnicity: {{trainer.race_ethnicity}}</br>
+                      How did you hear: {{trainer.how_did_you_hear}}</br>
+                      Email: {{trainer.email}}</br>
+                      Phone: {{trainer.phone}}</br>
+                      Call or text: {{trainer.text_or_call}}</br>
+                      Student? {{trainer.education}}</br>
+                      Lifesaver skills: {{trainer.lifesaver_skills}}</br>
+                      Relevant experience: {{trainer.relevant_exp}}</br>
+                      Heartsaver interest: {{trainer.heartsaver_interest}}</br>
+                      Other languages: {{trainer.languages}}</br>
+                      <strong>General availability:</strong><br>
+                      {{trainer.gen_avail}}<br>
+                    <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
+                    <strong>Other info:</strong><br>
+                    {{ trainer.other_info }}<br>
+                    <strong>Admin notes:</strong><br>
+                    {{ trainer.admin_notes }}<br>
+                    </p>
+                    </div>
+                  </div>
+                  </li> 
+                  {% endfor %}
+                </ul>
+              </div>
+              </div>
+          </div>
+
+          <div id="calendar-view" class="tabcontent" style="display:none; height:100%;">
+            <iframe src="/availabilitySummary/" id="availabilitySummaryIframe" allowTransparency="true" frameborder="0" style="width:100%;height:62vh;"></iframe>
+          </div>
     </body>

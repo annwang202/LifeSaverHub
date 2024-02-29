@@ -14,12 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("filterButton")
     .addEventListener("click", async function () {
       var availabilityHide = await filterAvailability(container, trainerBoxes);
+      getAvailabilitySummary(container);
       var statusHide = filterStatus(checkboxes);
       console.log("Hides based on availability: " + availabilityHide);
       console.log("Hides based on status: " + statusHide);
       var unionArr = union(availabilityHide, statusHide);
       console.log("Union hides: " + unionArr);
-      hideTrainers(trainerBoxes,unionArr);
+      hideTrainers(trainerBoxes, unionArr);
     });
 
   trainerBoxes.forEach(function (box) {
@@ -37,11 +38,45 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+function getAvailabilitySummary(container) {
+  //get availabilitySummary
+  const weekdays = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday"
+  ];
+  let date = container.querySelector('input[name="date"]').value;
+  var calendarViewButton= document.getElementById(
+    "calendar-view-button"
+  );
+  if (date != "") {
+    calendarViewButton.disabled = false;
+    //valid date entered
+    let weekday = weekdays[new Date(date).getDay()];
+    var availabilitySummaryIframe = document.getElementById(
+      "availabilitySummaryIframe"
+    );
+    availabilitySummaryIframe.src = "/availabilitySummary/" + weekday; //weekdays[parsedStart.getDay()];
+    var asDocument;
+    availabilitySummaryIframe.onload = function () {
+      asDocument = availabilitySummaryIframe.contentWindow;
+      //asDocument.loadTimeBars(event.startStr, event.endStr);
+    };
+  }
+  else{
+    calendarViewButton.disabled = true;
+  }
+}
+
 function clearInputs(inputs) {
   inputs.forEach(function (input) {
     input.value = "";
   });
-};
+}
 
 function filterStatus(checkboxes) {
   var trainersToHide = [];
@@ -56,7 +91,7 @@ function filterStatus(checkboxes) {
     }
   });
   return trainersToHide;
-};
+}
 
 async function filterAvailability(container, trainerBoxes) {
   //return boxes to hide
@@ -110,13 +145,13 @@ async function filterAvailability(container, trainerBoxes) {
     } //If all fields are empty, no warning needed. Just show all trainers.
     return hideIds;
   }
-};
+}
 
 function union(arr1, arr2) {
   const arr3 = [...new Set([...arr1, ...arr2])];
 
   return arr3;
-};
+}
 
 function hideTrainers(listItems, hideList) {
   for (var i = 0; i < listItems.length; i++) {
@@ -130,4 +165,4 @@ function hideTrainers(listItems, hideList) {
       addClass(currentItem, "showItem");
     }
   }
-};
+}

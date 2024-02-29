@@ -41,26 +41,6 @@ function addTrainerSlot(search_class,container) {
   });
   return input;
 }
-function openTab(evt, tabId) {
-  // Declare all variables
-  var i, tabcontent, tablinks;
-
-  // Get all elements with class="tabcontent" and hide them
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-
-  // Get all elements with class="tablinks" and remove the class "active"
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-
-  // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(tabId).style.display = "block";
-  evt.currentTarget.className += " active";
-}
 function showEditModalfunction({
   eventId,
   title,
@@ -274,14 +254,14 @@ document.addEventListener("DOMContentLoaded", function () {
             var endTimeInput = modal.find('input[name="end_time"]').get(0);
             //parse the values into date objects
             var parsedStart = new Date(event.start);
-            console.log("parsedStart: " + parsedStart);
             var parsedEnd = new Date(event.end);
-            const startHours = parsedStart.getHours();
+            const startHours = String(parsedStart.getHours()).padStart(2,'0');
             const startMinutes = String(parsedStart.getMinutes()).padStart(2, '0');
             const startTime = `${startHours}:${startMinutes}`;
-            const endHours = parsedEnd.getHours();
+            const endHours = String(parsedEnd.getHours()).padStart(2,'0');
             const endMinutes = String(parsedEnd.getMinutes()).padStart(2, '0');
             const endTime = `${endHours}:${endMinutes}`;
+            console.log("startTime: " + startTime);
             startTimeInput.value = startTime;
             endTimeInput.value = endTime;
   
@@ -313,23 +293,6 @@ document.addEventListener("DOMContentLoaded", function () {
             checkboxes.forEach((checkbox) => {
               checkbox.checked = false;
             });
-            //get availabilitySummary
-            const weekdays = [
-              "sunday",
-              "monday",
-              "tuesday",
-              "wednesday",
-              "thursday",
-              "friday",
-              "saturday",
-            ];
-            var availabilitySummaryIframe = document.getElementById("availabilitySummaryIframe");
-            availabilitySummaryIframe.src = "/availabilitySummary/" + weekdays[parsedStart.getDay()];
-            var asDocument;
-            availabilitySummaryIframe.onload = function(){
-              asDocument = availabilitySummaryIframe.contentWindow;
-              asDocument.loadTimeBars(event.startStr,event.endStr);
-            }
 
             modal.modal();
           }

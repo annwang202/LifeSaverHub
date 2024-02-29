@@ -9,25 +9,20 @@ function filterEvents(filter_selector) {
 
   for (var i = 0; i < checkBoxes.length; i++) {
     checkBoxes[i].addEventListener("click", filterItems, false);
-    console.log("added event listener to:", checkBoxes[i]);
   }
 
   function filterItems(e) {
-    console.log("filterItems() called");
     var clickedItem = e.target;
 
     if (clickedItem.checked == true) {
       hideOrShowItems(itemsToFilter,"data-type",clickedItem.value, "hideItem", "showItem");
     } else if (clickedItem.checked == false) {
-      console.log(clickedItem + "is unchecked.");
-      console.log("clickedItem type:", clickedItem.value);
       var boxesToUncheck = document.querySelectorAll(
         `input.event-checkbox[value="${clickedItem.value}"]`
       );
       var trigger = new Event("change");
       boxesToUncheck.forEach(function (boxToUncheck) {
         // Uncheck the checkboxes
-        console.log("checkbox value:", boxToUncheck.value);
         boxToUncheck.checked = false;
         boxToUncheck.dispatchEvent(trigger);
       });
@@ -85,9 +80,6 @@ function removeClass(element, classToRemove) {
 }
 
 function autocomplete(inputs, full_arr) {
-  /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
-  console.log("autocomplete function called");
   var currentFocus;
   /*execute a function when someone writes in the text field:*/
   inputs.forEach(function (inp) {
@@ -168,9 +160,7 @@ function autocomplete(inputs, full_arr) {
       /*append the DIV element as a child of the autocomplete container:*/
       this.parentNode.appendChild(a);
       /*for each item in the array...*/
-      console.log("iterating through autocomplete array");
       for (i = 0; i < arr.length; i++) {
-        console.log(arr[i]);
         /*check if the item starts with the same letters as the text field value:*/
         if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
           /*create a DIV element for each matching element:*/

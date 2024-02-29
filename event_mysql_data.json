@@ -125,12 +125,12 @@
   {
     "events": [
       {
-        "color": "#ff8503",
+        "color": "#039e72",
         "display": "block",
         "displayEventEnd": true,
         "end": "2024-03-09T11:30:00",
         "eventDisplay": "background",
-        "eventTextColor": "#ff8503",
+        "eventTextColor": "#039e72",
         "extendedProps": {
           "eventId": 2,
           "formattedEndTime": "11:30 AM",
@@ -143,12 +143,12 @@
         "title": "Panthers United"
       },
       {
-        "color": "#ff8503",
+        "color": "#039e72",
         "display": "block",
         "displayEventEnd": true,
         "end": "2024-02-26T17:30:00",
         "eventDisplay": "background",
-        "eventTextColor": "#ff8503",
+        "eventTextColor": "#039e72",
         "extendedProps": {
           "eventId": 2,
           "formattedEndTime": "05:30 PM",
