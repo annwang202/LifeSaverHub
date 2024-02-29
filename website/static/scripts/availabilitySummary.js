@@ -1,3 +1,5 @@
+var timeline;
+var trainerColors = {"New":"#fadabb", "Team Lead":"#c5dba2","Basic Trainer":"#bbd0f0"};
 document.addEventListener("DOMContentLoaded", function () {
   // create groups
   /*
@@ -9,7 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
   trainers.forEach(function(trainer) {
     groups.add({
       id: trainer.id,
-      content: "" + trainer.id + ". " + trainer.nickname,
+      content: "" + trainer.id + ". " + trainer.nickname, 
+      style: "color: black; background-color: " + trainerColors[trainer.status] + ";"
     });
   });
 
@@ -60,3 +63,11 @@ document.addEventListener("DOMContentLoaded", function () {
   var container = document.getElementById("visualization");
   timeline = new vis.Timeline(container, items, groups, options);
 });
+
+function loadTimeBars(start,end){
+  var result1 = timeline.addCustomTime(start, 't1');
+  var result2 = timeline.addCustomTime(end, 't2');
+  console.log(result1);
+  console.log(result2);
+  console.log(timeline.customTimes);
+}

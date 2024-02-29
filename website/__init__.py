@@ -1,27 +1,28 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
 from flask_login import LoginManager
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
 from local_settings import postgresql as settings
+import psycopg2
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
-DB_NAME = "database.db"
 
 def create_app():
     app = Flask(__name__)
+    DB_URL = get_engine_from_settings()
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
+    db.init_app(app)
+    migrate = Migrate(app, db)
+
     path = os.getcwd()
     # file Upload
     UPLOAD_FOLDER = os.path.join(path, 'doc_uploads')
     if not os.path.isdir(UPLOAD_FOLDER):
         os.mkdir(UPLOAD_FOLDER)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    db.init_app(app)
 
     from .views import views
     from .auth import auth
@@ -51,26 +52,17 @@ def create_database(app):
         print('Created Database!')
 '''
         
-def get_engine(user,passwd,host,port,db):
-    url = f"postgresql://{user}:{passwd}@{host}:{port}/{db}"
+def get_url(user,passwd,db_url,db):
+    url = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=user,pw=passwd,url=db_url,db=db)
     if not database_exists(url):
         create_database(url)
-    engine = create_engine(url,pool_size=50,echo=False)
-    return engine
+    return url
 
 def get_engine_from_settings():
-    keys = ['pguser','pgpasswd','pghost','pgport','pgdb']
+    keys = ['pguser','pgpasswd','pgurl','pgdb']
     if not all(key in keys for key in settings.keys()):
         raise Exception('Bad config file')
-    return get_engine(settings['pguser'],
+    return get_url(settings['pguser'],
                     settings['pgpasswd'],
-                    settings['pghost'],
-                    settings['pgport'],
+                    settings['pgurl'],
                     settings['pgdb'])
-
-def get_session():
-    engine = get_engine_from_settings()
-    session = sessionmaker(bind=engine)()
-    return session
-
-session = get_session()

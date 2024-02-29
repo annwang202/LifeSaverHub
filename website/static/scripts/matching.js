@@ -1,6 +1,5 @@
 function numberSlots(container){
   var slotNum = 2;
-  console.log("numberSlots() called");
   const slotLabels = container.querySelectorAll(".slot-label");
   slotLabels.forEach(function(label){
     label.textContent = "Trainer " + slotNum++;
@@ -12,7 +11,6 @@ function deleteTrainerSlot(button,search_class) {
   slot.parentNode.removeChild(slot);
 }
 function addTrainerSlot(search_class,container) {
-  console.log("addtrainerslot called");
   const slotsContainer = document.getElementById(container);
   const slotEntry = document.querySelector(search_class).cloneNode(true);
 
@@ -42,6 +40,26 @@ function addTrainerSlot(search_class,container) {
       autocomplete(document.querySelectorAll(".leaderInput"), leader_names);
   });
   return input;
+}
+function openTab(evt, tabId) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabId).style.display = "block";
+  evt.currentTarget.className += " active";
 }
 function showEditModalfunction({
   eventId,
@@ -84,7 +102,6 @@ function showEditModalfunction({
     trainerSlotsContainer.removeChild(currentSlots[i]);
   }
   //copy the correct number of slots
-  console.log("trainers length:" + trainers.length)
   for (let j = 1; j < trainers.length; j++) {
     addTrainerSlot(".update.trainer-search","update-trainer-slots");
   }
@@ -107,7 +124,6 @@ function initializeAdvancedSearch(iframeDocument,modal){
     var modal2 = $("#modal2");
     const openAdvancedSearch = modal1.querySelector('a[name="open-advanced-search"]');
     openAdvancedSearch.addEventListener("click", function () {
-      console.log("hi");
       //get date and time from og modal
       var startDateInput = modal1.querySelector('input[name="start-date"]').value;
       var endDateInput = modal1.querySelector('input[name="end-date"]').value;
@@ -123,11 +139,6 @@ function initializeAdvancedSearch(iframeDocument,modal){
       const endMinutes = String(parsedEnd.getMinutes()).padStart(2, '0');
       const endTime = `${endHours}:${endMinutes}`;
 
-
-      console.log(startDate);
-      console.log(startTime);
-      console.log(endTime);
-
       //clear selected trainers
       var checkboxesAndRadios = iframeDocument.querySelectorAll('.trainer-checkbox, .starradio');
       checkboxesAndRadios.forEach(function (box) {
@@ -136,14 +147,11 @@ function initializeAdvancedSearch(iframeDocument,modal){
 
       //pre-select trainers that are already named in slots
       var lead = modal1.querySelector('input[name="leader-slot"]').value;
-      console.log("Selected lead: " + lead);
       var regex = /ID: (\d+)/;
       var leadMatch = lead.match(regex);
       if(leadMatch){
         var leadId = leadMatch[1];
-        console.log(leadId);
         var input = iframeDocument.querySelector('input[name="stars"][trainer="' + leadId + '"]')
-        console.log("lead input: ", input);
         input.checked = true;
       } 
       else {
@@ -153,7 +161,6 @@ function initializeAdvancedSearch(iframeDocument,modal){
 
       var trainers = modal1.querySelectorAll('input[name="trainer-slot[]"]');
       trainers.forEach(function(trainer){
-        console.log(trainer.value);
         let trainerMatch = trainer.value.match(regex);
         if(trainerMatch){
           var trainerId = trainerMatch[1];
@@ -181,37 +188,29 @@ function initializeAdvancedSearch(iframeDocument,modal){
     });
     const select = document.getElementById("selectBtn");
     select.addEventListener("click", function () {
-      console.log("select button clicked");
       //copy over leader
       var selectedRadio = iframeDocument.querySelector('input.starradio:checked');
       if (selectedRadio){
         var leaderSlot = modal1.querySelector(".leaderInput");
-        console.log(selectedRadio);
-        console.log(leaderSlot);
         leaderSlot.value = selectedRadio.value;
       }
       //copy over trainers
       var checkedCheckboxes = iframeDocument.querySelectorAll(
           ".trainer-checkbox:checked"
         );
-        console.log(checkedCheckboxes);
         var slots = modal1.querySelectorAll(".trainerInput");
         var slotContainer = modal1.querySelector(".trainer-slots");
-        console.log(checkedCheckboxes.length);
 
         let j = 0; //slots counter
       for (let index = 0; index < checkedCheckboxes.length; index++) {
-        console.log(index);
         if(checkedCheckboxes[index].disabled){
           continue;
         }
         if(slots.length > index){
-          console.log("checkbox value: " + checkedCheckboxes[index]);
           slots[j++].value = checkedCheckboxes[index].value;
         }
         else{
           const classSelector = "." + Array.from(modal1.querySelector(".trainer-search").classList).join(".");
-          console.log(classSelector);
           addTrainerSlot(classSelector,slotContainer.id);
           numberSlots(slotContainer);
           slots = modal1.querySelectorAll(".trainerInput");
@@ -275,6 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var endTimeInput = modal.find('input[name="end_time"]').get(0);
             //parse the values into date objects
             var parsedStart = new Date(event.start);
+            console.log("parsedStart: " + parsedStart);
             var parsedEnd = new Date(event.end);
             const startHours = parsedStart.getHours();
             const startMinutes = String(parsedStart.getMinutes()).padStart(2, '0');
@@ -315,17 +315,21 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             //get availabilitySummary
             const weekdays = [
+              "sunday",
               "monday",
               "tuesday",
               "wednesday",
               "thursday",
               "friday",
               "saturday",
-              "sunday",
             ];
             var availabilitySummaryIframe = document.getElementById("availabilitySummaryIframe");
             availabilitySummaryIframe.src = "/availabilitySummary/" + weekdays[parsedStart.getDay()];
-            console.log(weekdays[parsedStart.getDay()]);
+            var asDocument;
+            availabilitySummaryIframe.onload = function(){
+              asDocument = availabilitySummaryIframe.contentWindow;
+              asDocument.loadTimeBars(event.startStr,event.endStr);
+            }
 
             modal.modal();
           }
@@ -338,7 +342,6 @@ document.addEventListener("DOMContentLoaded", function () {
   fetchDataAndInitializeCalendar().then(({ calendar }) => {
     function updateEventSources() {
       $.getJSON(`/eventdata`, function (data) {
-        console.log("updateEventSources called");
         // Retrieve checked checkboxes
         const checkedCheckboxes = document.querySelectorAll(
           ".event-checkbox:checked"
@@ -351,19 +354,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const eventIds = Array.from(checkedCheckboxes).map((checkbox) =>
           checkbox.getAttribute("event-id")
         );
-        console.log("checked events:");
-        console.log(eventIds);
         const hiddenEventIds = Array.from(uncheckedCheckboxes).map((checkbox) =>
           checkbox.getAttribute("event-id")
         );
-        console.log("unchecked events:");
-        console.log(hiddenEventIds);
 
         // Remove existing event sources that should be hidden
-        console.log("Event sources", calendar.getEventSources());
         const removePromises = calendar.getEvents().map(function (event) {
           if (event.extendedProps.trainerTrue === false) {
-            console.log("Removing", event);
             return event.remove(() => resolve());
           }
           // If the event doesn't meet the removal criteria, return a resolved promise
@@ -371,18 +368,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // Add the updated event sources
-        console.log("Attempt to add events");
         Promise.all(removePromises)
           .then(() => {
             // Add the updated event sources
             // Add eventDates associated with each event
-            console.log("eventIds", eventIds);
             const addPromises = data.map((jsonsource) => {
-              console.log("jsonsource", jsonsource);
               if (eventIds.includes(jsonsource.id.toString())) {
                 const sourceArray = jsonsource;
-                console.log("addEventSource called on:");
-                console.log(sourceArray);
                 return calendar.addEventSource(sourceArray);
               }
               return Promise.resolve();
@@ -394,8 +386,6 @@ document.addEventListener("DOMContentLoaded", function () {
           .then(() => {
             // Finally, refetch events
             calendar.refetchEvents();
-            console.log("calendar events:");
-            console.log(calendar.getEvents());
           })
           .catch((error) => {
             console.error("An error occurred:", error);
@@ -406,7 +396,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     function updateAssignmentSources() {
       $.getJSON(`/assignmentdata`, function (data) {
-        console.log("updateAssignmentSources called");
         // Retrieve checked checkboxes
         const checkedCheckboxes = document.querySelectorAll(
           ".assignment-checkbox:checked"
@@ -424,7 +413,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const removePromises = calendar.getEvents().map(function (event) {
           if (event.extendedProps.trainerTrue === true) {
-            console.log("Removing", event);
             return event.remove(() => resolve());
           }
           // If the event doesn't meet the removal criteria, return a resolved promise
@@ -432,15 +420,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // Add the updated event sources
-        console.log("Attempt to add events");
         Promise.all(removePromises).then(() => {
           // Add the updated event sources
           const addPromises = data.map((jsonsource) => {
-            console.log("jsonsource", jsonsource);
             if (ids.includes(jsonsource.id.toString())) {
               const sourceArray = jsonsource;
-              console.log("addEventSource called on:");
-              console.log(sourceArray);
               return calendar.addEventSource(sourceArray);
             }
             return Promise.resolve();
@@ -449,8 +433,6 @@ document.addEventListener("DOMContentLoaded", function () {
           Promise.all(addPromises).then(() => {
             // Finally, refetch events
             calendar.refetchEvents();
-            console.log("calendar sources:");
-            console.log(calendar.getEventSources());
           });
         }); 
       });

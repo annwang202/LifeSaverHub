@@ -308,3 +308,45 @@ input.star { /*star checkboxes*/
 .vis-timeline {
   font-size: x-small !important;
 }
+
+.t1 {
+  top: 0% !important;
+  background-color: red;
+}
+
+.t2 {
+  top: 0% !important;
+  left: 0% !important;
+}
+
+
+/* advancedsearch tabs*/
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
+
+.tabcontent {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}

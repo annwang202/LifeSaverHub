@@ -51,7 +51,7 @@
         id="event_{{event.id}}"
         class="list-group-item {% if event.status == 'Canceled' %} hideItem {% endif %}"
         data-type="{{event.status}}"
-        style="border-width: 3px; {% if event.status != 'Canceled' %}border-color: {{ event_colors[(event.id - 1) % event_colors|length][0] }}; {% endif %}"
+        style="border-width: 3px; {% if event.status != 'Canceled' %}border-color: {{ event_colors[event.status] }}; {% endif %}"
       >
         <strong>{{event.title}}</strong>
         <input
@@ -144,7 +144,7 @@
         id="assignment_{{assignment_table['event'].id}}"
         class="list-group-item {% if assignment_table['event'].status == 'Canceled' or assignment_table['event'].status == 'Happened'%} hideItem {% endif %}"
         data-type="{{assignment_table['event'].status}}"
-        style="border-color: {{ trainer_colors[(assignment_table['event'].id - 1) % trainer_colors|length][0] }}; border-width: 3px;"
+        style="border-color: {{ event_colors[assignment_table['event'].status] }}; border-width: 3px;"
       >
         <input
           type="checkbox"
@@ -248,9 +248,6 @@
               </div>
               <button type="button" id="add-trainer-slot">+</button></div><br>
             </div>
-            <div id="availabilitySummary" style="height: 40vh;">
-              <iframe src="/availabilitySummary/" id="availabilitySummaryIframe" allowTransparency="true" frameborder="0" style="width:100%; height:100%;"></iframe>
-            </div>
         <!-- Modal footer -->
         <div class="modal-footer">
           <strong>Event time:&ensp;</strong>
@@ -332,7 +329,19 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           </div><div class="container"></div>
           <div class="modal-body advancedSearch">
-            <iframe src="/advancedsearch" id="advancedSearch" allowTransparency="true" frameborder="0" ></iframe>
+            <!-- Tab links -->
+              <div class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'trainer-view')">Trainer View</button>
+                <button class="tablinks" onclick="openTab(event, 'calendar-view')">Calendar View</button>
+              </div>
+              <!-- Tab content -->
+              <div id="trainer-view" class="tabcontent">
+                <iframe src="/advancedsearch" id="advancedSearch" allowTransparency="true" frameborder="0" ></iframe>
+              </div>
+
+              <div id="calendar-view" class="tabcontent" style="display:none; height:100%;">
+                <iframe src="/availabilitySummary/" id="availabilitySummaryIframe" allowTransparency="true" frameborder="0" style="width:100%;height:62vh;"></iframe>
+              </div>
          </div>
           <div class="modal-footer">
             <button data-dismiss="modal" class="btn">Close</button>

@@ -2,58 +2,58 @@
   {
     "events": [
       {
-        "color": "#f7c95e",
+        "color": "#ff8503",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-02-04T15:00:00",
+        "end": "2024-02-26T15:00:00",
         "eventDisplay": "background",
-        "eventTextColor": "#000000",
+        "eventTextColor": "#ff8503",
         "extendedProps": {
           "eventId": 1,
           "formattedEndTime": "03:00 PM",
-          "formattedStartDate": "02/04/2024 12:00 PM",
-          "numLearners": 20,
+          "formattedStartDate": "02/26/2024 01:00 PM",
+          "numLearners": 25,
           "trainerTrue": false
         },
         "id": 2,
-        "start": "2024-02-04T12:00:00",
-        "title": "Fake Organization 1"
+        "start": "2024-02-26T13:00:00",
+        "title": "Pitt Panthers Men's Basketball Team"
       },
       {
-        "color": "#f7c95e",
+        "color": "#ff8503",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-02-06T15:00:00",
+        "end": "2024-03-05T13:30:00",
         "eventDisplay": "background",
-        "eventTextColor": "#000000",
+        "eventTextColor": "#ff8503",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "03:00 PM",
-          "formattedStartDate": "02/06/2024 12:00 PM",
-          "numLearners": 20,
+          "formattedEndTime": "01:30 PM",
+          "formattedStartDate": "03/05/2024 11:30 AM",
+          "numLearners": 25,
           "trainerTrue": false
         },
         "id": 3,
-        "start": "2024-02-06T12:00:00",
-        "title": "Fake Organization 1"
+        "start": "2024-03-05T11:30:00",
+        "title": "Pitt Panthers Men's Basketball Team"
       },
       {
-        "color": "#f7c95e",
+        "color": "#ff8503",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-01-30T15:00:00",
+        "end": "2024-02-28T16:00:00",
         "eventDisplay": "background",
-        "eventTextColor": "#000000",
+        "eventTextColor": "#ff8503",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "03:00 PM",
-          "formattedStartDate": "01/30/2024 12:00 PM",
-          "numLearners": 20,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "02/28/2024 02:00 PM",
+          "numLearners": 25,
           "trainerTrue": false
         },
         "id": 1,
-        "start": "2024-01-30T12:00:00",
-        "title": "Fake Organization 1"
+        "start": "2024-02-28T14:00:00",
+        "title": "Pitt Panthers Men's Basketball Team"
       }
     ],
     "id": 1
@@ -61,122 +61,22 @@
   {
     "events": [
       {
-        "color": "#ffa04c",
+        "color": "#ff8503",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-02-07T14:00:00",
+        "end": "2024-03-07T16:00:00",
         "eventDisplay": "background",
-        "eventTextColor": "#000000",
+        "eventTextColor": "#ff8503",
         "extendedProps": {
-          "eventId": 2,
-          "formattedEndTime": "02:00 PM",
-          "formattedStartDate": "02/07/2024 01:00 PM",
+          "eventId": 4,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "03/07/2024 02:00 PM",
           "numLearners": 50,
-          "trainerTrue": false
-        },
-        "id": 5,
-        "start": "2024-02-07T13:00:00",
-        "title": "Fake Organization 2"
-      },
-      {
-        "color": "#ffa04c",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-01-31T14:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#000000",
-        "extendedProps": {
-          "eventId": 2,
-          "formattedEndTime": "02:00 PM",
-          "formattedStartDate": "01/31/2024 01:00 PM",
-          "numLearners": 50,
-          "trainerTrue": false
-        },
-        "id": 4,
-        "start": "2024-01-31T13:00:00",
-        "title": "Fake Organization 2"
-      }
-    ],
-    "id": 2
-  },
-  {
-    "events": [
-      {
-        "color": "#ff724f",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-02-07T15:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#FFFFFF",
-        "extendedProps": {
-          "eventId": 3,
-          "formattedEndTime": "03:00 PM",
-          "formattedStartDate": "02/07/2024 12:00 PM",
-          "numLearners": 30,
-          "trainerTrue": false
-        },
-        "id": 7,
-        "start": "2024-02-07T12:00:00",
-        "title": "Fake Organization 3"
-      },
-      {
-        "color": "#ff724f",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-02-09T15:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#FFFFFF",
-        "extendedProps": {
-          "eventId": 3,
-          "formattedEndTime": "03:00 PM",
-          "formattedStartDate": "02/09/2024 12:00 PM",
-          "numLearners": 30,
           "trainerTrue": false
         },
         "id": 8,
-        "start": "2024-02-09T12:00:00",
-        "title": "Fake Organization 3"
-      },
-      {
-        "color": "#ff724f",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-01-30T15:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#FFFFFF",
-        "extendedProps": {
-          "eventId": 3,
-          "formattedEndTime": "03:00 PM",
-          "formattedStartDate": "01/30/2024 12:00 PM",
-          "numLearners": 30,
-          "trainerTrue": false
-        },
-        "id": 6,
-        "start": "2024-01-30T12:00:00",
-        "title": "Fake Organization 3"
-      }
-    ],
-    "id": 3
-  },
-  {
-    "events": [
-      {
-        "color": "#f34e57",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-02-06T12:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#FFFFFF",
-        "extendedProps": {
-          "eventId": 4,
-          "formattedEndTime": "12:00 PM",
-          "formattedStartDate": "02/06/2024 10:00 AM",
-          "numLearners": 10,
-          "trainerTrue": false
-        },
-        "id": 9,
-        "start": "2024-02-06T10:00:00",
-        "title": "Disney"
+        "start": "2024-03-07T14:00:00",
+        "title": "Pitt Program Council"
       }
     ],
     "id": 4
@@ -184,24 +84,83 @@
   {
     "events": [
       {
-        "color": "#c8006f",
+        "color": "#7f04d1",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-02-13T18:30:00",
+        "end": "2024-03-07T15:00:00",
         "eventDisplay": "background",
-        "eventTextColor": "#FFFFFF",
+        "eventTextColor": "#7f04d1",
         "extendedProps": {
-          "eventId": 5,
-          "formattedEndTime": "06:30 PM",
-          "formattedStartDate": "02/13/2024 04:30 PM",
-          "numLearners": 20,
+          "eventId": 3,
+          "formattedEndTime": "03:00 PM",
+          "formattedStartDate": "03/07/2024 01:00 PM",
+          "numLearners": 30,
           "trainerTrue": false
         },
-        "id": 10,
-        "start": "2024-02-13T16:30:00",
-        "title": "Sesame Street"
+        "id": 7,
+        "start": "2024-03-07T13:00:00",
+        "title": "UPMC"
+      },
+      {
+        "color": "#7f04d1",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-02-29T12:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#7f04d1",
+        "extendedProps": {
+          "eventId": 3,
+          "formattedEndTime": "12:00 PM",
+          "formattedStartDate": "02/29/2024 08:00 AM",
+          "numLearners": 30,
+          "trainerTrue": false
+        },
+        "id": 6,
+        "start": "2024-02-29T08:00:00",
+        "title": "UPMC"
       }
     ],
-    "id": 5
+    "id": 3
+  },
+  {
+    "events": [
+      {
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-09T11:30:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 2,
+          "formattedEndTime": "11:30 AM",
+          "formattedStartDate": "03/09/2024 08:00 AM",
+          "numLearners": 25,
+          "trainerTrue": false
+        },
+        "id": 5,
+        "start": "2024-03-09T08:00:00",
+        "title": "Panthers United"
+      },
+      {
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-02-26T17:30:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 2,
+          "formattedEndTime": "05:30 PM",
+          "formattedStartDate": "02/26/2024 03:00 PM",
+          "numLearners": 25,
+          "trainerTrue": false
+        },
+        "id": 4,
+        "start": "2024-02-26T15:00:00",
+        "title": "Panthers United"
+      }
+    ],
+    "id": 2
   }
 ]
