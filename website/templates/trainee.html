@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
+<script type="module" src="{{url_prefix}}/static/scripts/request.js"></script>
 <div class="form-container">
 <div id="submit_event" style="max-width: 850px; font-weight: bold;">
   <div style="text-align: center;"><h2>Request a Training Event</h2></div>
@@ -11,8 +12,8 @@
     <input type="text" id="event_email" name="event_email" maxlength="50" required/><br />
     <label for="event_phone">Phone Number*:</label>
     <input type="text" id="event_phone" name="event_phone" maxlength="16" required>
-    <label for="event_title">Your Organization*:</label>
-    <input type="text" id="event_title" name="event_title" maxlength="50" required/><br /><br>
+    <label for="event_title" style="font-weight: normal;">Your Organization:</label>
+    <input type="text" id="event_title" name="event_title" maxlength="50"/><br /><br>
     <label for="training_types" style="font-weight: normal;">Type of Training Requested (select any that apply):</label>
 </br>
 <div id = training_types>
@@ -21,15 +22,15 @@
     <input type="checkbox" id="fair_cpr_aed" name="training_type[]" value="Hands-only Adult CPR/AED - Street/Health Fair">
     <label for="fair_cpr_aed" style="font-weight: normal;">Hands-only Adult CPR/AED - Street/Health Fair (teach a skill in 5 minutes)</label><br>
     <input type="checkbox" id="heartsaver" name="training_type[]" value="Heartsaver CPR/AED/FA">
-    <label for="heartsaver" style="font-weight: normal;">Heartsaver CPR/AED/FA (AHA Certification, $17/person, 2 hours)</label><br>
+    <label for="heartsaver" style="font-weight: normal;">Heartsaver CPR/AED/First-Aid (AHA Certification, 2 hours. This training comes with a cost)</label><br>
     <input type="checkbox" id="child_infant_cpr" name="training_type[]" value="Child/Infant CPR">
-    <label for="child_infant_cpr" style="font-weight: normal;">Child/Infant CPR (30 compressions:2 breaths. If added to adult training, 30 minutes. Otherwise, 60 minutes.)</label><br>
+    <label for="child_infant_cpr" style="font-weight: normal;">Child/Infant CPR (If added to adult training, 30 minutes. Otherwise, 60 minutes.)</label><br>
     <input type="checkbox" id="narcan" name="training_type[]" value="Narcan">
     <label for="narcan" style="font-weight: normal;">Narcan (5-10 minutes)</label><br>
-    <input type="checkbox" id="hemorrhage_informal" name="training_type[]" value="Hemorrhage Control - Informal">
-    <label for="hemorrhage_informal" style="font-weight: normal;">Hemorrhage Control - Informal (20 minutes)</label><br>
-    <input type="checkbox" id="hemorrhage_formal" name="training_type[]" value="Hemorrhage Control - Formal STB">
-    <label for="hemorrhage_informal" style="font-weight: normal;">Hemorrhage Control - Formal STB (60 minutes, free certificate and official powerpoint)</label><br>
+    <input type="checkbox" id="hemorrhage_informal" name="training_type[]" value="Hemorrhage Control">
+    <label for="hemorrhage_informal" style="font-weight: normal;">Hemorrhage Control (20 minutes)</label><br>
+    <input type="checkbox" id="hemorrhage_formal" name="training_type[]" value="Stop the Bleed">
+    <label for="hemorrhage_informal" style="font-weight: normal;">Stop the Bleed (60 minutes)</label><br>
     <input type="checkbox" id="idk" name="training_type[]" value="I don't know">
     <label for="idk" style="font-weight: normal;">I don't know</label><br>
   </div>
@@ -37,10 +38,7 @@
     <div id="availability">
       <div class="preferred-date-time">
         <label for="event_date">Preferred Date*:</label>
-        <input type="date" name="date" required />
-        <input type="time" name="start_time" required />
-        <label for="event_date" style="font-weight: normal;">to</label>
-        <input type="time" name="end_time" required />
+
       </br>
       </div>
       <div class="backup-date-time">
@@ -64,27 +62,26 @@
     });
     </script>
     <br />
+    <div id="request_calendar"></div>
   </br>
   <div style="text-align: left;">
-  <label for="event_mission">1. What is your group's mission?*</label><br />
+  <label for="event_mission" style="font-weight: normal;">1. What is your group's mission?</label><br />
     <textarea
       id="event_mission"
       name="event_mission"
       rows="3"
       cols="100"
       maxlength="500"
-      required
     ></textarea><br><br />
-    <label for="num_learners">2. Approximately how many learners will there be?*</label>
+    <label for="num_learners">2. Approximately how many learners will there be?&ensp;</label>
       <input type="number" id="num_learners" name="num_learners" min="1" required style="width: 8ch;"><br><br />
-    <label for="event_learners">2b. What is their age range? Any medical backgrounds?*</label><br />
+    <label for="event_learners" style="font-weight: normal;">2b. What is their age range? Any medical backgrounds?</label><br />
     <textarea
       id="event_learners"
       name="event_learners"
       rows="3"
       cols="100"
       maxlength="500"
-      required
     ></textarea><br><br />
     <label for="event_place">3. Where will the event be? Is there parking?*</label><br />
     <textarea
@@ -156,5 +153,28 @@
   </form>
   <br />
 </div>
+</div>
+<div class="modal fade" id="modal">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Available trainers</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+          <div></div>
+          <strong>Preferred time of day:</strong> 
+          <select name="timeOfDay">
+            <option value="Morning">Morning</option>
+            <option value="Afternoon">Afternoon</option>
+            <option value="Evening">Evening</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button data-dismiss="modal" class="btn">Close</button>
+          <a id="selectBtn" href="#" class="btn btn-primary">Add date</a>
+        </div>
+      </div>
+    </div>
 </div>
 {% endblock %}

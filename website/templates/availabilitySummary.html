@@ -4,6 +4,7 @@
   <title>Timeline</title>
   <script type="text/javascript" src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
   <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+  <script src="{{url_prefix}}/static/scripts/base.js"></script>
   <style type="text/css">
     #visualization {
       width: 600px;
@@ -14,9 +15,14 @@
   <link rel="stylesheet" type="text/css" href="{{url_prefix}}/static/styles/web.css">
   <script>
     var availability = {{ availability | tojson | safe }};
-    var start = {{ start | tojson | safe }};
-    var end = {{ end | tojson | safe }};
+    var day_start = {{ day_start | tojson | safe }};
+    var day_end = {{ day_end | tojson | safe }};
+    var eventStart = {{ eventStart | tojson | safe }};
+    var eventEnd = {{ eventEnd | tojson | safe }};
     var trainers = {{ trainerData | tojson | safe }};
+    var unavailables = {{ unavailables | tojson | safe }};
+    var addCheckboxes = {{ addCheckboxes | tojson | safe }};
+    var alreadyAssigned = {{ alreadyAssigned | tojson | safe }}
     </script>
     <script src="{{url_prefix}}/static/scripts/availabilitySummary.js"></script>
 </head>

@@ -20,6 +20,7 @@
     <script src="
 https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
 "></script>
+<script src="{{url_prefix}}/static/scripts/base.js"></script>
 <script>
   function showOrHideDropdown(id,prefix,action)
     {
@@ -37,40 +38,17 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
         }
       }
     }
-  function disableCheckbox(radio){
-    var trainerId = radio.getAttribute("trainer");
-    var checkedCheckboxes = document.querySelectorAll(
-          ".trainer-checkbox"
-        );
-    checkedCheckboxes.forEach(function(box){
-      if(box.getAttribute("trainer")!=trainerId){
-        box.disabled = false;
-      }
-      else{
-        box.disabled = true;
-      }
-    })
-  }
-  function openTab(evt, tabId) {
-      // Declare all variables
-      var i, tabcontent, tablinks;
+    document.addEventListener("DOMContentLoaded", function() {
+        var availabilitySummaryIframe = document.getElementById("availabilitySummaryIframe");
 
-      // Get all elements with class="tabcontent" and hide them
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
+        var checkboxes = document.querySelectorAll('.trainer-checkbox');
+        checkboxes.forEach(function (box) {
+          box.addEventListener("change", function(){
+            copySelectedTrainers(box, box.getAttribute("trainer"));
+          })
+        });
 
-      // Get all elements with class="tablinks" and remove the class "active"
-      tablinks = document.getElementsByClassName("tablinks");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-      }
-
-      // Show the current tab, and add an "active" class to the button that opened the tab
-      document.getElementById(tabId).style.display = "block";
-      evt.currentTarget.className += " active";
-    }
+      });
 </script> 
     <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
   <body style="max-width: 100%;">
@@ -109,9 +87,9 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
         <!-- Tab links -->
           <div class="tab">
             <button id="trainer-view-button" class="tablinks active" onclick="openTab(event, 'trainer-view')">Trainer View</button>
-            <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')">Calendar View</button>
+            <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')">Day View</button>
+            <button id="calendar-view-all-button" class="tablinks" onclick="openTab(event, 'calendar-view-all')" disabled>Day View All</button>
           </div>
-          <h2>Available trainers</h2>
           <!-- Tab content -->
           <div id="trainer-view" class="tabcontent">
             <div class="rating">
@@ -125,7 +103,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
                     style="display: inline-block; border-width: 3px;"
                   >
                   {% if trainer.status == "Team Lead"%}
-                    <input title="Select as team lead" class="starradio" type="radio" name="stars" trainer="{{trainer.id}}" value="{{trainer.nickname}} (ID: {{trainer.id}})" onchange="disableCheckbox(this)" />
+                    <input title="Select as team lead" class="starradio" type="radio" name="stars" trainer="{{trainer.id}}" value="{{trainer.nickname}} (ID: {{trainer.id}})" onchange="radioFunc(this)" />
                   {% endif %}
                   <input
                   type="checkbox"
@@ -133,9 +111,13 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
                   name="check"
                   trainer="{{trainer.id}}"
                   value="{{trainer.nickname}} (ID: {{trainer.id}})"
-                ><a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a><br>
+                  onchange="copySelectedTrainers(this,'{{trainer.id}}')"
+                >
+                <div name="warning" trainer="{{trainer.id}}" style="display:inline-block;"></div>
+                <a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a>
+                <br>
                   {{trainer.pronouns}}
-                  <div class="update-status"><strong>Status:</strong> {{trainer.status}} <br>
+                  <div class="update-status"><strong>Status:</strong> {{trainer.status}} </div>
                     <div class = "button-container">
                       <button title="Details" id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128899;</button>
                     </div>
@@ -172,6 +154,9 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
           </div>
 
           <div id="calendar-view" class="tabcontent" style="display:none; height:100%;">
-            <iframe src="/availabilitySummary/" id="availabilitySummaryIframe" allowTransparency="true" frameborder="0" style="width:100%;height:62vh;"></iframe>
+            <iframe id="availabilitySummaryIframe" page="advancedSearch" allowTransparency="true" frameborder="0" style="width:100vw;height:100vh;"></iframe>
+          </div>
+          <div id="calendar-view-all" class="tabcontent" style="display:none; height:100%;">
+            <iframe id="allIframe" page="advancedSearch"  allowTransparency="true" frameborder="0" style="width:100%;height:100vh;"></iframe>
           </div>
     </body>

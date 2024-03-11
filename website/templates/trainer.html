@@ -2,60 +2,19 @@
     %}
 <script type="module" src="{{url_prefix}}/static/scripts/trainer.js"></script>
 <div class="form-container">
-  <div class="trainer_intro_faq" style="max-width:1000px;">
+  <br>
+  <div class="trainer_intro" style="max-width:1000px;">
     <h2>Center for Cardiac Arrest Survival Volunteer Application</h2>
     Thank you for your interest in volunteering with the Center for Cardiac Arrest Survival (CCAS).
   Our team at CCAS works hard to empower communities by teaching lifesaving skills such as CPR, AED,
-  Stop the Bleed!, and Narcan administration. Please see below to apply and to answer
-  general questions. For anything else, please email ccas@pitt.edu </br>
-  
-  <strong>What do CCAS events look like and what do volunteers do?</strong></br>
-  CCAS events can be divided into 2 main types. 1.) The first type is a classroom style training in
-  which we split time between a discussion and a practical at a ratio of 50:50. We mainly teach adult
-  Hands-Only CPR/AED, so the approximate timeline would be 35 minutes discussing the topic and 35
-  minutes practicing. 2.) The second type of event would be a health fair, at which we would teach
-  individuals as they visit our booth in 15-minute segments (with additional time for additional skills).
-  The primary responsibilities of a CCAS volunteer include event set-up, introduction to the crowd,
-  enacting a cardiac arrest event if comfortable/applicable, hands on instructing of life saving skills during
-  the practical portion of events, and clean-up. Trainers manage a group during the practical, observe skill
-  practice, and provide feedback such as “your rate is good, just push deeper and you're set” or “don't
-  forget to lock your elbows, you will use less energy this way”. </br>
-  
-  <strong>What certification/clearances do I need to start?</strong></br>
-  To volunteer with CCAS, you must have:
+  Stop the Bleed!, and Narcan administration. For any questions or concerns, please email <a href="mailto:ccas@pitt.edu">ccas@pitt.edu</a>. </br><br>
+ 
+  <strong>To volunteer with CCAS, you must have:</strong>
   <ul>
     <li>Act 33 Clearance (CY113): https://www.compass.state.pa.us/cwis/public/home (click on create
-      individual account) we ask that you forward your results to us at ccas@pitt.edu </li>
+      individual account) we ask that you forward your results to us at ccas@pitt.edu. </li>
     <li>Act 34 Clearance (EPATCH)- we handle this one </li>
   </ul>
-  <strong>What if I am asked a question that I don’t know the answer to? </strong></br>
-  During events, participants tend to have a lot of questions, especially once we break up into
-  smaller groups for the practical. It is common for them to ask about specifics you may not have learned in
-  a standard BLS class or never thought to question yourself. It is okay to say, “I don’t know”, and direct
-  them to someone who might, such as a supervising doctor at that training, CCAS staff, or if it relates with
-  their health- their own doctor.</br>
-  
-  <strong>What if I need to cancel my signup for an event?</strong></br>
-  We understand that life happens. If you need to cancel, please email ccas@pitt.edu as soon as you
-  know you need to cancel, or if it is a possibility so we can plan someone to take your place. If you cancel
-  twice within 48 hours in a 3-month period, we will suspend your volunteer status temporarily. We need to
-  respect the time of those hosting events as much as we need to respect our own. If you miss due to illness
-  and you have a doctor's note, that can be submitted to exempt a cancellation.</br>
-  
-  <strong>What should I wear?</strong></br>
-  Given that we do work in a variety of school settings, and have children present in events outside
-  of schools, we ask that your clothing does not contain profanity or disturbing/graphic imagery. If you
-  have a CCAS shirt we encourage trainers to wear them during events, but do not require them, especially
-  in warmer weather because they are long-sleeved shirts.
-  Trainers are gifted a CCAS shirt once they have worked 5 events with us.<br>
-  <strong>What's next?</strong></br>
-  Once your clearances are approved, we will send you the CCAS calendar link, which updates
-  automatically. If you want to sign up for an event, please let the Project Coordinator know via email
-  (ccas@pitt.edu) and you will be signed up. Please note some events are limited to how many trainers they
-  can have.
-  Once signed up, you will receive an Outlook calendar invite, as well as a reminder email 3 days
-  before an event. We ask that you come to all events 20 minutes prior to the start time for the Pre-Event
-  Huddle and setup. 
   </div><br>
     <div id="submit_trainer">
         <h3 align="center">Volunteer Application</h1>
@@ -63,22 +22,24 @@
           <input type="hidden" name="trainer_form" value="1">
           <label for="trainer_name" style="font-weight: bold;">Please provide your full name (for ACT 34 clearance)*:</label>
           <input type="text" id="trainer_name" name="trainer_name" maxlength="50" required /><br />
-          <label for="trainer_nickname" style="font-weight: bold;">Enter your preferred name*:</label>
-          <input type="text" id="trainer_nickname" name="trainer_nickname" maxlength="50" required/><br />
+          <label for="trainer_nickname" style="font-weight: bold;">Enter your preferred name:</label>
+          <input type="text" id="trainer_nickname" name="trainer_nickname" maxlength="50"/><br />
           <label for="trainer_bd" style="font-weight: bold;">Please provide your date of birth (for ACT 34 clearance)*:</label></br>
           <input id = "trainer_bd" type="date" name="trainer_bd" required /><br />
-          <label for="trainer_pronouns" style="font-weight: bold;">Describe or select your preferred pronouns*:</label>
+          <label for="trainer_pronouns" style="font-weight: bold;">Describe or select your preferred pronouns:</label>
           <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
-            <input class="pronounsInput" type="text" name="trainer_pronouns" placeholder="Enter or select pronouns" required>
+            <input class="pronounsInput" type="text" name="trainer_pronouns" placeholder="Enter or select pronouns">
           </div>
           <label for="trainer_phone" style="font-weight: bold;">Best phone number to reach you*:</label>
           <input type="text" id="trainer_phone" name="trainer_phone" maxlength="16" required><br />
-          <label for="text_or_call" style="font-weight: bold;">Do you prefer texts or calls?*</label></br>
-          <select name="text_or_call" id="text_or_call" required>
-            <option value="Select" selected disabled hidden>Select preference</option>
-            <option value="Texts">Texts</option>
-            <option value="Calls">Calls</option>
-          </select></br></br>
+          <div style="display:none;">
+            <label for="text_or_call" style="font-weight: bold;">Do you prefer texts or calls?</label></br>
+            <select name="text_or_call" id="text_or_call">
+              <option value="Select" selected disabled hidden>Select preference</option>
+              <option value="Texts">Texts</option>
+              <option value="Calls">Calls</option>
+            </select></br></br>
+          </div>
           <label for="trainer_email" style="font-weight: bold;">Email*:</label>
           <input type="text" id="trainer_email" name="trainer_email" maxlength="50" required /><br />
           <label for="trainer_race">Race/ethnicity (optional)</label>
@@ -146,10 +107,10 @@
           </script>
           -->
           <br />
-          <label for="preferred_hrs_per_month">Preferred # of Hours per Month:</label>
+          <label for="preferred_hrs_per_month">Preferred # of volunteering hours per month:</label>
           <input type="number" id="preferred_hrs_per_month" name="preferred_hrs_per_month" min="1" max="730">
           <br/>
-          <label for="trainer_languages">List any languages other than English that you are fluent in:</label>
+          <label for="trainer_languages">Please list any languages other than English that you are fluent or conversational in:</label>
           <input type="text" id="trainer_languages" name="trainer_languages" maxlength="50"></br>
           <label for="other_info">Other information:</label><br />
           <textarea

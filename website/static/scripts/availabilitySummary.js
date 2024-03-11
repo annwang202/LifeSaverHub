@@ -1,17 +1,38 @@
 var timeline;
-var trainerColors = {"New":"#fadabb", "Team Lead":"#c5dba2","Basic Trainer":"#bbd0f0"};
+var trainerColors = {"New":"#fce5cf", "Team Lead":"#eafccc","Basic Trainer":"#d9e8ff"};
 document.addEventListener("DOMContentLoaded", function () {
-  // create groups
-  /*
-  availability.forEach(function(trainerDate) {
-    console.log(trainerDate);
-  });
-  */
+  console.log("alreadyAssigned: ");
+  console.log(alreadyAssigned);
   var groups = new vis.DataSet();
   trainers.forEach(function(trainer) {
+    let checkContainer= document.createElement("div");
+    if(addCheckboxes){
+      checkContainer = appendCheckboxes(trainer,checkContainer);
+    }
+    checkContainer.appendChild(document.createTextNode(trainer.nickname));
+    if(alreadyAssigned["" + trainer.id]){
+      var exclamation = document.createElement("div");
+      exclamation.className = "warningIcon";
+      exclamation.title = "This trainer is already assigned to " + alreadyAssigned["" + trainer.id] + " on this day.";
+      exclamation.setAttribute("trainer", trainer.id);
+      checkContainer.appendChild(exclamation);
+    }
+
     groups.add({
       id: trainer.id,
-      content: "" + trainer.id + ". " + trainer.nickname, 
+      content: checkContainer, 
+      style: "color: black; background-color: " + trainerColors[trainer.status] + ";"
+    });
+  });
+  unavailables.forEach(function(trainer) {
+    let checkContainer = document.createElement("div");
+    if(addCheckboxes){
+      checkContainer = appendCheckboxes(trainer,checkContainer);
+    }
+    checkContainer.appendChild(document.createTextNode(trainer.nickname));
+    groups.add({
+      id: trainer.id,
+      content: checkContainer, 
       style: "color: black; background-color: " + trainerColors[trainer.status] + ";"
     });
   });
@@ -32,20 +53,22 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   })
 
-  console.log(start);
-  console.log(end);
+  //add event time frame
+  if(eventStart !== "no" && eventEnd !== "no"){
+    items.add({id: 'eventTime', start: eventStart, end: eventEnd, type: 'background',style:"background-color: rgba(255, 0, 0, 0.1);"})
+  }
+
   // specify options
   var options = {
     width: '100%',
-    margin: { item: {horizontal:0, vertical:0},
-              axis: 0    },
+    margin: { axis: 5    },
     stack: true,
     verticalScroll: true,
     moveable: false,
     autoResize: true,
     zoomKey: "ctrlKey",
-    start: start,
-    end: end,
+    start: day_start,
+    end: day_end,
     editable: false,
     orientation: "top",
     format: {
@@ -58,16 +81,39 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     timeAxis: {scale: 'hour', step: 1}
   };
-
   // create a Timeline
   var container = document.getElementById("visualization");
   timeline = new vis.Timeline(container, items, groups, options);
 });
 
-function loadTimeBars(start,end){
-  var result1 = timeline.addCustomTime(start, 't1');
-  var result2 = timeline.addCustomTime(end, 't2');
-  console.log(result1);
-  console.log(result2);
-  console.log(timeline.customTimes);
+function appendCheckboxes(trainer,contentDiv){
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "trainer-checkbox";
+    checkbox.name = "check";
+    checkbox.setAttribute("trainer", trainer.id);
+    checkbox.value = trainer.nickname + " (ID: " + trainer.id + ")";
+    checkbox.onchange=function(){
+      copySelectedTrainers(checkbox,"" + trainer.id);
+    }
+
+    contentDiv.appendChild(checkbox);
+    if (trainer.status == "Team Lead"){
+      var radio = document.createElement("input");
+      radio.title = "Select as team lead";
+      radio.className = "starradio";
+      radio.type = "radio";
+      radio.name = "stars";
+      radio.setAttribute("trainer",trainer.id);
+      radio.value = trainer.nickname + " (ID: " + trainer.id + ")";
+      radio.style.width = "15px";
+      radio.style.height = "15px";
+      radio.style.padding = "0px";
+      radio.style.margin = "0px";
+      radio.onchange = function(){
+        radioFunc(this);
+      }
+      contentDiv.appendChild(radio);
+    }
+    return contentDiv;
 }

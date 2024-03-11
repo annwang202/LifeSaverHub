@@ -15,7 +15,13 @@ function filterEvents(filter_selector) {
     var clickedItem = e.target;
 
     if (clickedItem.checked == true) {
-      hideOrShowItems(itemsToFilter,"data-type",clickedItem.value, "hideItem", "showItem");
+      hideOrShowItems(
+        itemsToFilter,
+        "data-type",
+        clickedItem.value,
+        "hideItem",
+        "showItem"
+      );
     } else if (clickedItem.checked == false) {
       var boxesToUncheck = document.querySelectorAll(
         `input.event-checkbox[value="${clickedItem.value}"]`
@@ -26,12 +32,24 @@ function filterEvents(filter_selector) {
         boxToUncheck.checked = false;
         boxToUncheck.dispatchEvent(trigger);
       });
-      hideOrShowItems(itemsToFilter,"data-type",clickedItem.value, "showItem", "hideItem");
+      hideOrShowItems(
+        itemsToFilter,
+        "data-type",
+        clickedItem.value,
+        "showItem",
+        "hideItem"
+      );
     }
   }
 }
 
-function hideOrShowItems(listItems,attribute,itemType,classToRemove, classToAdd) {
+function hideOrShowItems(
+  listItems,
+  attribute,
+  itemType,
+  classToRemove,
+  classToAdd
+) {
   for (var i = 0; i < listItems.length; i++) {
     var currentItem = listItems[i];
     if (currentItem.getAttribute(attribute) == itemType) {
@@ -138,13 +156,14 @@ function autocomplete(inputs, full_arr) {
       }
     }
     function handleInput(e) {
-      
       /*Get already entered trainer names and remove them from dropdown list*/
-      var valuesArray = Array.from(document.querySelectorAll(".trainerInput, .leaderInput")).map(function(input) {
+      var valuesArray = Array.from(
+        document.querySelectorAll(".trainerInput, .leaderInput")
+      ).map(function (input) {
         return input.value;
-       });
+      });
 
-      var arr = full_arr.filter(n => !valuesArray.includes(n))
+      var arr = full_arr.filter((n) => !valuesArray.includes(n));
 
       var a,
         b,
@@ -187,4 +206,87 @@ function autocomplete(inputs, full_arr) {
       closeAllLists(e.target);
     });
   });
+}
+
+function radioFunc(radio) {
+  console.log("radioFunc called");
+  var trainerId = radio.getAttribute("trainer");
+  //change radio on every iframe
+  var availabilitySummaryIframe = document.getElementById(
+    "availabilitySummaryIframe"
+  );
+  var allIframe = document.getElementById("allIframe");
+  var parentWindow = window.parent.document;
+  if (!availabilitySummaryIframe || !allIframe) {
+    //function is being activated within availabilitySummaryIframe or allIframe
+    availabilitySummaryIframe = parentWindow.getElementById(
+      "availabilitySummaryIframe"
+    );
+    allIframe = parentWindow.getElementById("allIframe");
+    parentWindow.querySelector( //copy stars to parent window
+      'input[type="radio"][trainer="' + trainerId + '"]'
+    ).checked = true;
+    disableCheckbox(parentWindow,trainerId);
+  } else {
+    document.querySelector(
+      'input[type="radio"][trainer="' + trainerId + '"]'
+    ).checked = true;
+    disableCheckbox(document, trainerId);
+  }
+  availabilitySummaryIframe.contentDocument.querySelector(
+    'input[type="radio"][trainer="' + trainerId + '"]'
+  ).checked = true;
+  disableCheckbox(availabilitySummaryIframe.contentDocument, trainerId);
+  allIframe.contentDocument.querySelector(
+    'input[type="radio"][trainer="' + trainerId + '"]'
+  ).checked = true;
+  disableCheckbox(allIframe.contentDocument, trainerId);
+}
+
+function disableCheckbox(doc, trainerId) {
+  console.log("disableCheckbox called");
+  //disable the trainer checkbox when the radio is selected
+  var checkedCheckboxes = doc.querySelectorAll(".trainer-checkbox");
+  console.log(checkedCheckboxes);
+  checkedCheckboxes.forEach(function (box) {
+    if (box.getAttribute("trainer") != trainerId) {
+      box.disabled = false;
+    } else {
+      //reenable previously disabled checkboxes
+      box.disabled = true;
+    }
+  });
+}
+
+function copySelectedTrainers(checkbox, trainer_id) {
+  //triggered by checkbox onchange
+  console.log("copySelectedTrainers called");
+  var availabilitySummaryIframe = document.getElementById(
+    "availabilitySummaryIframe"
+  );
+  var allIframe = document.getElementById("allIframe");
+  var parentWindow = window.parent.document;
+  if (!availabilitySummaryIframe) {
+    availabilitySummaryIframe = parentWindow.getElementById(
+      "availabilitySummaryIframe"
+    );
+    parentWindow.querySelector(
+      'input[type="checkbox"][trainer="' + trainer_id + '"]'
+    ).checked = checkbox.checked;
+  }
+  availabilitySummaryIframe.contentDocument.querySelector(
+    'input[type="checkbox"][trainer="' + trainer_id + '"]'
+  ).checked = checkbox.checked;
+  if (!allIframe) {
+    allIframe = parentWindow.getElementById("allIframe");
+    parentWindow.querySelector(
+      'input[type="checkbox"][trainer="' + trainer_id + '"]'
+    ).checked = checkbox.checked;
+  }
+  allIframe.contentDocument.querySelector(
+    'input[type="checkbox"][trainer="' + trainer_id + '"]'
+  ).checked = checkbox.checked;
+  document.querySelector(
+    'input[type="checkbox"][trainer="' + trainer_id + '"]'
+  ).checked = checkbox.checked;
 }

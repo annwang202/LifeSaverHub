@@ -39,7 +39,6 @@
     display: grid;
     box-sizing: border-box !important;
     width: 100%  !important;
-    align-items: center !important; /* Centers horizontally */
     max-width: none !important;
     grid-template-columns: 1fr 9fr;
 }
@@ -266,7 +265,7 @@ input.star { /*star checkboxes*/
   -moz-appearance: none;
   width: 15px;
   height: 15px;
-  background: url('unstarred.png') no-repeat;
+  background: url('unstarred_tspt.png') no-repeat;
   background-size: cover;
   cursor: pointer;
   border: none;
@@ -274,8 +273,23 @@ input.star { /*star checkboxes*/
 }
 
 .starradio:checked {
-  background: url('starred.png') no-repeat;
+  background: url('starred_tspt.png') no-repeat;
   background-size: cover;
+}
+
+/*Trainer already assigned to event this day warning*/
+.warningIcon {
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 15px;
+  height: 15px;
+  background: url('warning.png') no-repeat;
+  background-size: cover;
+  border: none;
+  outline: none;
+  display: inline-block;
 }
 
 /*status colors*/
@@ -319,12 +333,12 @@ input.star { /*star checkboxes*/
   left: 0% !important;
 }
 
-
 /* advancedsearch tabs*/
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
+  display: inline-block;
 }
 
 .tab button {

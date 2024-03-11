@@ -32,66 +32,81 @@
             <button id = "clearButton">Clear</button>
         </ul>
       </div>
-      <div class="trainerList">
-        <ul class="list-group list-group-flush infoFilter" id="trainerInfoFilter">
-          {% for trainer in trainers %}
-          <li
-            id="trainer_{{trainer.id}}"
-            data-type="{{trainer.status}}"
-            class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %} "
-            style="display: inline-block; border-width: 3px;"
-          >
-          <a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a><br>
-          {{trainer.pronouns}}</br>
-          <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{trainer.status}}</strong></div><br>
-            <div class = "button-container">
-              <button title= "Details" id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128899;</button>
-              <button title="Edit trainer" id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit trainer"/></button></div>
-          <div id="update_div_{{ trainer.name }}" style="display:none;">
-            <form id="update_form_{{ trainer.name }}"  name="update_trainer_form" action="/update-trainer" method="POST">
-              <input type="hidden" name="update_trainer_form" value="1">
-              <input type="hidden" name="update_id" value="{{trainer.id}}">
-              <strong>Update status:</strong><br>
-              <select name="status" id="status_{{trainer.name}}">
-                <option value="none" selected disabled hidden>{{trainer.status}}</option>
-                <option value="New">New</option>
-                <option value="Basic Trainer">Basic Trainer</option>
-                <option value="Team Lead">Team Lead</option>
-                <option value="Suspended">Suspended</option>
-              </select><br>
-              <strong>Update admin notes:</strong><br>
-              <textarea id="admin_trainer_notes" name="admin_trainer_notes" rows="4" cols="50" style="font-size:10px;">{{trainer.admin_notes}}</textarea><br>
-              <button type="submit" form = "update_form_{{ trainer.name }}" id="update_submit_{{ trainer.name }}" class="btn btn-primary">Update trainer</button>
-            </form>
+      <div class="viewTabs">
+        <div class="tab">
+          <button id="trainer-view-button" class="tablinks active" onclick="openTab(event, 'trainer-view')">Trainer View</button>
+          <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')" disabled>Day View</button>
+          <button id="calendar-view-all-button" class="tablinks" onclick="openTab(event, 'calendar-view-all')" disabled>Day View All</button>
+        </div>
+        <div id="trainer-view" class="tabcontent">
+          <div class="trainerList">
+            <ul class="list-group list-group-flush infoFilter" id="trainerInfoFilter">
+              {% for trainer in trainers %}
+              <li
+                id="trainer_{{trainer.id}}"
+                data-type="{{trainer.status}}"
+                class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %} "
+                style="display: inline-block; border-width: 3px;"
+              >
+              <div name="warning" trainer="{{trainer.id}}" style="display:inline-block;"></div>
+              <a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a><br>
+              {{trainer.pronouns}}</br>
+              <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{trainer.status}}</strong></div><br>
+                <div class = "button-container">
+                  <button title= "Details" id="details_{{trainer.id}}"class="show-trainer-details" onClick="showOrHideDropdown(this.id,'trainer','expand')">&#128899;</button>
+                  <button title="Edit trainer" id="{{trainer.name}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit trainer"/></button></div>
+              <div id="update_div_{{ trainer.name }}" style="display:none;">
+                <form id="update_form_{{ trainer.name }}"  name="update_trainer_form" action="/update-trainer" method="POST">
+                  <input type="hidden" name="update_trainer_form" value="1">
+                  <input type="hidden" name="update_id" value="{{trainer.id}}">
+                  <strong>Update status:</strong><br>
+                  <select name="status" id="status_{{trainer.name}}">
+                    <option value="none" selected disabled hidden>{{trainer.status}}</option>
+                    <option value="New">New</option>
+                    <option value="Basic Trainer">Basic Trainer</option>
+                    <option value="Team Lead">Team Lead</option>
+                    <option value="Suspended">Suspended</option>
+                  </select><br>
+                  <strong>Update admin notes:</strong><br>
+                  <textarea id="admin_trainer_notes" name="admin_trainer_notes" rows="4" cols="50" style="font-size:10px;">{{trainer.admin_notes}}</textarea><br>
+                  <button type="submit" form = "update_form_{{ trainer.name }}" id="update_submit_{{ trainer.name }}" class="btn btn-primary">Update trainer</button>
+                </form>
+              </div>
+              <div class="trainer-details">
+                <div id="trainer_details_{{ trainer.id }}" style="display:none;">
+                  <p>
+                  Full name: {{trainer.name}}</br>
+                  Date of birth: {{trainer.date}}</br>
+                  Race/ethnicity: {{trainer.race_ethnicity}}</br>
+                  How did you hear: {{trainer.how_did_you_hear}}</br>
+                  Email: {{trainer.email}}</br>
+                  Phone: {{trainer.phone}}</br>
+                  Call or text: {{trainer.text_or_call}}</br>
+                  Student? {{trainer.education}}</br>
+                  Lifesaver skills: {{trainer.lifesaver_skills}}</br>
+                  Relevant experience: {{trainer.relevant_exp}}</br>
+                  Heartsaver interest: {{trainer.heartsaver_interest}}</br>
+                  Other languages: {{trainer.languages}}</br>
+                  <strong>General availability:</strong><br>
+                  {{trainer.gen_avail}}<br>
+                <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
+                <strong>Other info:</strong><br>
+                {{ trainer.other_info }}<br>
+                <strong>Admin notes:</strong><br>
+                {{ trainer.admin_notes }}<br>
+                </p>
+                </div>
+              </div>
+              </li> 
+              {% endfor %}
+            </ul>
           </div>
-          <div class="trainer-details">
-            <div id="trainer_details_{{ trainer.id }}" style="display:none;">
-              <p>
-              Full name: {{trainer.name}}</br>
-              Date of birth: {{trainer.date}}</br>
-              Race/ethnicity: {{trainer.race_ethnicity}}</br>
-              How did you hear: {{trainer.how_did_you_hear}}</br>
-              Email: {{trainer.email}}</br>
-              Phone: {{trainer.phone}}</br>
-              Call or text: {{trainer.text_or_call}}</br>
-              Student? {{trainer.education}}</br>
-              Lifesaver skills: {{trainer.lifesaver_skills}}</br>
-              Relevant experience: {{trainer.relevant_exp}}</br>
-              Heartsaver interest: {{trainer.heartsaver_interest}}</br>
-              Other languages: {{trainer.languages}}</br>
-              <strong>General availability:</strong><br>
-              {{trainer.gen_avail}}<br>
-            <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
-            <strong>Other info:</strong><br>
-            {{ trainer.other_info }}<br>
-            <strong>Admin notes:</strong><br>
-            {{ trainer.admin_notes }}<br>
-            </p>
-            </div>
-          </div>
-          </li> 
-          {% endfor %}
-        </ul>
-      </div>
+        </div>
+        <div id="calendar-view" class="tabcontent" style="display:none; height:100%;">
+          <iframe id="availabilitySummaryIframe" page="trainer_info" allowTransparency="true" frameborder="0" style="width:100%;height:100vh;"></iframe>
+        </div>
+        <div id="calendar-view-all" class="tabcontent" style="display:none; height:100%;">
+          <iframe id="allIframe" page="trainer_info" allowTransparency="true" frameborder="0" style="width:100%;height:100vh;"></iframe>
+        </div>
       </div>
 {% endblock %}>

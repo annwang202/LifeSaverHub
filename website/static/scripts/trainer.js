@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
             calendar.addEvent(new_event);
             calendar.refetchEvents();
             var events = calendar.getEvents();
-            console.log(events)
             /*let eventPlainObjects = events.map((event) => {
                 return {
                     id: event.id,

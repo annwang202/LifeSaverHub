@@ -4,6 +4,48 @@
       {
         "color": "#039e72",
         "displayEventEnd": true,
+        "end": "2024-03-07T18:00:00",
+        "eventTextColor": "#039e72",
+        "extendedProps": {
+          "eventId": 6,
+          "formattedEndTime": "06:00 PM",
+          "formattedStartDate": "03/07/2024 04:00 PM",
+          "numLearners": 100,
+          "trainerTrue": true
+        },
+        "id": 6,
+        "start": "2024-03-07T16:00:00",
+        "title": "WXPI"
+      }
+    ],
+    "id": 6
+  },
+  {
+    "events": [
+      {
+        "color": "#039e72",
+        "displayEventEnd": true,
+        "end": "2024-03-07T14:00:00",
+        "eventTextColor": "#039e72",
+        "extendedProps": {
+          "eventId": 3,
+          "formattedEndTime": "02:00 PM",
+          "formattedStartDate": "03/07/2024 12:00 PM",
+          "numLearners": 30,
+          "trainerTrue": true
+        },
+        "id": 3,
+        "start": "2024-03-07T12:00:00",
+        "title": "UPMC"
+      }
+    ],
+    "id": 3
+  },
+  {
+    "events": [
+      {
+        "color": "#039e72",
+        "displayEventEnd": true,
         "end": "2024-02-26T17:30:00",
         "eventTextColor": "#039e72",
         "extendedProps": {

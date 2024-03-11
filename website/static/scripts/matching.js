@@ -133,10 +133,7 @@ function initializeAdvancedSearch(iframeDocument,modal){
         var leadId = leadMatch[1];
         var input = iframeDocument.querySelector('input[name="stars"][trainer="' + leadId + '"]')
         input.checked = true;
-      } 
-      else {
-        console.log(lead);
-        console.log("No match found");
+        input.dispatchEvent(new Event('change'));
       }
 
       var trainers = modal1.querySelectorAll('input[name="trainer-slot[]"]');
@@ -144,11 +141,9 @@ function initializeAdvancedSearch(iframeDocument,modal){
         let trainerMatch = trainer.value.match(regex);
         if(trainerMatch){
           var trainerId = trainerMatch[1];
-          iframeDocument.querySelector('input[name="check"][trainer="' + trainerId + '"]').checked = true;
+          var input = iframeDocument.querySelector('input[name="check"][trainer="' + trainerId + '"]');
+          input.checked = true;
         } 
-        else {
-          console.log("No match found");
-        }
       })
 
       //get inputs from advancedSearch.html
@@ -261,7 +256,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const endHours = String(parsedEnd.getHours()).padStart(2,'0');
             const endMinutes = String(parsedEnd.getMinutes()).padStart(2, '0');
             const endTime = `${endHours}:${endMinutes}`;
-            console.log("startTime: " + startTime);
             startTimeInput.value = startTime;
             endTimeInput.value = endTime;
   
