@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
-<script type="module" src="{{url_prefix}}/static/scripts/request.js"></script>
+  <script type="module" src="{{url_prefix}}/static/scripts/request.js"></script>
 <div class="form-container">
 <div id="submit_event" style="max-width: 850px; font-weight: bold;">
   <div style="text-align: center;"><h2>Request a Training Event</h2></div>
@@ -36,33 +36,10 @@
   </div>
   </br>
     <div id="availability">
-      <div class="preferred-date-time">
-        <label for="event_date">Preferred Date*:</label>
-
-      </br>
-      </div>
-      <div class="backup-date-time">
-        <label for="event_date" style="font-weight: normal;">Back-up Date:</label>
-        <input type="date" name="date[]" />
-        <input type="time" name="start_time[]"/>
-        <label for="event_date" style="font-weight: normal;">to</label>
-        <input type="time" name="end_time[]"/>
-      </br>
-      </div>
+      <h5><strong>Select your date(s) of availability:</strong></h5><br>
+      <div id="request_calendar"></div>
     </div>
-    <button type="button" id="add-date-time">Add more back-up dates</button>
-    <script>
-      document.getElementById("add-date-time").addEventListener("click", function () {
-      const dateTimesContainer = document.getElementById("availability");
-      const dateTimeEntry = document.querySelector(".backup-date-time").cloneNode(true);
-      dateTimeEntry.querySelectorAll('input[type="date"], input[type="time"]').forEach(function (input) {
-                input.value = '';
-                });
-      dateTimesContainer.appendChild(dateTimeEntry);
-    });
-    </script>
     <br />
-    <div id="request_calendar"></div>
   </br>
   <div style="text-align: left;">
   <label for="event_mission" style="font-weight: normal;">1. What is your group's mission?</label><br />
@@ -158,17 +135,54 @@
   <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Available trainers</h4>
+          <h4 class="modal-title"></h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>
         <div class="modal-body">
-          <div></div>
-          <strong>Preferred time of day:</strong> 
-          <select name="timeOfDay">
+          <strong>Select your preferred time of day:</strong></br>
+          <select id="timeOfDay">
             <option value="Morning">Morning</option>
             <option value="Afternoon">Afternoon</option>
             <option value="Evening">Evening</option>
-          </select>
+          </select></br><br>
+          <strong>Or provide a specific time frame:</strong></br>
+          <input type="text" id="startStr" hidden/>
+          <input type="text" id="endStr" hidden/>
+          <input type="text" id="start" hidden/>
+          <input type="text" id="end" hidden/>
+          <input type="time" id="start_time"/>
+          <label for="event_date" style="font-weight: normal;">to</label>
+          <input type="time" id="end_time"/><br>
+        </div>
+        <div class="modal-footer">
+          <button data-dismiss="modal" class="btn">Close</button>
+          <a id="selectBtn" href="#" class="btn btn-primary">Add date</a>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="modal fade" id="delete-modal">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+          <strong>Select your preferred time of day:</strong></br>
+          <select id="timeOfDay">
+            <option value="Morning">Morning</option>
+            <option value="Afternoon">Afternoon</option>
+            <option value="Evening">Evening</option>
+          </select></br><br>
+          <strong>Or provide a specific time frame:</strong></br>
+          <input type="text" id="startStr" hidden/>
+          <input type="text" id="endStr" hidden/>
+          <input type="text" id="start" hidden/>
+          <input type="text" id="end" hidden/>
+          <input type="time" id="start_time"/>
+          <label for="event_date" style="font-weight: normal;">to</label>
+          <input type="time" name="end_time" id="end_time"/><br>
         </div>
         <div class="modal-footer">
           <button data-dismiss="modal" class="btn">Close</button>

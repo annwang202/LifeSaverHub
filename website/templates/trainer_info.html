@@ -1,25 +1,58 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
     <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
+    <script>
+        var new_count = {{ new_count | tojson | safe }};
+        var lead_count = {{ lead_count | tojson | safe }};
+        var basic_count = {{ basic_count | tojson | safe }};
+        var inactive_count = {{ inactive_count | tojson | safe }};
+        var suspended_count = {{ suspended_count | tojson | safe }};
+    </script>
     <div id="trainer-info-container" class="trainer-info-container">
       <div class="trainerFilterSection">
         <ul>
             <strong>Status</strong>
             <li>
-                <input checked="true" type="checkbox" value="New"/>
-                <label style="color: #ff7d03; font-weight: bold;">New</label>
-            </li>
+              <input checked="true" type="checkbox" name="status" value="Team Lead"/>
+              <label style="color: #4c7a02; font-weight: bold;">Team Lead ({{lead_count}})</label>
+          </li>
+          <li>
+            <input checked="true" type="checkbox" name="status" value="Basic Trainer">
+            <label style="color: #044dba; font-weight: bold;">Basic Trainer ({{basic_count}})</label>
+        </li>
             <li>
-              <input checked="true" type="checkbox" value="Basic Trainer">
-              <label style="color: #044dba; font-weight: bold;">Basic Trainer</label>
+                <input checked="true" type="checkbox" name="status" value="New"/>
+                <label style="color: #ff7d03; font-weight: bold;">New ({{new_count}})</label>
+            </li>
+
+            <li>
+              <input type="checkbox" name="status" value="Inactive"/>
+              <label style="font-weight: bold;">Inactive ({{inactive_count}})</label>
           </li>
             <li>
-                <input checked="true" type="checkbox" value="Team Lead"/>
-                <label style="color: #4c7a02; font-weight: bold;">Team Lead</label>
+                <input type="checkbox" name="status" value="Suspended"/>
+                <label style="font-weight: bold;">Suspended ({{suspended_count}})</label>
+            </li></br>
+            <strong>Skills</strong>
+            <li>
+                <input type="checkbox" name="skill" value="CPR_AED" checked/>
+                <label style="font-weight: bold;">CPR/AED</label>
             </li>
             <li>
-                <input type="checkbox" value="Suspended"/>
-                <label style="font-weight: bold;">Suspended</label>
+              <input type="checkbox" name="skill" value="STB" checked>
+              <label style="font-weight: bold;">Hemorrhage Control</label>
+          </li>
+            <li>
+                <input type="checkbox" name="skill" value="Narcan" checked/>
+                <label style="font-weight: bold;">Narcan</label>
+            </li>
+            <li>
+                <input type="checkbox" name="skill" value="AHA_HS" checked/>
+                <label style="font-weight: bold;">AHA Heartsaver</label>
+            <li>
+                  <input type="checkbox" name="skill" value="AHA_BLS" checked/>
+                  <label style="font-weight: bold;">AHA BLS</label>
+              </li>
             </li></br>
             <strong>Availability</strong></br>
             <label for="date" style="font-size: x-small;">Date:</label></br>
@@ -61,12 +94,24 @@
                   <input type="hidden" name="update_id" value="{{trainer.id}}">
                   <strong>Update status:</strong><br>
                   <select name="status" id="status_{{trainer.name}}">
-                    <option value="none" selected disabled hidden>{{trainer.status}}</option>
-                    <option value="New">New</option>
-                    <option value="Basic Trainer">Basic Trainer</option>
+                    <option value="{{trainer.status}}" selected hidden>{{trainer.status}}</option>
                     <option value="Team Lead">Team Lead</option>
+                    <option value="Basic Trainer">Basic Trainer</option>
+                    <option value="New">New</option>
+                    <option value="Inactive">Inactive</option>
                     <option value="Suspended">Suspended</option>
                   </select><br>
+                  <strong>Update skills:</strong><br>
+                    <input type="checkbox" value="CPR_AED" name="CPR_AED" {% if trainer.CPR_AED %}checked{% endif %}>
+                    <label>CPR/AED</label><br>
+                    <input type="checkbox" value="STB" name="STB" {% if trainer.STB %}checked{% endif %}>
+                    <label>Hemorrhage Control</label><br>
+                    <input type="checkbox" value="Narcan" name="Narcan" {% if trainer.Narcan %}checked{% endif %}>
+                    <label>Narcan</label><br>
+                    <input type="checkbox" value="AHA_HS" name="AHA_HS" {% if trainer.AHA_HS %}checked{% endif %}>
+                    <label>AHA Heartsaver Instructor</label><br>
+                    <input type="checkbox" value="AHA_BLS" name="AHA_BLS" {% if trainer.AHA_BLS %}checked{% endif %}>
+                    <label>AHA BLS Instructor</label><br>
                   <strong>Update admin notes:</strong><br>
                   <textarea id="admin_trainer_notes" name="admin_trainer_notes" rows="4" cols="50" style="font-size:10px;">{{trainer.admin_notes}}</textarea><br>
                   <button type="submit" form = "update_form_{{ trainer.name }}" id="update_submit_{{ trainer.name }}" class="btn btn-primary">Update trainer</button>
@@ -87,11 +132,27 @@
                   Relevant experience: {{trainer.relevant_exp}}</br>
                   Heartsaver interest: {{trainer.heartsaver_interest}}</br>
                   Other languages: {{trainer.languages}}</br>
-                  <strong>General availability:</strong><br>
-                  {{trainer.gen_avail}}<br>
-                <strong>Preferred hours per Month:</strong> {{ trainer.hrs_per_month }}<br>
-                <strong>Other info:</strong><br>
-                {{ trainer.other_info }}<br>
+                Preferred hours per month: {{ trainer.hrs_per_month }}<br>
+                Other info:<br>
+                {{ trainer.other_info }}
+                <ul>
+                <strong>Skills:</strong>
+                {% if trainer.CPR_AED %}
+                <li skill="CPR_AED" trainer="trainer.id">CPR/AED</li>
+                {% endif %}
+                {% if trainer.STB %}
+                <li skill="STB" trainer="trainer.id">Hemorrhage Control</li>
+                {% endif %}
+                {% if trainer.Narcan %}
+                <li skll="Narcan" trainer="trainer.id">Narcan</li>
+                {% endif %}
+                {% if trainer.AHA_HS %}
+                <li skill="AHA_HS" trainer="trainer.id">AHA Heartsaver</li>
+                {% endif %}
+                {% if trainer.AHA_BLS %}
+                <li skill="AHA_HS" trainer="trainer.id">AHA BLS</li>
+                {% endif %}
+              </ul>
                 <strong>Admin notes:</strong><br>
                 {{ trainer.admin_notes }}<br>
                 </p>

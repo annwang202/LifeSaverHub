@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Event, EventDate, Trainer, TrainerDate, Assignment
+from .models import Event, EventDate, Trainer, TrainerDate, Assignment, Resource
 from . import db
 import json
 from datetime import datetime, time, timedelta
@@ -21,16 +21,20 @@ tz = pytz.timezone('America/New_York')
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
+    eventModel = Event.query.all()
     events = (
-        Event.query
-        .join(Event.preferred_date).order_by(EventDate.start_date)
-    )
+    Event.query
+    .join(Event.dates)  # Assuming 'dates' is the relationship attribute in Event
+    .order_by(EventDate.start_date)
+    .all()
+)
     assignments = Assignment.query.all()
     trainers = Trainer.query.all()
 
     # for loading scheduled assignments column
     assignments_by_event = []
     for event in events:
+        print(event.dates)
         event_assignments = event.assignments.all()
         if (not event_assignments):
             continue
@@ -57,15 +61,39 @@ def home():
                       'gen_avail': trainer.gen_avail} for trainer in trainers]
     return render_template("home.html", user=current_user, events=events, trainers=trainers, assignments=assignments, assignments_by_event=assignments_by_event, trainers_data=trainers_data, event_colors=event_colors)
 
+@views.route('/resources', methods=['GET', 'POST'])
+@login_required
+def resources():
+    resources = Resource.query.order_by(Resource.name).all()
+    resource_data = []
+    for resource in resources:
+        resource_data.append(resource.name)
+    return render_template("resources.html", user=current_user, resources=resources, resource_data=resource_data)
+
+
+@views.route('/resourceSearch', methods=['GET', 'POST'])
+@login_required
+def resourcesearch():
+    resources = Resource.query.order_by(Resource.name).all()
+    resource_data = []
+    for resource in resources:
+        resource_data.append(resource.name)
+    return render_template("resourceSearch.html", user=current_user, resources=resources, resource_data=resource_data)
 
 @views.route('/advancedsearch', methods=['GET', 'POST'])
 @login_required
 def advancedsearch():
     trainers = Trainer.query.order_by(Trainer.name).all()
+    new_count = Trainer.query.filter_by(status="New").count()
+    lead_count = Trainer.query.filter_by(status="Team Lead").count()
+    basic_count = Trainer.query.filter_by(status="Basic Trainer").count()
+    inactive_count = Trainer.query.filter_by(status="Inactive").count()
+    suspended_count = Trainer.query.filter_by(status="Suspended").count()
     trainers_data = []
     for trainer in trainers:
         trainers_data.append(trainer.name)
-    return render_template("advancedSearch.html", user=current_user, trainers=trainers, trainers_data=trainers_data)
+    return render_template("advancedSearch.html", user=current_user, trainers=trainers, trainers_data=trainers_data,new_count=new_count,
+                           lead_count=lead_count,basic_count=basic_count,inactive_count=inactive_count,suspended_count=suspended_count)
 
 
 @views.route('/availabilitySummary/<string:event_date>/<string:eventStart>/<string:eventEnd>/<int:showAll>/<int:addCheckboxes>', methods=['GET', 'POST'])
@@ -171,65 +199,61 @@ def trainer():
 @login_required
 def trainer_info():
     trainers = Trainer.query.order_by(Trainer.name).all()
-    '''
-    for trainer in trainers:
-        if trainer.gen_avail:
-            trainer.gen_avail.sort(key=lambda date: date.start_date)
-    '''
-    # trainers_data = [{'id': trainer.id, 'name': trainer.name, 'gen_avail': trainer.gen_avail} for trainer in trainers]
+    new_count = Trainer.query.filter_by(status="New").count()
+    lead_count = Trainer.query.filter_by(status="Team Lead").count()
+    basic_count = Trainer.query.filter_by(status="Basic Trainer").count()
+    inactive_count = Trainer.query.filter_by(status="Inactive").count()
+    suspended_count = Trainer.query.filter_by(status="Suspended").count()
     trainers_data = []
     for trainer in trainers:
         trainers_data.append(trainer.name)
-    return render_template("trainer_info.html", user=current_user, trainers=trainers, trainers_data=trainers_data)
+    return render_template("trainer_info.html", user=current_user, trainers=trainers, trainers_data=trainers_data,new_count=new_count,
+                           lead_count=lead_count,basic_count=basic_count,inactive_count=inactive_count,suspended_count=suspended_count)
 
 
 @views.route('/submit-event', methods=['GET', 'POST'])
 @login_required
 def submit_event():
     if request.method == 'POST':
-        if request.form.get("event_form"):  # get event form submission
-            name = request.form["event_name"]
-            email = request.form["event_email"]
-            phone = request.form["event_phone"]
-            title = request.form["event_title"]
-            if (not title or title == ""):
-                title = name
-            training_types = request.form.getlist('training_type[]')
-            training_types_string = ', '.join(training_types)
-            preferred_date = request.form.getlist("date")
-            preferred_start = request.form.getlist("start_time")
-            preferred_end = request.form.getlist("end_time")
-            backup_dates = request.form.getlist(
-                "date[]")  # Retrieve multiple date entries
-            backup_starts = request.form.getlist(
-                "start_time[]")  # Retrieve multiple start times
-            backup_ends = request.form.getlist(
-                "end_time[]")  # Retrieve multiple end times
-            mission = request.form.get("event_mission")
-            num_learners = request.form.get("num_learners")
-            learners = request.form.get("event_learners")
-            place = request.form.get("event_place")
-            chairs_tables = request.form.get("event_chairs_tables")
-            cultural = request.form.get("event_cultural")
-            content_concerns = request.form.get("event_content_concerns")
-            music = request.form.get("event_music")
-            photos = request.form.get("event_photos")
-            other_info = request.form.get("event_other_info")
-            status = "New"
-            new_event = Event(name=name, email=email, phone=phone, title=title, training_types=training_types_string,
-                              mission=mission, num_learners=num_learners, learners=learners, place=place, chairs_tables=chairs_tables, cultural=cultural,
-                              content_concerns=content_concerns, music=music, photos=photos, other_info=other_info, status=status)
-            if backup_dates[0] and backup_starts[0] and backup_ends[0]:
-                backup_eventDates = create_event_dates(
-                    backup_dates, backup_starts, backup_ends)
-                for eventDate in backup_eventDates:
-                    new_event.backup_dates.append(eventDate)
-            preferred_eventDates = create_event_dates(
-                preferred_date, preferred_start, preferred_end)
-            new_event.preferred_date.append(preferred_eventDates[0])
-            db.session.add(new_event)  # adding the event to the database
-            db.session.commit()
-            flash('Event added to list!', category='success')
+        try:
+            if request.form.get("event_form"):  # get event form submission
+                name = request.form["event_name"]
+                email = request.form["event_email"]
+                phone = request.form["event_phone"]
+                title = request.form["event_title"]
+                if (not title or title == ""):
+                    title = name
+                training_types = request.form.getlist('training_type[]')
+                training_types_string = ', '.join(training_types)
+                
+                eventDatesField = request.form.get('eventDates')
+                eventDatesData = json.loads(eventDatesField)
+
+                mission = request.form.get("event_mission")
+                num_learners = request.form.get("num_learners")
+                learners = request.form.get("event_learners")
+                place = request.form.get("event_place")
+                chairs_tables = request.form.get("event_chairs_tables")
+                cultural = request.form.get("event_cultural")
+                content_concerns = request.form.get("event_content_concerns")
+                music = request.form.get("event_music")
+                photos = request.form.get("event_photos")
+                other_info = request.form.get("event_other_info")
+                status = "New"
+                new_event = Event(name=name, email=email, phone=phone, title=title, training_types=training_types_string,
+                                mission=mission, num_learners=num_learners, learners=learners, place=place, chairs_tables=chairs_tables, cultural=cultural,
+                                content_concerns=content_concerns, music=music, photos=photos, other_info=other_info, status=status)
+                if (len(eventDatesField) != 0):
+                    eventDates = create_event_dates(eventDatesData)
+                    for eventDate in eventDates:
+                        new_event.dates.append(eventDate)
+                db.session.add(new_event)  # adding the event to the database
+                db.session.commit()
+                flash('Event added to list!', category='success')
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            traceback.print_exc()
+            db.session.rollback()
 
     return redirect(url_for('views.trainee'))
 
@@ -438,12 +462,24 @@ def update_trainer():
         if request.form.get("update_trainer_form"):  # get event form submission
             update_id = request.form.get('update_id')
             new_status = request.form.get('status')
+            print(new_status)
             new_admin_notes = request.form.get('admin_trainer_notes')
+            cpr_aed = request.form.get(
+            'CPR_AED') is not None
+            stb = request.form.get('STB') is not None
+            narcan = request.form.get('Narcan') is not None
+            aha_hs = request.form.get('AHA_HS') is not None
+            aha_bls = request.form.get('AHA_BLS') is not None
             trainer = Trainer.query.get(update_id)
             if trainer:
                 # Update the event status
                 trainer.status = new_status
                 trainer.admin_notes = new_admin_notes
+                trainer.CPR_AED = cpr_aed
+                trainer.STB = stb
+                trainer.Narcan = narcan
+                trainer.AHA_HS = aha_hs
+                trainer.AHA_BLS = aha_bls
                 db.session.commit()
                 flash('Trainer updated!', category='success')
             else:
@@ -561,10 +597,11 @@ def event_mysql_to_json():
     sources_list = []
     for event in data:
         event_list = []
-        for slot in (event.backup_dates + event.preferred_date):
+        for slot in (event.dates):
             time_dict = {
                 'id': slot.id,
                 'title': event.title,
+                'allDay': slot.allDay,
                 'start': slot.iso_formatted_start_date,
                 'end': slot.iso_formatted_end_date,
                 'eventDisplay': 'background',
@@ -577,7 +614,8 @@ def event_mysql_to_json():
                     'formattedStartDate': slot.formatted_start_date,
                     'formattedEndTime': slot.formatted_end_time,
                     'eventId': event.id,
-                    'numLearners': event.num_learners
+                    'numLearners': event.num_learners,
+                    'timeOfDay':slot.timeOfDay
                 }
                 # Add other attributes here as needed
             }
@@ -770,17 +808,31 @@ def create_ics():
 '''
 
 
-def create_event_dates(dates, starts, ends):
-    event_dates = []
-    for date, start_time, end_time in zip(dates, starts, ends):
-        event_date = datetime.strptime(
-            f"{date} {start_time}", "%Y-%m-%d %H:%M")
-        end_date = datetime.strptime(f"{date} {end_time}", "%Y-%m-%d %H:%M")
-        iso8601_start_date = event_date.isoformat()
-        iso8601_end_date = end_date.isoformat()
+def create_event_dates(eventDates):
+    ret = []
+    print(eventDates)
+    for slot in eventDates:
+        iso8601_start_date = slot["start_date"]
+        iso8601_end_date = slot["end_date"]
+        allDay = slot["allDay"]
+        timeOfDay = slot["timeOfDay"]
+        event_date = datetime.fromisoformat(iso8601_start_date)
+        end_date = datetime.fromisoformat(iso8601_end_date)
+        if allDay:
+            if timeOfDay == "Morning":
+                event_date = event_date.replace(hour=8, minute=0, second=0)
+                end_date = end_date.replace(hour=11, minute=0, second=0)
+            elif timeOfDay == "Afternoon":
+                event_date = event_date.replace(hour=13, minute=0, second=0)
+                end_date = end_date.replace(hour=16, minute=0, second=0)
+            elif timeOfDay == "Evening":
+                event_date = event_date.replace(hour=16, minute=0, second=0)
+                end_date = end_date.replace(hour=19, minute=0, second=0)
         formatted_event_date = event_date.strftime('%m/%d/%Y %I:%M %p')
         formatted_end_time = end_date.strftime("%I:%M %p")
         new_event_date = EventDate(
-            start_date=event_date, end_date=end_date, formatted_start_date=formatted_event_date, formatted_end_time=formatted_end_time, iso_formatted_start_date=iso8601_start_date, iso_formatted_end_date=iso8601_end_date)
-        event_dates.append(new_event_date)
-    return event_dates
+           start_date=event_date, end_date=end_date, formatted_start_date=formatted_event_date, 
+           formatted_end_time=formatted_end_time, iso_formatted_start_date=iso8601_start_date, 
+           iso_formatted_end_date=iso8601_end_date, allDay=allDay, timeOfDay=timeOfDay)
+        ret.append(new_event_date)
+    return ret

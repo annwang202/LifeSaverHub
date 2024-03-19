@@ -4,8 +4,11 @@ document.addEventListener("DOMContentLoaded", function () {
     'input[type="date"], input[type="time"]'
   );
   const trainerBoxes = document.querySelectorAll(".infoFilter li");
-  var checkboxes = document.querySelectorAll(
-    ".trainerFilterSection li input[type='checkbox']"
+  var statusCheckboxes = document.querySelectorAll(
+    ".trainerFilterSection li input[type='checkbox'][name='status']"
+  );
+  var skillCheckboxes = document.querySelectorAll(
+    ".trainerFilterSection li input[type='checkbox'][name='skill']"
   );
   document.getElementById("clearButton").addEventListener("click", function () {
     clearInputs(inputs);
@@ -14,10 +17,18 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("filterButton")
     .addEventListener("click", async function () {
       var availabilityHide = await filterAvailability(container, trainerBoxes);
-      getAvailabilitySummary(container);
-      var statusHide = filterStatus(checkboxes);
-      var unionArr = union(availabilityHide, statusHide);
+      getAvailabilitySummary(container); //retrieve calendar views based on weekday and timeframe
+      var statusHide = filterStatus(statusCheckboxes);
+      var skillHide = filterSkills(skillCheckboxes);
+      var unionArr = union(availabilityHide, statusHide, skillHide);
       hideTrainers(trainerBoxes, unionArr);
+      var noTrainers = document.getElementById("noTrainers");
+      if(unionArr.length == trainerBoxes.length){
+        noTrainers.style = "display:block;";
+      }
+      else{
+        noTrainers.style = "display:none;";
+      }
     });
 
   trainerBoxes.forEach(function (box) {
@@ -109,6 +120,22 @@ function filterStatus(checkboxes) {
   return trainersToHide;
 }
 
+
+function filterSkills(checkboxes) {
+  var trainersToHide = [];
+  checkboxes.forEach(function (checkbox) {
+    if (!checkbox.checked) {
+      var trainers = document.querySelectorAll(
+        `.trainerList li[skill="${checkbox.value}"]`
+      );
+      trainers.forEach(function (li) {
+        trainersToHide.push(li.getAttribute("trainer"));
+      });
+    }
+  });
+  return trainersToHide;
+}
+
 async function filterAvailability(container, trainerBoxes) {
   console.log("filterAvailability called");
   //return boxes to hide
@@ -184,10 +211,10 @@ async function filterAvailability(container, trainerBoxes) {
   return hideIds;
 }
 
-function union(arr1, arr2) {
-  const arr3 = [...new Set([...arr1, ...arr2])];
+function union(arr1, arr2, arr3) {
+  const arr4 = [...new Set([...arr1, ...arr2, ...arr3])];
 
-  return arr3;
+  return arr4;
 }
 
 function hideTrainers(listItems, hideList) {
@@ -201,20 +228,6 @@ function hideTrainers(listItems, hideList) {
       addClass(currentItem, "showItem");
     }
   }
-}
-
-function openTab(evt, tabId) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(tabId).style.display = "block";
-  evt.currentTarget.className += " active";
 }
 
 async function getWarnings(date){

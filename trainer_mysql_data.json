@@ -1,13 +1,5 @@
 [
   {
-    "email": "alliederubeis@fakeemail.com",
-    "events": [],
-    "full-name": "Alexandra Derubeis",
-    "id": 5,
-    "name": "Allie Derubeis",
-    "status": "New"
-  },
-  {
     "email": "katiebarkley@fakeemail.com",
     "events": [],
     "full-name": "Katherine Jude Barkley",
@@ -21,22 +13,6 @@
     "full-name": "Jessica Patten",
     "id": 13,
     "name": "Jessie Patten",
-    "status": "New"
-  },
-  {
-    "email": "chrisstamp@fakeemail.com",
-    "events": [],
-    "full-name": "Christopher Kenneth Stamp",
-    "id": 14,
-    "name": "Chris Stamp",
-    "status": "New"
-  },
-  {
-    "email": "jostrobel",
-    "events": [],
-    "full-name": "Josephine Strobel",
-    "id": 15,
-    "name": "Jo Strobel",
     "status": "New"
   },
   {
@@ -56,52 +32,28 @@
     "status": "New"
   },
   {
-    "email": "jaredpeters@fakemail.com",
+    "email": "chrisstamp@fakeemail.com",
     "events": [],
-    "full-name": "Jared Peters",
-    "id": 6,
-    "name": "Jared Peters",
-    "status": "Team Lead"
+    "full-name": "Christopher Kenneth Stamp",
+    "id": 14,
+    "name": "Chris Stamp",
+    "status": "New"
   },
   {
-    "email": "johndoe@fakeemail.com",
+    "email": "alliederubeis@fakeemail.com",
     "events": [],
-    "full-name": "Jonathan Doe II",
-    "id": 7,
-    "name": "John Doe",
-    "status": "Team Lead"
+    "full-name": "Alexandra Derubeis",
+    "id": 5,
+    "name": "Allie Derubeis",
+    "status": "Suspended"
   },
   {
-    "email": "janedoe@fakeemail.com",
+    "email": "jostrobel",
     "events": [],
-    "full-name": "Jane Doe",
-    "id": 8,
-    "name": "Jane Doe",
-    "status": "Team Lead"
-  },
-  {
-    "email": "anniewang@fakeemail.com",
-    "events": [],
-    "full-name": "Ann Wang",
-    "id": 1,
-    "name": "Annie Wang",
-    "status": "Team Lead"
-  },
-  {
-    "email": "elyssaallen@fakeemail.com",
-    "events": [],
-    "full-name": "Elyssa Allen",
-    "id": 3,
-    "name": "Elyssa Allen",
-    "status": "Basic Trainer"
-  },
-  {
-    "email": "lilyschneider@fakeemail.com",
-    "events": [],
-    "full-name": "Lily Schneider",
-    "id": 4,
-    "name": "Lily Schneider",
-    "status": "Team Lead"
+    "full-name": "Josephine Strobel",
+    "id": 15,
+    "name": "Jo Strobel",
+    "status": "New"
   },
   {
     "email": "mollymckay@fakeemail.com",
@@ -112,11 +64,11 @@
     "status": "Basic Trainer"
   },
   {
-    "email": "joshdoe@fakeemail.com",
+    "email": "elyssaallen@fakeemail.com",
     "events": [],
-    "full-name": "Joshua Doe III",
-    "id": 9,
-    "name": "Josh Doe",
+    "full-name": "Elyssa Allen",
+    "id": 3,
+    "name": "Elyssa Allen",
     "status": "Basic Trainer"
   },
   {
@@ -128,11 +80,59 @@
     "status": "Basic Trainer"
   },
   {
+    "email": "janedoe@fakeemail.com",
+    "events": [],
+    "full-name": "Jane Doe",
+    "id": 8,
+    "name": "Jane Doe",
+    "status": "Team Lead"
+  },
+  {
+    "email": "joshdoe@fakeemail.com",
+    "events": [],
+    "full-name": "Joshua Doe III",
+    "id": 9,
+    "name": "Josh Doe",
+    "status": "Basic Trainer"
+  },
+  {
     "email": "georgesynder@fakeemail.com",
     "events": [],
     "full-name": "George James Snyder",
     "id": 10,
     "name": "George Synder",
     "status": "Basic Trainer"
+  },
+  {
+    "email": "johndoe@fakeemail.com",
+    "events": [],
+    "full-name": "Jonathan Doe II",
+    "id": 7,
+    "name": "John Doe",
+    "status": "Team Lead"
+  },
+  {
+    "email": "lilyschneider@fakeemail.com",
+    "events": [],
+    "full-name": "Lily Schneider",
+    "id": 4,
+    "name": "Lily Schneider",
+    "status": "Team Lead"
+  },
+  {
+    "email": "jaredpeters@fakemail.com",
+    "events": [],
+    "full-name": "Jared Peters",
+    "id": 6,
+    "name": "Jared Peters",
+    "status": "Team Lead"
+  },
+  {
+    "email": "anniewang@fakeemail.com",
+    "events": [],
+    "full-name": "Ann Wang",
+    "id": 1,
+    "name": "Annie Wang",
+    "status": "Team Lead"
   }
 ]

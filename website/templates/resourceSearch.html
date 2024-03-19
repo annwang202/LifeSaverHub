@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="{{url_prefix}}/static/styles/web.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="{{url_prefix}}/static/scripts/base.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
+"></script>
+<script src="{{url_prefix}}/static/scripts/base.js"></script>
+<script>
+  function showOrHideDropdown(id,prefix,action)
+    {
+      let el = document.getElementById(`${prefix}_${id}`);
+      if(el.style.display === "block"){
+        el.style.display = "none";
+        if (action === "expand"){
+          document.getElementById(id).innerHTML = "&#128897;";
+        }
+      }
+      else{
+        el.style.display = "block";
+        if (action === "expand"){
+          document.getElementById(id).innerHTML = "&#128899;";
+        }
+      }
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        var availabilitySummaryIframe = document.getElementById("availabilitySummaryIframe");
+
+        var checkboxes = document.querySelectorAll('.resource-checkbox');
+        checkboxes.forEach(function (box) {
+          box.addEventListener("change", function(){
+            copySelectedResources(box, box.getAttribute("resource"));
+          })
+        });
+
+      });
+</script> 
+    <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
+  <body style="max-width: 100%;">
+    <div id="trainer-info-container" class="trainer-info-container">
+        <div class="trainerFilterSection">
+            <ul>
+                <strong>Status</strong>
+                <li>
+                    <input checked="true" type="checkbox" value="Good"/>
+                    <label style="font-weight: bold;">Good</label>
+                </li>
+                <li>
+                    <input type="checkbox" value="Suspended"/>
+                    <label style="font-weight: bold;">Suspended</label>
+                </li>
+                <strong>Type</strong>
+                <li>
+                    <input checked="true" type="checkbox" value="Adult manikin"/>
+                    <label style="font-weight: bold;">Adult manikin</label>
+                </li>
+                <li>
+                    <input type="checkbox" value="Pediatric manikin"/>
+                    <label style="font-weight: bold;">Pediatric manikin</label>
+                </li>
+                <li>
+                  <input type="checkbox" value="Infant manikin"/>
+                  <label style="font-weight: bold;">Infant manikin</label>
+              </li>
+              <li>
+                <input type="checkbox" value="AED trainer"/>
+                <label style="font-weight: bold;">AED trainer</label>
+            </li>
+            <li>
+              <input type="checkbox" value="STB kit"/>
+              <label style="font-weight: bold;">STB kit</label>
+          </li>
+          </br>
+                <strong>Availability</strong></br>
+                <label for="date" style="font-size: x-small;">Date:</label></br>
+                <input type="date" name="date" style="font-size: smaller;"/></br>
+                <label for= "start_time" style="font-size: x-small;">From : &ensp;</label></br>
+                <input type="time" name="start_time"/></br>
+                <label for= "end_time" style="font-size: x-small;">To :&emsp;&emsp;</label></br>
+                <input type="time" name="end_time"/></br>
+                <button id = "filterButton" onClick="">Filter</button>
+                <button id = "clearButton">Clear</button>
+            </ul>
+          </div>
+      <div class="modal-body advancedSearch">
+        <!-- Tab links -->
+          <div class="tab">
+            <button id="resource-view-button" class="tablinks active" onclick="openTab(event, 'resource-view')">Resource View</button>
+            <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')">Day View (by Availability)</button>
+            <button id="calendar-view-all-button" class="tablinks" onclick="openTab(event, 'calendar-view-all')" disabled>Day View All (Alphabetical)</button>
+          </div>
+          <!-- Tab content -->
+          <div id="resource-view" class="tabcontent">
+            <div class="rating">
+              <div class="resourceList">
+                <ul class="list-group list-group-flush infoFilter" id="advancedInfoFilter">
+                  {% for resource in resources %}
+                  <li
+                  id="resource_{{resource.id}}"
+                  data-type="{{resource.type}}"
+                  class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
+                  style="display: inline-block; border-width: 3px;"
+                >
+                  <input
+                  type="checkbox"
+                  class="resource-checkbox"
+                  name="check"
+                  resource="{{resource.id}}"
+                  value="{{resource.name}} (ID: {{resource.id}})"
+                  onchange="copySelectedresources(this,'{{resource.id}}')"
+                >
+                <div name="warning" resource="{{resource.id}}" style="display:inline-block;"></div>
+                <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong>
+                <br>
+                  {{resource.type}}
+                  <div class="update-status"><strong>Status:</strong> {{resource.status}} </div>
+                    <div class = "button-container">
+                      <button title="Details" id="details_{{resource.id}}"class="show-resource-details" onClick="showOrHideDropdown(this.id,'resource','expand')">&#128899;</button>
+                    </div>
+                  </li> 
+                  {% endfor %}
+                </ul>
+              </div>
+              </div>
+          </div>
+
+          <div id="calendar-view" class="tabcontent" style="display:none; height:100%;">
+            <iframe id="availabilitySummaryIframe" page="advancedSearch" allowTransparency="true" frameborder="0" style="width:100%;height:100%;"></iframe>
+          </div>
+          <div id="calendar-view-all" class="tabcontent" style="display:none; height:100%;">
+            <iframe id="allIframe" page="advancedSearch"  allowTransparency="true" frameborder="0" style="width:100%;height:100vh;"></iframe>
+          </div>
+    </body>

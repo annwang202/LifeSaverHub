@@ -22,6 +22,13 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
 "></script>
 <script src="{{url_prefix}}/static/scripts/base.js"></script>
 <script>
+  var new_count = {{ new_count | tojson | safe }};
+  var lead_count = {{ lead_count | tojson | safe }};
+  var basic_count = {{ basic_count | tojson | safe }};
+  var inactive_count = {{ inactive_count | tojson | safe }};
+  var suspended_count = {{ suspended_count | tojson | safe }};
+</script>
+<script>
   function showOrHideDropdown(id,prefix,action)
     {
       let el = document.getElementById(`${prefix}_${id}`);
@@ -57,20 +64,24 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
         <ul>
             <strong>Status</strong>
             <li>
-                <input checked="true" type="checkbox" value="New"/>
-                <label>New</label>
+              <input checked="true" name="status" type="checkbox" value="Team Lead"/>
+              <label style="color: #4c7a02; font-weight: bold;">Team Lead ({{lead_count}})</label>
+          </li>
+          <li>
+            <input checked="true" name="status" type="checkbox" value="Basic Trainer">
+            <label style="color: #044dba; font-weight: bold;">Basic Trainer ({{basic_count}})</label>
+        </li>
+            <li>
+                <input checked="true" name="status" type="checkbox" value="New"/>
+                <label style="color: #ff7d03; font-weight: bold;">New ({{new_count}})</label>
             </li>
             <li>
-              <input checked="true" type="checkbox" value="Basic Trainer">
-              <label>Basic Trainer</label>
+              <input type="checkbox" name="status" value="Inactive"/>
+              <label style="font-weight: bold;">Inactive ({{inactive_count}})</label>
           </li>
             <li>
-                <input checked="true" type="checkbox" value="Team Lead"/>
-                <label>Team Lead</label>
-            </li>
-            <li>
-                <input type="checkbox" value="Suspended"/>
-                <label>Suspended</label>
+                <input type="checkbox" name="status" value="Suspended"/>
+                <label style="font-weight: bold;">Suspended ({{suspended_count}})</label>
             </li></br>
             <strong>Availability</strong></br>
             <label for="date" style="font-size: x-small;">Date:</label></br>
@@ -87,13 +98,14 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
         <!-- Tab links -->
           <div class="tab">
             <button id="trainer-view-button" class="tablinks active" onclick="openTab(event, 'trainer-view')">Trainer View</button>
-            <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')">Day View</button>
-            <button id="calendar-view-all-button" class="tablinks" onclick="openTab(event, 'calendar-view-all')" disabled>Day View All</button>
+            <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')">Day View (by Availability)</button>
+            <button id="calendar-view-all-button" class="tablinks" onclick="openTab(event, 'calendar-view-all')" disabled>Day View All (Alphabetical)</button>
           </div>
           <!-- Tab content -->
           <div id="trainer-view" class="tabcontent">
             <div class="rating">
               <div class="trainerList">
+                <div id="noTrainers" style="display:none;"><strong>No trainers available with the current filters.</strong></div>
                 <ul class="list-group list-group-flush infoFilter" id="advancedInfoFilter">
                   {% for trainer in trainers %}
                   <li
@@ -154,7 +166,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
           </div>
 
           <div id="calendar-view" class="tabcontent" style="display:none; height:100%;">
-            <iframe id="availabilitySummaryIframe" page="advancedSearch" allowTransparency="true" frameborder="0" style="width:100vw;height:100vh;"></iframe>
+            <iframe id="availabilitySummaryIframe" page="advancedSearch" allowTransparency="true" frameborder="0" style="width:100%;height:100%;"></iframe>
           </div>
           <div id="calendar-view-all" class="tabcontent" style="display:none; height:100%;">
             <iframe id="allIframe" page="advancedSearch"  allowTransparency="true" frameborder="0" style="width:100%;height:100vh;"></iframe>

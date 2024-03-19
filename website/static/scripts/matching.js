@@ -102,22 +102,19 @@ function showEditModalfunction({
 function initializeAdvancedSearch(iframeDocument,modal){
     var modal1 = modal;
     var modal2 = $("#modal2");
+    var modal3 = $("#modal3");
     const openAdvancedSearch = modal1.querySelector('a[name="open-advanced-search"]');
     openAdvancedSearch.addEventListener("click", function () {
       //get date and time from og modal
       var startDateInput = modal1.querySelector('input[name="start-date"]').value;
       var endDateInput = modal1.querySelector('input[name="end-date"]').value;
+      var startTimeInput = modal1.querySelector('input[name="start_time"]').value;
+      var endTimeInput = modal1.querySelector('input[name="end_time"]').value;
       //parse the values into date objects
       var parsedStart = new Date(startDateInput);
       var parsedEnd = new Date(endDateInput);
       var startDate = parsedStart.toISOString().split('T')[0];
       var endDate = parsedEnd.toISOString().split('T')[0];
-      const startHours = parsedStart.getHours();
-      const startMinutes = String(parsedStart.getMinutes()).padStart(2, '0');
-      const startTime = `${startHours}:${startMinutes}`;
-      const endHours = parsedEnd.getHours();
-      const endMinutes = String(parsedEnd.getMinutes()).padStart(2, '0');
-      const endTime = `${endHours}:${endMinutes}`;
 
       //clear selected trainers
       var checkboxesAndRadios = iframeDocument.querySelectorAll('.trainer-checkbox, .starradio');
@@ -153,8 +150,8 @@ function initializeAdvancedSearch(iframeDocument,modal){
 
       //copy date and times over
       dateFilter.value = startDate;
-      startFilter.value = startTime;
-      endFilter.value=endTime;
+      startFilter.value = startTimeInput;
+      endFilter.value=endTimeInput;
 
       var filterButton = iframeDocument.querySelector('button[id="filterButton"]');
       filterButton.click();
@@ -194,6 +191,33 @@ function initializeAdvancedSearch(iframeDocument,modal){
       }
       modal2.modal('toggle');
     });
+    const resourceBtn = document.getElementById("resourceBtn");
+    resourceBtn.addEventListener("click", function () {
+      //copy over resources
+      var checkedCheckboxes = iframeDocument.querySelectorAll(
+          ".resource-checkbox:checked"
+        );
+        var slots = modal1.querySelectorAll(".resourceInput");
+        var slotContainer = modal1.querySelector(".resource-slots");
+
+        let j = 0; //slots counter
+      for (let index = 0; index < checkedCheckboxes.length; index++) {
+        if(checkedCheckboxes[index].disabled){
+          continue;
+        }
+        if(slots.length > index){
+          slots[j++].value = checkedCheckboxes[index].value;
+        }
+        else{
+          const classSelector = "." + Array.from(modal1.querySelector(".resource-search").classList).join(".");
+          addTrainerSlot(classSelector,slotContainer.id);
+          numberSlots(slotContainer);
+          slots = modal1.querySelectorAll(".resourceInput");
+          slots[j++].value = checkedCheckboxes[index].value;
+        }
+      }
+      modal3.modal('toggle');
+    });
   }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -208,6 +232,14 @@ document.addEventListener("DOMContentLoaded", function () {
         initializeAdvancedSearch(iframeDocument,createModal);
         initializeAdvancedSearch(iframeDocument,updateModal);
       }
+      var resourceIframe = document.getElementById("resourceSearch");
+      var resourceDoc;
+      resourceIframe.onload = function(){
+        resourceDoc = resourceIframe.contentDocument || resourceIframe.contentWindow.document;
+        initializeAdvancedSearch(iframeDocument,createModal);
+        initializeAdvancedSearch(iframeDocument,updateModal);
+      }
+
       var calendarEl = document.getElementById("calendar");
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: "dayGridMonth",
@@ -224,11 +256,34 @@ document.addEventListener("DOMContentLoaded", function () {
             var modal = $("#detail-expand");
             modal.find(".modal-title").text(event.title);
             modal.find(".description").text(event.extendedProps.description);
-            modal
+            var parsedStart = new Date(event.start);
+            var parsedEnd = new Date(event.end);
+            if(event.allDay){
+              modal
+              .find(".time")
+              .text(
+                `${event.extendedProps.formattedStartDate} - ${event.extendedProps.timeOfDay}`
+              );
+              if (event.extendedProps.timeOfDay == "Morning"){
+                parsedStart.setHours(8);
+                parsedEnd.setHours(11);
+              }
+              else if (event.extendedProps.timeOfDay == "Afternoon"){
+                parsedStart.setHours(13);
+                parsedEnd.setHours(16);
+              }
+              else if (event.extendedProps.timeOfDay == "Evening"){
+                parsedStart.setHours(16);
+                parsedEnd.setHours(19);
+              }
+            }
+            else{
+              modal
               .find(".time")
               .text(
                 `${event.extendedProps.formattedStartDate} - ${event.extendedProps.formattedEndTime}`
               );
+            }
               modal.find(".numLearners").text(`${event.extendedProps.numLearners}`);
               modal.find(".targetTrainers").text(`${Math.ceil(event.extendedProps.numLearners/4)}`)
             var borderColor = event.borderColor
@@ -245,11 +300,11 @@ document.addEventListener("DOMContentLoaded", function () {
               event.extendedProps.formattedEndTime
             );
             //copy request time into assigned time inputs fields
+            console.log("parsedStart:" + parsedStart);
+            console.log("parsedEnd: " + parsedEnd);
             var startTimeInput = modal.find('input[name="start_time"]').get(0);
             var endTimeInput = modal.find('input[name="end_time"]').get(0);
             //parse the values into date objects
-            var parsedStart = new Date(event.start);
-            var parsedEnd = new Date(event.end);
             const startHours = String(parsedStart.getHours()).padStart(2,'0');
             const startMinutes = String(parsedStart.getMinutes()).padStart(2, '0');
             const startTime = `${startHours}:${startMinutes}`;

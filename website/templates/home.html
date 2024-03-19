@@ -53,16 +53,23 @@
         data-type="{{event.status}}"
         style="border-width: 3px; {% if event.status != 'Canceled' %}border-color: {{ event_colors[event.status] }}; {% endif %}"
       >
-        <strong>{{event.title}}</strong>
-        <input
-          type="checkbox"
-          class="event-checkbox"
-          event-id = "{{ event.id }}"
-          value = "{{event.status}}"
-        ><br>
-        <strong>Preferred date: </strong></br>{% for preferred_date in event.preferred_date %} {{preferred_date.formatted_start_date}} - {{preferred_date.formatted_end_time}}{% endfor %}<br>
-        <strong>Backup dates: </strong></br>{% for date in event.backup_dates %} {{date.formatted_start_date}} - {{date.formatted_end_time}}</br>
+      <input
+      type="checkbox"
+      class="event-checkbox"
+      event-id = "{{ event.id }}"
+      value = "{{event.status}}"
+    >
+        <strong><u>{{event.title}}</u></strong></br>
+        <strong>Dates: </strong></br>
+        <ul style="margin-left:12px; padding:0;">
+          {% for date in event.dates %}
+        {% if date.allDay%}
+        <li>{{date.formatted_start_date}} - {{date.timeOfDay}}</li>
+        {% else %}
+        <li>{{date.formatted_start_date}} - {{date.formatted_end_time}}</li>
+        {% endif %}
           {% endfor %}
+        </ul>
           <strong>Status:</strong> <div class="update-status {{event.status}}" style="display: inline-block;"><strong>{{event.status}}</strong></div></br>
     <strong>Admin notes: </strong>{{event.admin_notes}}<br>
     <div class = "button-container">
@@ -223,30 +230,56 @@
             <strong>Request date:</strong>
             <div class="time" style="display: inline-block;">Event Time</div></br>
             <strong>Estimated learners: </strong><div class="numLearners" style="display: inline-block;"></div></br>
-            <strong>Target # of trainers: </strong><div class="targetTrainers" style="display: inline-block;"></div></br>
-            <div class="description"></div>
-            <input type="hidden" id="assignment-event-id" name="event-id" value="hi">
-            <input type="hidden" id="assignment-start-date" name="start-date" value="">
-            <input type="hidden" id="assignment-end-date" name="end-date" value="">
-            <input type="hidden" id="assignment-formatted-start-date" name="formatted-start-date" value="">
-            <input type="hidden" id="assignment-formatted-end-time" name="formatted-end-time" value="">
-            <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Search for trainers</a>
-            <div class="assign-trainers">
-              <div id="trainer-slots" class="trainer-slots">
-                <div class="leader-search" style="display: flex; align-items: center;">
-                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
-                    <p style="margin: 7px;">Leader</p>
-                    <input class="leaderInput" type="text" name="leader-slot" placeholder="Enter team lead">
+            <div class="tab">
+              <button id="add-trainers-button" class="tablinks active" onclick="openTab(event, 'add-trainers')" type="button">Trainers</button>
+              <button id="add-manikins-button" class="tablinks" onclick="openTab(event, 'add-manikins')" type="button">Manikins</button>
+              <button id="add-resources-button" class="tablinks" onclick="openTab(event, 'add-resources')" type="button">Other Resources</button>
+            </div>
+            <div id="add-trainers" class="tabcontent">
+              <strong>Target # of trainers: </strong><div class="targetTrainers" style="display: inline-block;"></div></br>
+              <div class="description"></div>
+              <input type="hidden" id="assignment-event-id" name="event-id" value="hi">
+              <input type="hidden" id="assignment-start-date" name="start-date" value="">
+              <input type="hidden" id="assignment-end-date" name="end-date" value="">
+              <input type="hidden" id="assignment-formatted-start-date" name="formatted-start-date" value="">
+              <input type="hidden" id="assignment-formatted-end-time" name="formatted-end-time" value="">
+              <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Search for trainers</a>
+              <div class="assign-trainers">
+                <div id="trainer-slots" class="trainer-slots">
+                  <div class="leader-search" style="display: flex; align-items: center;">
+                    <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
+                      <p style="margin: 7px;">Leader</p>
+                      <input class="leaderInput" type="text" name="leader-slot" placeholder="Enter team lead">
+                    </div>
+                  </div>
+                  <div class="trainer-search" style="display: flex; align-items: center;">
+                    <div class="autocomplete" style="width:300px;display: flex; align-items: center;white-space: nowrap;">
+                      <label class = "slot-label" style="margin: 7px;">Trainer</label>
+                      <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Enter trainer">
+                    </div>
                   </div>
                 </div>
-                <div class="trainer-search" style="display: flex; align-items: center;">
-                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;white-space: nowrap;">
-                    <label class = "slot-label" style="margin: 7px;">Trainer</label>
-                    <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Enter trainer">
+                <button type="button" id="add-trainer-slot">+</button></div><br>
+            </div>
+            <div id="add-manikins" class="tabcontent" style="display:none; height:100%;">
+              <input type="hidden" id="assignment-event-id" name="event-id" value="hi">
+              <input type="hidden" id="assignment-start-date" name="start-date" value="">
+              <input type="hidden" id="assignment-end-date" name="end-date" value="">
+              <input type="hidden" id="assignment-formatted-start-date" name="formatted-start-date" value="">
+              <input type="hidden" id="assignment-formatted-end-time" name="formatted-end-time" value="">
+              <a name="open-advanced-search2" data-toggle="modal" href="#modal3" class="btn btn-primary">Search for resources</a>
+              <div class="assign-resources">
+                <div id="resource-slots" class="resource-slots">
+                  <div class="resource-search" style="display: flex; align-items: center;">
+                    <div class="autocomplete" style="width:300px;display: flex; align-items: center;white-space: nowrap;">
+                      <label class = "slot-label" style="margin: 7px;">Resource</label>
+                      <input class="resourceInput" type="text" name="resource-slot[]" placeholder="Enter resource">
+                    </div>
                   </div>
                 </div>
+                <button type="button" id="add-resource-slot">+</button></div><br>
               </div>
-              <button type="button" id="add-trainer-slot">+</button></div><br>
+            <div id="add-resources" class="tabcontent"></div>
             </div>
         <!-- Modal footer -->
         <div class="modal-footer">
@@ -334,6 +367,23 @@
           <div class="modal-footer">
             <button data-dismiss="modal" class="btn">Close</button>
             <a id="selectBtn" href="#" class="btn btn-primary">Assign trainers</a>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="modal fade" id="modal3">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Available resources</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div><div class="container"></div>
+          <div class="modal-body advancedSearch">
+            <iframe src="/resourceSearch" id="resourceSearch" allowTransparency="true" frameborder="0" style="width:100%; height:62vh;"></iframe>
+         </div>
+          <div class="modal-footer">
+            <button data-dismiss="modal" class="btn">Close</button>
+            <a id="resourceBtn" href="#" class="btn btn-primary">Assign resources</a>
           </div>
         </div>
       </div>

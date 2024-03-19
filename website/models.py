@@ -13,10 +13,6 @@ event_date_association = db.Table('event_date_association',
     db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
     db.Column('event_date_id', db.Integer, db.ForeignKey('event_date.id'))
 )
-preferred_event_date_association = db.Table('preferred_event_date_association',
-    db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
-    db.Column('event_date_id', db.Integer, db.ForeignKey('event_date.id'))
-)
 
 class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -41,6 +37,8 @@ class EventDate(db.Model):
     formatted_end_time = db.Column(db.String(100))
     iso_formatted_start_date = db.Column(db.String(100))
     iso_formatted_end_date = db.Column(db.String(100))
+    allDay = db.Column(db.Boolean,default=False)
+    timeOfDay = db.Column(db.String(100))
     # Define a relationship with the Event model
 
 class Event(db.Model):
@@ -50,8 +48,7 @@ class Event(db.Model):
     phone = db.Column(db.String(16))
     title = db.Column(db.String(50))
     training_types = db.Column(db.String(500))
-    preferred_date = db.relationship('EventDate', secondary=preferred_event_date_association)
-    backup_dates = db.relationship('EventDate', secondary=event_date_association)
+    dates = db.relationship('EventDate', secondary=event_date_association,order_by='EventDate.start_date')
     mission = db.Column(db.String(500))
     num_learners = db.Column(db.Integer)
     learners = db.Column(db.String(500))
@@ -103,3 +100,15 @@ class Trainer(db.Model):
     status = db.Column(db.String(100))
     assignments = db.relationship('Assignment', backref = 'trainer', cascade = 'all, delete-orphan', lazy = 'dynamic')
     admin_notes = db.Column(db.String(1500))
+    CPR_AED = db.Column(db.Boolean,default=False)
+    STB = db.Column(db.Boolean,default=False)
+    Narcan = db.Column(db.Boolean,default=False)
+    AHA_HS = db.Column(db.Boolean,default=False)
+    AHA_BLS = db.Column(db.Boolean,default=False)
+
+
+class Resource(db.Model):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    name = db.Column(db.String(50))
+    type = db.Column(db.String(50))
+    status = db.Column(db.String(50))

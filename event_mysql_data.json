@@ -2,21 +2,43 @@
   {
     "events": [
       {
+        "allDay": false,
         "color": "#ff8503",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-03-07T16:00:00",
+        "end": "2024-03-04T18:00:00",
         "eventDisplay": "background",
         "eventTextColor": "#ff8503",
         "extendedProps": {
           "eventId": 4,
-          "formattedEndTime": "04:00 PM",
-          "formattedStartDate": "03/07/2024 02:00 PM",
+          "formattedEndTime": "06:00 PM",
+          "formattedStartDate": "03/04/2024 04:00 PM",
           "numLearners": 50,
+          "timeOfDay": null,
           "trainerTrue": false
         },
-        "id": 8,
-        "start": "2024-03-07T14:00:00",
+        "id": 9,
+        "start": "2024-03-04T16:00:00",
+        "title": "Pitt Program Council"
+      },
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-07T15:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 4,
+          "formattedEndTime": "03:00 PM",
+          "formattedStartDate": "03/07/2024 01:00 PM",
+          "numLearners": 50,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 7,
+        "start": "2024-03-07T13:00:00",
         "title": "Pitt Program Council"
       }
     ],
@@ -25,39 +47,88 @@
   {
     "events": [
       {
-        "color": "#039e72",
+        "allDay": true,
+        "color": "#ff8503",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-03-09T11:30:00",
+        "end": "2024-03-20T16:00:00.000",
         "eventDisplay": "background",
-        "eventTextColor": "#039e72",
+        "eventTextColor": "#ff8503",
         "extendedProps": {
-          "eventId": 2,
-          "formattedEndTime": "11:30 AM",
-          "formattedStartDate": "03/09/2024 08:00 AM",
-          "numLearners": 25,
+          "eventId": 13,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "03/19/2024",
+          "numLearners": 30,
+          "timeOfDay": "Afternoon",
           "trainerTrue": false
         },
-        "id": 5,
-        "start": "2024-03-09T08:00:00",
-        "title": "Panthers United"
+        "id": 15,
+        "start": "2024-03-19T13:00:00",
+        "title": "Extra Gum"
       },
       {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-20T18:00:00.000",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 13,
+          "formattedEndTime": "06:00 PM",
+          "formattedStartDate": "03/20/2024 04:00 PM",
+          "numLearners": 30,
+          "timeOfDay": "",
+          "trainerTrue": false
+        },
+        "id": 16,
+        "start": "2024-03-20T16:00:00",
+        "title": "Extra Gum"
+      },
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-21T20:00:00.000",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 13,
+          "formattedEndTime": "08:00 PM",
+          "formattedStartDate": "03/21/2024 05:30 PM",
+          "numLearners": 30,
+          "timeOfDay": "",
+          "trainerTrue": false
+        },
+        "id": 17,
+        "start": "2024-03-21T17:30:00",
+        "title": "Extra Gum"
+      }
+    ],
+    "id": 13
+  },
+  {
+    "events": [
+      {
+        "allDay": false,
         "color": "#039e72",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-02-26T17:30:00",
+        "end": "2024-03-05T13:30:00",
         "eventDisplay": "background",
         "eventTextColor": "#039e72",
         "extendedProps": {
           "eventId": 2,
-          "formattedEndTime": "05:30 PM",
-          "formattedStartDate": "02/26/2024 03:00 PM",
+          "formattedEndTime": "01:30 PM",
+          "formattedStartDate": "03/05/2024 11:30 AM",
           "numLearners": 25,
+          "timeOfDay": null,
           "trainerTrue": false
         },
-        "id": 4,
-        "start": "2024-02-26T15:00:00",
+        "id": 3,
+        "start": "2024-03-05T11:30:00",
         "title": "Panthers United"
       }
     ],
@@ -66,21 +137,23 @@
   {
     "events": [
       {
+        "allDay": false,
         "color": "#ff8503",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-03-04T18:00:00",
+        "end": "2024-03-20T14:00:00",
         "eventDisplay": "background",
         "eventTextColor": "#ff8503",
         "extendedProps": {
           "eventId": 5,
-          "formattedEndTime": "06:00 PM",
-          "formattedStartDate": "03/04/2024 04:00 PM",
+          "formattedEndTime": "02:00 PM",
+          "formattedStartDate": "03/20/2024 12:00 PM",
           "numLearners": 24,
+          "timeOfDay": null,
           "trainerTrue": false
         },
-        "id": 9,
-        "start": "2024-03-04T16:00:00",
+        "id": 11,
+        "start": "2024-03-20T12:00:00",
         "title": "Duolingo"
       }
     ],
@@ -89,39 +162,23 @@
   {
     "events": [
       {
+        "allDay": false,
         "color": "#039e72",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-03-07T15:00:00",
+        "end": "2024-03-09T11:30:00",
         "eventDisplay": "background",
         "eventTextColor": "#039e72",
         "extendedProps": {
           "eventId": 3,
-          "formattedEndTime": "03:00 PM",
-          "formattedStartDate": "03/07/2024 01:00 PM",
+          "formattedEndTime": "11:30 AM",
+          "formattedStartDate": "03/09/2024 08:00 AM",
           "numLearners": 30,
+          "timeOfDay": null,
           "trainerTrue": false
         },
-        "id": 7,
-        "start": "2024-03-07T13:00:00",
-        "title": "UPMC"
-      },
-      {
-        "color": "#039e72",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-02-29T12:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#039e72",
-        "extendedProps": {
-          "eventId": 3,
-          "formattedEndTime": "12:00 PM",
-          "formattedStartDate": "02/29/2024 08:00 AM",
-          "numLearners": 30,
-          "trainerTrue": false
-        },
-        "id": 6,
-        "start": "2024-02-29T08:00:00",
+        "id": 5,
+        "start": "2024-03-09T08:00:00",
         "title": "UPMC"
       }
     ],
@@ -130,6 +187,7 @@
   {
     "events": [
       {
+        "allDay": false,
         "color": "#7f04d1",
         "display": "block",
         "displayEventEnd": true,
@@ -141,6 +199,7 @@
           "formattedEndTime": "03:00 PM",
           "formattedStartDate": "02/26/2024 01:00 PM",
           "numLearners": 25,
+          "timeOfDay": null,
           "trainerTrue": false
         },
         "id": 2,
@@ -148,39 +207,23 @@
         "title": "Pitt Panthers Men's Basketball Team"
       },
       {
+        "allDay": false,
         "color": "#7f04d1",
         "display": "block",
         "displayEventEnd": true,
-        "end": "2024-03-05T13:30:00",
+        "end": "2024-03-07T18:00:00",
         "eventDisplay": "background",
         "eventTextColor": "#7f04d1",
         "extendedProps": {
           "eventId": 1,
-          "formattedEndTime": "01:30 PM",
-          "formattedStartDate": "03/05/2024 11:30 AM",
+          "formattedEndTime": "06:00 PM",
+          "formattedStartDate": "03/07/2024 04:00 PM",
           "numLearners": 25,
+          "timeOfDay": null,
           "trainerTrue": false
         },
-        "id": 3,
-        "start": "2024-03-05T11:30:00",
-        "title": "Pitt Panthers Men's Basketball Team"
-      },
-      {
-        "color": "#7f04d1",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-02-28T16:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#7f04d1",
-        "extendedProps": {
-          "eventId": 1,
-          "formattedEndTime": "04:00 PM",
-          "formattedStartDate": "02/28/2024 02:00 PM",
-          "numLearners": 25,
-          "trainerTrue": false
-        },
-        "id": 1,
-        "start": "2024-02-28T14:00:00",
+        "id": 10,
+        "start": "2024-03-07T16:00:00",
         "title": "Pitt Panthers Men's Basketball Team"
       }
     ],
@@ -189,24 +232,7 @@
   {
     "events": [
       {
-        "color": "#039e72",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-03-20T14:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#039e72",
-        "extendedProps": {
-          "eventId": 6,
-          "formattedEndTime": "02:00 PM",
-          "formattedStartDate": "03/20/2024 12:00 PM",
-          "numLearners": 100,
-          "trainerTrue": false
-        },
-        "id": 11,
-        "start": "2024-03-20T12:00:00",
-        "title": "WXPI"
-      },
-      {
+        "allDay": false,
         "color": "#039e72",
         "display": "block",
         "displayEventEnd": true,
@@ -218,31 +244,144 @@
           "formattedEndTime": "02:00 PM",
           "formattedStartDate": "03/26/2024 12:00 PM",
           "numLearners": 100,
+          "timeOfDay": null,
           "trainerTrue": false
         },
         "id": 12,
         "start": "2024-03-26T12:00:00",
         "title": "WXPI"
-      },
-      {
-        "color": "#039e72",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-03-07T18:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#039e72",
-        "extendedProps": {
-          "eventId": 6,
-          "formattedEndTime": "06:00 PM",
-          "formattedStartDate": "03/07/2024 04:00 PM",
-          "numLearners": 100,
-          "trainerTrue": false
-        },
-        "id": 10,
-        "start": "2024-03-07T16:00:00",
-        "title": "WXPI"
       }
     ],
     "id": 6
+  },
+  {
+    "events": [
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-02-26T17:30:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 9,
+          "formattedEndTime": "05:30 PM",
+          "formattedStartDate": "02/26/2024 03:00 PM",
+          "numLearners": 12,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 4,
+        "start": "2024-02-26T15:00:00",
+        "title": "Laffy Taffy"
+      },
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-02-28T16:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 9,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "02/28/2024 02:00 PM",
+          "numLearners": 12,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 1,
+        "start": "2024-02-28T14:00:00",
+        "title": "Laffy Taffy"
+      },
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-02-29T12:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 9,
+          "formattedEndTime": "12:00 PM",
+          "formattedStartDate": "02/29/2024 08:00 AM",
+          "numLearners": 12,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 6,
+        "start": "2024-02-29T08:00:00",
+        "title": "Laffy Taffy"
+      }
+    ],
+    "id": 9
+  },
+  {
+    "events": [
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-07T16:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 12,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "03/07/2024 02:00 PM",
+          "numLearners": 12,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 8,
+        "start": "2024-03-07T14:00:00",
+        "title": "Canada Dry"
+      },
+      {
+        "allDay": true,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-20T11:00:00.000",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 12,
+          "formattedEndTime": "11:00 AM",
+          "formattedStartDate": "03/19/2024",
+          "numLearners": 12,
+          "timeOfDay": "Morning",
+          "trainerTrue": false
+        },
+        "id": 13,
+        "start": "2024-03-19T08:00:00",
+        "title": "Canada Dry"
+      },
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-20T18:00:00.000",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 12,
+          "formattedEndTime": "06:00 PM",
+          "formattedStartDate": "03/20/2024 04:00 PM",
+          "numLearners": 12,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 14,
+        "start": "2024-03-20T16:00:00",
+        "title": "Canada Dry"
+      }
+    ],
+    "id": 12
   }
 ]

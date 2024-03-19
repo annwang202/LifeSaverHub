@@ -1,0 +1,90 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+    <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
+    <div id="trainer-info-container" class="trainer-info-container">
+      <div class="trainerFilterSection">
+        <ul>
+            <strong>Status</strong>
+            <li>
+                <input checked="true" type="checkbox" value="Good"/>
+                <label style="font-weight: bold;">Good</label>
+            </li>
+            <li>
+                <input type="checkbox" value="Suspended"/>
+                <label style="font-weight: bold;">Suspended</label>
+            </li>
+            <strong>Type</strong>
+            <li>
+                <input checked="true" type="checkbox" value="Adult manikin"/>
+                <label style="font-weight: bold;">Adult manikin</label>
+            </li>
+            <li>
+                <input type="checkbox" value="Pediatric manikin"/>
+                <label style="font-weight: bold;">Pediatric manikin</label>
+            </li>
+            <li>
+              <input type="checkbox" value="Infant manikin"/>
+              <label style="font-weight: bold;">Infant manikin</label>
+          </li>
+          <li>
+            <input type="checkbox" value="AED trainer"/>
+            <label style="font-weight: bold;">AED trainer</label>
+        </li>
+        <li>
+          <input type="checkbox" value="STB kit"/>
+          <label style="font-weight: bold;">STB kit</label>
+      </li>
+      </br>
+            <strong>Availability</strong></br>
+            <label for="date" style="font-size: x-small;">Date:</label></br>
+            <input type="date" name="date" style="font-size: smaller;"/></br>
+            <label for= "start_time" style="font-size: x-small;">From : &ensp;</label></br>
+            <input type="time" name="start_time"/></br>
+            <label for= "end_time" style="font-size: x-small;">To :&emsp;&emsp;</label></br>
+            <input type="time" name="end_time"/></br>
+            <button id = "filterButton" onClick="">Filter</button>
+            <button id = "clearButton">Clear</button>
+        </ul>
+      </div>
+      <div class="viewTabs">
+        <div class="tab">
+          <button id="trainer-view-button" class="tablinks active" onclick="openTab(event, 'trainer-view')">Resource View</button>
+          <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')" disabled>Day View</button>
+          <button id="calendar-view-all-button" class="tablinks" onclick="openTab(event, 'calendar-view-all')" disabled>Day View All</button>
+        </div>
+        <div id="trainer-view" class="tabcontent">
+          <div class="trainerList">
+            <ul class="list-group list-group-flush infoFilter" id="trainerInfoFilter">
+              {% for resource in resources %}
+              <li
+                id="resource_{{resource.id}}"
+                data-type="{{resource.type}}"
+                class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
+                style="display: inline-block; border-width: 3px;"
+              >
+              <div name="warning" trainer="{{resource.id}}" style="display:inline-block;"></div>
+              <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong><br>
+              {{resource.type}}</br>
+              <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{resource.status}}</strong></div><br>
+                <div class = "button-container">
+                  <button title="Edit trainer" id="{{resource.id}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit trainer"/></button></div>
+              <div id="update_div_{{ resource.id }}" style="display:none;">
+                <form id="update_form_{{ resource.id }}"  name="update_trainer_form" action="/update-resource" method="POST">
+                  <input type="hidden" name="update_trainer_form" value="1">
+                  <input type="hidden" name="update_id" value="{{resource.id}}">
+                  <strong>Update status:</strong><br>
+                  <select name="status" id="status_{{resource.id}}">
+                    <option value="none" selected disabled hidden>{{resource.status}}</option>
+                    <option value="Good">Good</option>
+                    <option value="Suspended">Suspended</option>
+                  </select><br>
+                  <button type="submit" form = "update_form_{{ resource.id }}" id="update_submit_{{ resource.id }}" class="btn btn-primary">Update {{resource.name}}</button>
+                </form>
+              </div>
+              </li> 
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+{% endblock %}>
