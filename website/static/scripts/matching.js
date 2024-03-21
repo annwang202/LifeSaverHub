@@ -1,8 +1,8 @@
-function numberSlots(container){
-  var slotNum = 2;
+function numberSlots(container,type){
+  var slotNum = 1;
   const slotLabels = container.querySelectorAll(".slot-label");
   slotLabels.forEach(function(label){
-    label.textContent = "Trainer " + slotNum++;
+    label.textContent = type + " #" + slotNum++;
   })
 }
 
@@ -10,7 +10,7 @@ function deleteTrainerSlot(button,search_class) {
   var slot = button.closest(search_class);
   slot.parentNode.removeChild(slot);
 }
-function addTrainerSlot(search_class,container) {
+function addTrainerSlot(search_class,container,type) {
   const slotsContainer = document.getElementById(container);
   const slotEntry = document.querySelector(search_class).cloneNode(true);
 
@@ -23,12 +23,13 @@ function addTrainerSlot(search_class,container) {
   deleteButton.textContent = "X";
   deleteButton.addEventListener("click", function () {
     deleteTrainerSlot(this,search_class);
-    numberSlots(slotsContainer);
+    numberSlots(slotsContainer,type);
   });
   // Append the button to the slot
   slotEntry.appendChild(deleteButton);
 
   slotsContainer.appendChild(slotEntry);
+  if (type=="trainer"){
     $.getJSON(`/trainerdata`, function (data) {
       let trainer_names = data
         .filter((person) => person.status !== "Suspended")
@@ -39,8 +40,18 @@ function addTrainerSlot(search_class,container) {
       autocomplete(document.querySelectorAll(".trainerInput"), trainer_names);
       autocomplete(document.querySelectorAll(".leaderInput"), leader_names);
   });
+  }
+  else if (type=="resource"){
+    $.getJSON(`/resourcedata`, function (data) {
+      let resource_names = data
+        .filter((resource) => resource.status !== "Suspended")
+        .map((resource) => `${resource.type}: ${resource.name} (ID: ${resource.id})`);
+      autocomplete(document.querySelectorAll(".resourceInput"), resource_names);
+  });
+  }
   return input;
 }
+
 function showEditModalfunction({
   eventId,
   title,
@@ -83,9 +94,9 @@ function showEditModalfunction({
   }
   //copy the correct number of slots
   for (let j = 1; j < trainers.length; j++) {
-    addTrainerSlot(".update.trainer-search","update-trainer-slots");
+    addTrainerSlot(".update.trainer-search","update-trainer-slots","trainer");
   }
-  numberSlots(trainerSlotsContainer);
+  numberSlots(trainerSlotsContainer, "Trainer");
   const newSlots = trainerSlotsContainer.querySelectorAll(".update.trainer-search");
   for (index = 0; index < newSlots.length; index++) {
     let slot = newSlots[index];
@@ -183,13 +194,58 @@ function initializeAdvancedSearch(iframeDocument,modal){
         }
         else{
           const classSelector = "." + Array.from(modal1.querySelector(".trainer-search").classList).join(".");
-          addTrainerSlot(classSelector,slotContainer.id);
-          numberSlots(slotContainer);
+          addTrainerSlot(classSelector,slotContainer.id,"trainer");
+          numberSlots(slotContainer, "Trainer");
           slots = modal1.querySelectorAll(".trainerInput");
           slots[j++].value = checkedCheckboxes[index].value;
         }
       }
       modal2.modal('toggle');
+    });
+    const openAdvancedSearch2 = modal1.querySelector('a[name="open-advanced-search2"]');
+    openAdvancedSearch2.addEventListener("click", function () {
+      var startDateInput = modal1.querySelector('input[name="start-date"]').value;
+      var endDateInput = modal1.querySelector('input[name="end-date"]').value;
+      var startTimeInput = modal1.querySelector('input[name="start_time"]').value;
+      var endTimeInput = modal1.querySelector('input[name="end_time"]').value;
+      //parse the values into date objects
+      var parsedStart = new Date(startDateInput);
+      var parsedEnd = new Date(endDateInput);
+      var startDate = parsedStart.toISOString().split('T')[0];
+      var endDate = parsedEnd.toISOString().split('T')[0];
+
+      //clear selected trainers
+      var checkboxes = iframeDocument.querySelectorAll('.resource-checkbox');
+      checkboxes.forEach(function (box) {
+          box.checked = false;
+      });
+
+      //pre-select listed resources
+      var regex = /ID: (\d+)/;
+      var resources = modal1.querySelectorAll('input[name="resource-slot[]"]');
+      resources.forEach(function(resource){
+        let resourceMatch = resource.value.match(regex);
+        if(resourceMatch){
+          var resourceId = resourceMatch[1];
+          var input = iframeDocument.querySelector('input[name="check"][resource="' + resourceId + '"]');
+          input.checked = true;
+        } 
+      })
+
+            //get inputs from advancedSearch.html
+            var dateFilter = iframeDocument.querySelector('input[name="date"]');
+            var startFilter = iframeDocument.querySelector('input[name="start_time"]');
+            var endFilter = iframeDocument.querySelector('input[name="end_time"]');
+      
+            //copy date and times over
+            dateFilter.value = startDate;
+            startFilter.value = startTimeInput;
+            endFilter.value=endTimeInput;
+      
+            var filterButton = iframeDocument.querySelector('button[id="filterButton"]');
+            filterButton.click();
+            //open model
+            modal3.modal();
     });
     const resourceBtn = document.getElementById("resourceBtn");
     resourceBtn.addEventListener("click", function () {
@@ -207,11 +263,12 @@ function initializeAdvancedSearch(iframeDocument,modal){
         }
         if(slots.length > index){
           slots[j++].value = checkedCheckboxes[index].value;
+          console.log(checkedCheckboxes[index].value);
         }
         else{
           const classSelector = "." + Array.from(modal1.querySelector(".resource-search").classList).join(".");
-          addTrainerSlot(classSelector,slotContainer.id);
-          numberSlots(slotContainer);
+          addTrainerSlot(classSelector,slotContainer.id,"resource");
+          numberSlots(slotContainer, "Resource");
           slots = modal1.querySelectorAll(".resourceInput");
           slots[j++].value = checkedCheckboxes[index].value;
         }
@@ -236,8 +293,8 @@ document.addEventListener("DOMContentLoaded", function () {
       var resourceDoc;
       resourceIframe.onload = function(){
         resourceDoc = resourceIframe.contentDocument || resourceIframe.contentWindow.document;
-        initializeAdvancedSearch(iframeDocument,createModal);
-        initializeAdvancedSearch(iframeDocument,updateModal);
+        initializeAdvancedSearch(resourceDoc,createModal);
+        initializeAdvancedSearch(resourceDoc,updateModal);
       }
 
       var calendarEl = document.getElementById("calendar");
@@ -332,9 +389,9 @@ document.addEventListener("DOMContentLoaded", function () {
             var defaultSlots = Math.ceil(event.extendedProps.numLearners / 4);
             var numSlots = defaultSlots < 8 ? defaultSlots : 8;
             for (var i = 2; i < numSlots; i++) {
-              addTrainerSlot(".trainer-search","trainer-slots");
+              addTrainerSlot(".trainer-search","trainer-slots","trainer");
             }
-            numberSlots(trainerSlotsContainer);
+            numberSlots(trainerSlotsContainer, "Trainer");
             //uncheck advanced search trainers
             const checkboxes = iframeDocument.querySelectorAll(
               ".trainer-checkbox"
@@ -453,14 +510,26 @@ document.addEventListener("DOMContentLoaded", function () {
     document
       .getElementById("add-trainer-slot")
       .addEventListener("click", function() {
-        addTrainerSlot(".trainer-search","trainer-slots");
-        numberSlots(document.getElementById("trainer-slots"));
+        addTrainerSlot(".trainer-search","trainer-slots","trainer");
+        numberSlots(document.getElementById("trainer-slots"),"Trainer");
       });
     document
       .getElementById("update-add-trainer-slot")
       .addEventListener("click", function() {
-        addTrainerSlot(".update.trainer-search","update-trainer-slots");
-        numberSlots(document.getElementById("update-trainer-slots"));
+        addTrainerSlot(".update.trainer-search","update-trainer-slots","trainer");
+        numberSlots(document.getElementById("update-trainer-slots"),"Trainer");
+      });
+      document
+      .getElementById("add-resource-slot")
+      .addEventListener("click", function() {
+        addTrainerSlot(".resource-search","resource-slots","resource");
+        numberSlots(document.getElementById("resource-slots"),"Resource");
+      });
+      document
+      .getElementById("update-add-resource-slot")
+      .addEventListener("click", function() {
+        addTrainerSlot(".update.resource-search","update-resource-slots","resource");
+        numberSlots(document.getElementById("update-resource-slots"),"Resource");
       });
     // Event listener for checkbox change
     const eventCheckboxes = document.querySelectorAll(".event-checkbox");
@@ -487,5 +556,11 @@ document.addEventListener("DOMContentLoaded", function () {
       autocomplete(document.querySelectorAll(".trainerInput"), trainer_names);
       autocomplete(document.querySelectorAll(".leaderInput"), leader_names);
     });
+    $.getJSON(`/resourcedata`, function (data) {
+      let resource_names = data
+        .filter((resource) => resource.status !== "Suspended")
+        .map((resource) => `${resource.type}: ${resource.name} (ID: ${resource.id})`);
+      autocomplete(document.querySelectorAll(".resourceInput"), resource_names);
+  });
   });
 });

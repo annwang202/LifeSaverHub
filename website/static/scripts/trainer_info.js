@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
     'input[type="date"], input[type="time"]'
   );
   const trainerBoxes = document.querySelectorAll(".infoFilter li");
+  var typeCheckboxes = document.querySelectorAll(
+    ".trainerFilterSection li input[type='checkbox'][name='type']"
+  );
   var statusCheckboxes = document.querySelectorAll(
     ".trainerFilterSection li input[type='checkbox'][name='status']"
   );
@@ -18,9 +21,10 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", async function () {
       var availabilityHide = await filterAvailability(container, trainerBoxes);
       getAvailabilitySummary(container); //retrieve calendar views based on weekday and timeframe
+      var typeHide = filterType(typeCheckboxes);
       var statusHide = filterStatus(statusCheckboxes);
       var skillHide = filterSkills(skillCheckboxes);
-      var unionArr = union(availabilityHide, statusHide, skillHide);
+      var unionArr = union(availabilityHide, typeHide, statusHide, skillHide);
       hideTrainers(trainerBoxes, unionArr);
       var noTrainers = document.getElementById("noTrainers");
       if(unionArr.length == trainerBoxes.length){
@@ -105,7 +109,7 @@ function clearInputs(inputs) {
   });
 }
 
-function filterStatus(checkboxes) {
+function filterType(checkboxes) {
   var trainersToHide = [];
   checkboxes.forEach(function (checkbox) {
     if (!checkbox.checked) {
@@ -120,6 +124,20 @@ function filterStatus(checkboxes) {
   return trainersToHide;
 }
 
+function filterStatus(checkboxes) {
+  var trainersToHide = [];
+  checkboxes.forEach(function (checkbox) {
+    if (!checkbox.checked) {
+      var trainers = document.querySelectorAll(
+        `.trainerList li[status="${checkbox.value}"]`
+      );
+      trainers.forEach(function (li) {
+        trainersToHide.push(li.id);
+      });
+    }
+  });
+  return trainersToHide;
+}
 
 function filterSkills(checkboxes) {
   var trainersToHide = [];
@@ -211,13 +229,14 @@ async function filterAvailability(container, trainerBoxes) {
   return hideIds;
 }
 
-function union(arr1, arr2, arr3) {
-  const arr4 = [...new Set([...arr1, ...arr2, ...arr3])];
+function union(arr1, arr2, arr3,arr4) {
+  const arr = [...new Set([...arr1, ...arr2, ...arr3, ...arr4])];
 
-  return arr4;
+  return arr;
 }
 
 function hideTrainers(listItems, hideList) {
+  console.log("hiding:" + hideList);
   for (var i = 0; i < listItems.length; i++) {
     var currentItem = listItems[i];
     if (hideList.includes(currentItem.id)) {

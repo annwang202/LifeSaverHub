@@ -18,7 +18,7 @@ event_colors = {"New": "#ff8503", "Confirmed": "#7f04d1", "Tentative": "#039e72"
 tz = pytz.timezone('America/New_York')
 
 
-@views.route('/', methods=['GET', 'POST'])
+@views.route('/admin/', methods=['GET', 'POST'])
 @login_required
 def home():
     eventModel = Event.query.all()
@@ -38,17 +38,21 @@ def home():
         event_assignments = event.assignments.all()
         if (not event_assignments):
             continue
-        info = {"event": event, "trainers": [], "assignments": []}
+        info = {"event": event, "trainers": [], "assignments": [], "resources":[]}
         for assignment in event_assignments:
-            trainer = Trainer.query.filter(
-                Trainer.id == assignment.trainer_id).first()
-            role = ""
-            if (assignment.isLead):
-                role = "Team Lead"
-            else:
-                role = "Trainer"
-            info["trainers"].append({"trainer": trainer, "role": role})
             info["assignments"].append(assignment)
+            if(assignment.trainer_id):
+                trainer = Trainer.query.filter(
+                Trainer.id == assignment.trainer_id).first()
+                role = ""
+                if (assignment.isLead):
+                    role = "Team Lead"
+                else:
+                    role = "Trainer"
+                info["trainers"].append({"trainer": trainer, "role": role})
+            elif(assignment.resource_id):
+                resource = Resource.query.filter(Resource.id == assignment.resource_id).first()
+                info["resources"].append({"resource": resource})
         assignments_by_event.append(info)
     '''
     assignments = Assignment.query.options(
@@ -61,24 +65,45 @@ def home():
                       'gen_avail': trainer.gen_avail} for trainer in trainers]
     return render_template("home.html", user=current_user, events=events, trainers=trainers, assignments=assignments, assignments_by_event=assignments_by_event, trainers_data=trainers_data, event_colors=event_colors)
 
-@views.route('/resources', methods=['GET', 'POST'])
+@views.route('/admin/resources', methods=['GET', 'POST'])
 @login_required
 def resources():
     resources = Resource.query.order_by(Resource.name).all()
+    good_count = Resource.query.filter_by(status="Good").count()
+    suspended_count = Resource.query.filter_by(status="Suspended").count()
+    adult_manikin_count = Resource.query.filter_by(type="Adult manikin").count()
+    pediatric_manikin_count = Resource.query.filter_by(type="Pediatric manikin").count()
+    infant_manikin_count = Resource.query.filter_by(type="Infant manikin").count()
+    aed_count = Resource.query.filter_by(type="AED trainer").count()
+    stb_count = Resource.query.filter_by(type="STB kit").count()
+
+
     resource_data = []
     for resource in resources:
         resource_data.append(resource.name)
-    return render_template("resources.html", user=current_user, resources=resources, resource_data=resource_data)
+    return render_template("resources.html", user=current_user, resources=resources, resource_data=resource_data,
+                           good_count=good_count,suspended_count=suspended_count,adult_manikin_count=adult_manikin_count,pediatric_manikin_count=pediatric_manikin_count,
+                           infant_manikin_count=infant_manikin_count,aed_count=aed_count,stb_count=stb_count)
 
 
 @views.route('/resourceSearch', methods=['GET', 'POST'])
 @login_required
 def resourcesearch():
     resources = Resource.query.order_by(Resource.name).all()
+    good_count = Resource.query.filter_by(status="Good").count()
+    suspended_count = Resource.query.filter_by(status="Suspended").count()
+    adult_manikin_count = Resource.query.filter_by(type="Adult manikin").count()
+    pediatric_manikin_count = Resource.query.filter_by(type="Pediatric manikin").count()
+    infant_manikin_count = Resource.query.filter_by(type="Infant manikin").count()
+    aed_count = Resource.query.filter_by(type="AED trainer").count()
+    stb_count = Resource.query.filter_by(type="STB kit").count()
+
     resource_data = []
     for resource in resources:
         resource_data.append(resource.name)
-    return render_template("resourceSearch.html", user=current_user, resources=resources, resource_data=resource_data)
+    return render_template("resourceSearch.html", user=current_user, resources=resources, resource_data=resource_data,
+                           good_count=good_count,suspended_count=suspended_count,adult_manikin_count=adult_manikin_count,pediatric_manikin_count=pediatric_manikin_count,
+                           infant_manikin_count=infant_manikin_count,aed_count=aed_count,stb_count=stb_count)
 
 @views.route('/advancedsearch', methods=['GET', 'POST'])
 @login_required
@@ -183,7 +208,7 @@ def alreadyAssigned(event_date):
     return jsonify(assigned)
 
 
-@views.route('/trainee', methods=['GET', 'POST'])
+@views.route('/request-event', methods=['GET', 'POST'])
 @login_required
 def trainee():
     return render_template("trainee.html", user=current_user)
@@ -195,7 +220,7 @@ def trainer():
     return render_template("trainer.html", user=current_user)
 
 
-@views.route('/trainer_info', methods=['GET', 'POST'])
+@views.route('/admin/trainers', methods=['GET', 'POST'])
 @login_required
 def trainer_info():
     trainers = Trainer.query.order_by(Trainer.name).all()
@@ -386,21 +411,30 @@ def submit_assignment():
                 formatted_end_time = end_date.strftime("%I:%M %p")
                 trainer_name_and_emails = request.form.getlist(
                     "trainer-slot[]")
+                resources = request.form.getlist(
+                    "resource-slot[]")
                 team_lead = request.form["leader-slot"]
                 event = Event.query.get(event_id)
                 lead_assignment = create_assignment(trainer=team_lead, event=event, start_date=start_date, end_date=end_date,
                                                     formatted_start_date=formatted_start_date,
-                                                    formatted_end_time=formatted_end_time, isLead=True)
+                                                    formatted_end_time=formatted_end_time, isLead=True,resource=None)
                 if (lead_assignment):
                     db.session.add(lead_assignment)
                     print(lead_assignment)
                 for trainer in trainer_name_and_emails:
                     new_assignment = create_assignment(trainer=trainer, event=event, start_date=start_date, end_date=end_date,
                                                        formatted_start_date=formatted_start_date,
-                                                       formatted_end_time=formatted_end_time, isLead=False)
+                                                       formatted_end_time=formatted_end_time, isLead=False,resource=None)
                     if (new_assignment):
                         db.session.add(new_assignment)
                         print(new_assignment)
+                for resource in resources:
+                    resource_assignment = create_assignment(trainer=None,event=event, start_date=start_date, end_date=end_date,
+                                                       formatted_start_date=formatted_start_date,
+                                                       formatted_end_time=formatted_end_time, isLead=False, resource=resource)
+                    if (resource_assignment):
+                        db.session.add(resource_assignment)
+                        print(resource_assignment)
                 db.session.commit()
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -409,7 +443,7 @@ def submit_assignment():
     return redirect(url_for('views.home'))
 
 
-def create_assignment(trainer, event, start_date, end_date, formatted_start_date, formatted_end_time, isLead):
+def create_assignment(trainer, event, start_date, end_date, formatted_start_date, formatted_end_time, isLead, resource):
     if (trainer):
         split = re.search(r'(.+?) \(ID: (\d+)\)', trainer)
         if (not split or len(split.groups()) < 2):
@@ -432,6 +466,28 @@ def create_assignment(trainer, event, start_date, end_date, formatted_start_date
                                     formatted_end_time=formatted_end_time,
                                     event_id=event.id, trainer_id=cur_trainer.id,
                                     trainer_status=cur_trainer.status, isLead=isLead)
+        return new_assignment
+    elif (resource):
+        split = re.search(r'(.+?) \(ID: (\d+)\)', resource)
+        if (not split or len(split.groups()) < 2):
+            flash('Resource ' + resource + ' not found!', category='error')
+            return None
+        resource_name = split.group(1)
+        resource_id = split.group(2)
+        print(resource_name)
+        print(resource_id)
+        cur_resource = Resource.query.filter(
+            Resource.name == resource_name, Resource.id == resource_id).first()
+        if (not cur_resource):
+            return None
+        print(cur_resource)
+        # only change event status to Tentative if there is a trainer to assign to it
+        event.status = "Tentative"
+        new_assignment = Assignment(start_date=start_date,
+                                    end_date=end_date,
+                                    formatted_start_date=formatted_start_date,
+                                    formatted_end_time=formatted_end_time,
+                                    event_id=event.id, isLead=isLead, resource_id=cur_resource.id)
         return new_assignment
 
 
@@ -502,6 +558,8 @@ def update_assignment():
                 team_lead = request.form["leader-slot"]
                 trainer_name_and_emails = request.form.getlist(
                     "trainer-slot[]")
+                resources = request.form.getlist(
+                    "resource-slot[]")
                 print(trainer_name_and_emails)
                 date_format = '%Y-%m-%d %H:%M:%S'
                 request_start = request.form.get("start-date")
@@ -530,7 +588,7 @@ def update_assignment():
                         # if event has no trainer assigned, change event status to "New" or "Confirmed"
                         lead_assignment = create_assignment(trainer=team_lead, event=event, start_date=start_date, end_date=end_date,
                                                             formatted_start_date=formatted_start_date,
-                                                            formatted_end_time=formatted_end_time, isLead=True)
+                                                            formatted_end_time=formatted_end_time, isLead=True,resource=None)
                         if (lead_assignment):
                             db.session.add(lead_assignment)
                             print(lead_assignment)
@@ -538,11 +596,18 @@ def update_assignment():
                         for trainer in trainer_name_and_emails:
                             new_assignment = create_assignment(trainer=trainer, event=event, start_date=start_date, end_date=end_date,
                                                                formatted_start_date=formatted_start_date,
-                                                               formatted_end_time=formatted_end_time, isLead=False)
+                                                               formatted_end_time=formatted_end_time, isLead=False,resource=None)
                             if (new_assignment):
                                 db.session.add(new_assignment)
                                 print(new_assignment)
                                 hasTrainer = True
+                        for resource in resources:
+                            resource_assignment = create_assignment(trainer=None,event=event, start_date=start_date, end_date=end_date,
+                                                       formatted_start_date=formatted_start_date,
+                                                       formatted_end_time=formatted_end_time, isLead=False, resource=resource)
+                            if (resource_assignment):
+                                db.session.add(resource_assignment)
+                                print(resource_assignment)
                     if (not hasTrainer and new_status != "New"):
                         event.status = "Confirmed"
                     else:
@@ -699,26 +764,6 @@ def trainer_mysql_to_json():
     sources_list = []
     for trainer in data:
         event_list = []
-        '''
-        for slot in trainer.gen_avail:
-            time_dict = {
-                'id': slot.id,
-                'title': trainer.name,
-                'start': slot.iso_formatted_start_date,
-                'end': slot.iso_formatted_end_date,
-                'displayEventEnd': True,
-                'color': trainer_colors[(trainer.id - 1) % len(trainer_colors)][0],
-                'extendedProps': {
-                    'trainerTrue': True,
-                    'description': trainer.other_info,
-                    'formattedStartDate': slot.formatted_start_date,
-                    'formattedEndTime': slot.formatted_end_time,
-                    'trainerId':trainer.id
-                }
-                # Add other attributes here as needed
-            }
-            event_list.append(time_dict)
-        '''
         trainer_dict = {'events': event_list, 'id': trainer.id,
                         'full-name': trainer.name, 'name': trainer.nickname, 'email': trainer.email, 'status': trainer.status}
         sources_list.append(trainer_dict)
@@ -731,7 +776,20 @@ def trainer_mysql_to_json():
 
     return json_data
 
+@views.route('/resourcedata')
+def resource_mysql_to_json():
+    from .models import Resource
+    data = Resource.query.all()
+    sources_list = []
+    for resource in data:
+        event_list = []
+        resource_dict = {'events': event_list, 'id': resource.id,'name': resource.name, 'type': resource.type, 'status': resource.status}
+        sources_list.append(resource_dict)
+    json_data = jsonify(sources_list).get_data(as_text=True)
+    with open('resource_mysql_data.json', 'w') as json_file:
+        json_file.write(json_data)
 
+    return json_data
 @views.route('/trainer_availability/<string:weekday>/<string:start>/<string:end>', methods=['GET'])
 def trainer_availability(weekday, start, end):
     print("Hello")

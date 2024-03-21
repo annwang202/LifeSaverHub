@@ -1,5 +1,44 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-    %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="{{url_prefix}}/static/styles/web.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="{{url_prefix}}/static/scripts/base.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
+"></script>
+<script>
+  function showOrHideDropdown(id,prefix,action)
+    {
+      let el = document.getElementById(`${prefix}_${id}`);
+      if(el.style.display === "block"){
+        el.style.display = "none";
+        if (action === "expand"){
+          document.getElementById(id).innerHTML = "&#128899;";
+        }
+      }
+      else{
+        el.style.display = "block";
+        if (action === "expand"){
+          document.getElementById(id).innerHTML = "&#128897;";
+        }
+      }
+    }
+</script>
+</head>
 <script type="module" src="{{url_prefix}}/static/scripts/trainer.js"></script>
 <div class="form-container">
   <br>
@@ -141,4 +180,4 @@
         <br />
       </div>
 </div>
-{% endblock %}
+</html>

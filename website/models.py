@@ -23,7 +23,9 @@ class Assignment(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'),
         nullable=False)
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'),
-        nullable=False)
+        nullable=True)
+    resource_id = db.Column(db.Integer, db.ForeignKey('resource.id'),
+        nullable=True)
     trainer_status = db.Column(db.String(50))
     isLead = db.Column(db.Boolean,default=False)
     
@@ -112,3 +114,4 @@ class Resource(db.Model):
     name = db.Column(db.String(50))
     type = db.Column(db.String(50))
     status = db.Column(db.String(50))
+    assignments = db.relationship('Assignment', backref = 'resource', cascade = 'all, delete-orphan', lazy = 'dynamic')

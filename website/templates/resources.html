@@ -1,38 +1,47 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
     %}
     <script type="module" src="{{url_prefix}}/static/scripts/trainer_info.js"></script>
+    <script>
+      var good_count = {{ good_count | tojson | safe }};
+      var suspended_count = {{ suspended_count | tojson | safe }};
+      var adult_manikin_count = {{ adult_manikin_count | tojson | safe }};
+      var pediatric_manikin_count = {{ pediatric_manikin_count | tojson | safe }};
+      var infant_manikin_count = {{ infant_manikin_count | tojson | safe }};
+      var aed_count = {{ aed_count | tojson | safe }};
+      var stb_count = {{ stb_count | tojson | safe }};
+    </script>
     <div id="trainer-info-container" class="trainer-info-container">
       <div class="trainerFilterSection">
         <ul>
             <strong>Status</strong>
             <li>
-                <input checked="true" type="checkbox" value="Good"/>
-                <label style="font-weight: bold;">Good</label>
+                <input checked="true" name="status" type="checkbox" value="Good"/>
+                <label style="font-weight: bold;">Good ({{good_count}})</label>
             </li>
             <li>
-                <input type="checkbox" value="Suspended"/>
-                <label style="font-weight: bold;">Suspended</label>
+                <input type="checkbox" name="status" value="Suspended"/>
+                <label style="font-weight: bold;">Suspended ({{suspended_count}})</label>
             </li>
             <strong>Type</strong>
             <li>
-                <input checked="true" type="checkbox" value="Adult manikin"/>
-                <label style="font-weight: bold;">Adult manikin</label>
+                <input checked="true" name="type" type="checkbox" value="Adult manikin"/>
+                <label style="font-weight: bold;">Adult manikin ({{adult_manikin_count}})</label>
             </li>
             <li>
-                <input type="checkbox" value="Pediatric manikin"/>
-                <label style="font-weight: bold;">Pediatric manikin</label>
+                <input checked="true" name="type" type="checkbox" value="Pediatric manikin"/>
+                <label style="font-weight: bold;">Pediatric manikin ({{pediatric_manikin_count}})</label>
             </li>
             <li>
-              <input type="checkbox" value="Infant manikin"/>
-              <label style="font-weight: bold;">Infant manikin</label>
+              <input checked="true" name="type" type="checkbox" value="Infant manikin"/>
+              <label style="font-weight: bold;">Infant manikin ({{infant_manikin_count}})</label>
           </li>
           <li>
-            <input type="checkbox" value="AED trainer"/>
-            <label style="font-weight: bold;">AED trainer</label>
+            <input checked="true" name="type" type="checkbox" value="AED trainer"/>
+            <label style="font-weight: bold;">AED trainer ({{aed_count}})</label>
         </li>
         <li>
-          <input type="checkbox" value="STB kit"/>
-          <label style="font-weight: bold;">STB kit</label>
+          <input checked="true" name="type" type="checkbox" value="STB kit"/>
+          <label style="font-weight: bold;">STB kit ({{stb_count}})</label>
       </li>
       </br>
             <strong>Availability</strong></br>
@@ -54,11 +63,12 @@
         </div>
         <div id="trainer-view" class="tabcontent">
           <div class="trainerList">
-            <ul class="list-group list-group-flush infoFilter" id="trainerInfoFilter">
+            <ul class="list-group list-group-flush" id="trainerInfoFilter">
               {% for resource in resources %}
               <li
                 id="resource_{{resource.id}}"
                 data-type="{{resource.type}}"
+                status="{{resource.status}}"
                 class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
                 style="display: inline-block; border-width: 3px;"
               >

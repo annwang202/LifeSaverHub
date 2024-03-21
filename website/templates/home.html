@@ -162,6 +162,7 @@
         <strong>{{assignment_table['event'].title}}</strong><br>
         <strong>Date: </strong></br>{{assignment_table['assignments'][0].formatted_start_date}} - {{assignment_table['assignments'][0].formatted_end_time}}<br>
         <div> <strong>Trainers: </strong><ul style="padding-left: 20px;">{% for trainer in assignment_table['trainers'] %}<li> <u>{{trainer["role"]}}</u>: {{trainer["trainer"].nickname}}</br> (<i>ID: {{trainer["trainer"].id}}</i>)</li>{% endfor %}</ul></div>
+        <div><strong>Resources: </strong><ul style="padding-left: 20px;">{% for resource in assignment_table['resources'] %}<li> <u>{{resource["resource"].type}}</u>: {{resource["resource"].name}}</br> (<i>ID: {{resource["resource"].id}}</i>)</li>{% endfor %}</ul></div>
         <div class="assignment-details">
           <strong>Status: </strong><div class="update-status {{assignment_table['event'].status}}" style="display: inline-block;"><strong>{{assignment_table['event'].status}}</strong></div></br>
           <strong>Admin notes:</strong><br>
@@ -307,32 +308,54 @@
         <div class="modal-body">
           <form id="update-assignment-form" autocomplete="off" name="update-assignment-form" action="/update-assignment" method="POST">
             <input type="hidden" name="update-assignment" value="1">
-            <div class="time" style="font-weight: bold">Event Time</div>
-            <div class="numLearners"></div>
+            <strong>Request date:</strong>
+            <div class="time" style="display: inline-block;">Event Time</div></br>
+            <strong>Estimated learners: </strong><div class="numLearners" style="display: inline-block;"></div></br>
             <div class="description"></div>
-            <input type="hidden" id="update-assignment-event-id" name="event-id" value="">
+            <input type="hidden" id="update-assignment-event-id" name="event-id" value="hi">
             <input type="hidden" id="update-assignment-start-date" name="start-date" value="">
             <input type="hidden" id="update-assignment-end-date" name="end-date" value="">
             <input type="hidden" id="update-assignment-formatted-start-date" name="formatted-start-date" value="">
             <input type="hidden" id="update-assignment-formatted-end-time" name="formatted-end-time" value="">
-            <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Search for trainers</a>
-            <div class="assign-trainers">
-              <div id="update-trainer-slots" class="trainer-slots">
-                <div class="update leader-search" style="display: flex; align-items: center;">
-                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
-                    <p style="margin: 7px;">Leader</p>
-                    <input class="leaderInput" type="text" name="leader-slot" placeholder="Enter team lead">
-                  </div>
-                </div>
-                <div class="update trainer-search" style="display: flex; align-items: center;">
-                  <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
-                    <label id = "slot-label" style="margin: 7px;">Trainer</label>
-                    <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Enter trainer">
-                  </div>
-                </div>
-              </div>
-              <button type="button" id="update-add-trainer-slot">+</button>
+            <div class="tab">
+              <button id="update-trainers-button" class="tablinks active" onclick="openTab(event, 'update-trainers')" type="button">Trainers</button>
+              <button id="update-manikins-button" class="tablinks" onclick="openTab(event, 'update-manikins')" type="button">Manikins</button>
+              <button id="update-resources-button" class="tablinks" onclick="openTab(event, 'update-resources')" type="button">Other Resources</button>
             </div>
+            <div id="update-trainers" class="tabcontent">
+              <strong>Target # of trainers: </strong><div class="targetTrainers" style="display: inline-block;"></div></br>
+              <a name="open-advanced-search" data-toggle="modal" href="#modal2" class="btn btn-primary">Search for trainers</a>
+              <div class="assign-trainers">
+                <div id="update-trainer-slots" class="trainer-slots">
+                  <div class="update leader-search" style="display: flex; align-items: center;">
+                    <div class="autocomplete" style="width:300px;display: flex; align-items: center;">
+                      <p style="margin: 7px;">Leader</p>
+                      <input class="leaderInput" type="text" name="leader-slot" placeholder="Enter team lead">
+                    </div>
+                  </div>
+                  <div class="update trainer-search" style="display: flex; align-items: center;">
+                    <div class="autocomplete" style="width:300px;display: flex; align-items: center;white-space: nowrap;">
+                      <label class = "slot-label" style="margin: 7px;">Trainer</label>
+                      <input class="trainerInput" type="text" name="trainer-slot[]" placeholder="Enter trainer">
+                    </div>
+                  </div>
+                </div>
+                <button type="button" id="update-add-trainer-slot">+</button></div><br>
+            </div>
+            <div id="update-manikins" class="tabcontent" style="display:none; height:100%;">
+              <a name="open-advanced-search2" data-toggle="modal" href="#modal3" class="btn btn-primary">Search for resources</a>
+              <div class="assign-resources">
+                <div id="update-resource-slots" class="resource-slots">
+                  <div class="update resource-search" style="display: flex; align-items: center;">
+                    <div class="autocomplete" style="width:300px;display: flex; align-items: center;white-space: nowrap;">
+                      <label class = "slot-label" style="margin: 7px;">Resource #1</label>
+                      <input class="resourceInput" type="text" name="resource-slot[]" placeholder="Enter resource">
+                    </div>
+                  </div>
+                </div>
+                <button type="button" id="update-add-resource-slot">+</button></div><br>
+              </div>
+            <div id="update-resources" class="tabcontent"></div>
             <strong>Status:</strong> 
             <select name="update_assignment_status">
               <option id="current-status" value="" selected hidden>Text content</option>
