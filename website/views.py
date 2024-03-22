@@ -4,7 +4,7 @@ from .models import Event, EventDate, Trainer, TrainerDate, Assignment, Resource
 from . import db
 import json
 from datetime import datetime, time, timedelta
-from sqlalchemy import asc, extract, Time, func, Date
+from sqlalchemy import asc, extract, Time, func, Date, or_
 from werkzeug.utils import secure_filename
 import re
 from sqlalchemy.orm import joinedload
@@ -77,13 +77,15 @@ def resources():
     aed_count = Resource.query.filter_by(type="AED trainer").count()
     stb_count = Resource.query.filter_by(type="STB kit").count()
 
-
+    manikins = Resource.query.filter(or_(Resource.type == "Adult manikin",Resource.type=="Pediatric manikin",Resource.type=="Infant manikin")).all()
+    aeds = Resource.query.filter_by(type="AED trainer").all()
+    stbs = Resource.query.filter_by(type="STB kit").all()
     resource_data = []
     for resource in resources:
         resource_data.append(resource.name)
     return render_template("resources.html", user=current_user, resources=resources, resource_data=resource_data,
                            good_count=good_count,suspended_count=suspended_count,adult_manikin_count=adult_manikin_count,pediatric_manikin_count=pediatric_manikin_count,
-                           infant_manikin_count=infant_manikin_count,aed_count=aed_count,stb_count=stb_count)
+                           infant_manikin_count=infant_manikin_count,aed_count=aed_count,stb_count=stb_count,manikins=manikins,aeds=aeds,stbs=stbs)
 
 
 @views.route('/resourceSearch', methods=['GET', 'POST'])
@@ -98,12 +100,16 @@ def resourcesearch():
     aed_count = Resource.query.filter_by(type="AED trainer").count()
     stb_count = Resource.query.filter_by(type="STB kit").count()
 
+    manikins = Resource.query.filter(or_(Resource.type == "Adult manikin",Resource.type=="Pediatric manikin",Resource.type=="Infant manikin")).all()
+    aeds = Resource.query.filter_by(type="AED trainer").all()
+    stbs = Resource.query.filter_by(type="STB kit").all()
+
     resource_data = []
     for resource in resources:
         resource_data.append(resource.name)
     return render_template("resourceSearch.html", user=current_user, resources=resources, resource_data=resource_data,
                            good_count=good_count,suspended_count=suspended_count,adult_manikin_count=adult_manikin_count,pediatric_manikin_count=pediatric_manikin_count,
-                           infant_manikin_count=infant_manikin_count,aed_count=aed_count,stb_count=stb_count)
+                           infant_manikin_count=infant_manikin_count,aed_count=aed_count,stb_count=stb_count,manikins=manikins,aeds=aeds,stbs=stbs)
 
 @views.route('/advancedsearch', methods=['GET', 'POST'])
 @login_required
@@ -201,10 +207,16 @@ def alreadyAssigned(event_date):
     for assignment in alreadyAssigned:
         events = Event.query.filter(Event.id == assignment.event_id).all()
         for i in events:
-            key = str(assignment.trainer_id)
-            if (key not in assigned):
-                assigned[str(assignment.trainer_id)] = []
-            assigned[str(assignment.trainer_id)].append(i.title)
+            if (assignment.trainer_id):
+                key = "trainer_" + str(assignment.trainer_id)
+                if (key not in assigned):
+                    assigned[key] = []
+                assigned[key].append(i.title)
+            elif (assignment.resource_id):
+                key = "resource_" + str(assignment.resource_id)
+                if (key not in assigned):
+                    assigned[key] = []
+                assigned[key].append(i.title)
     return jsonify(assigned)
 
 
@@ -234,7 +246,6 @@ def trainer_info():
         trainers_data.append(trainer.name)
     return render_template("trainer_info.html", user=current_user, trainers=trainers, trainers_data=trainers_data,new_count=new_count,
                            lead_count=lead_count,basic_count=basic_count,inactive_count=inactive_count,suspended_count=suspended_count)
-
 
 @views.route('/submit-event', methods=['GET', 'POST'])
 @login_required
@@ -382,6 +393,25 @@ def submit_trainer():
             db.session.rollback()  # Rollback the transaction in case of an error
     return redirect(url_for('views.trainer'))
 
+@views.route('/submit-resource', methods=['GET', 'POST'])
+@login_required
+def submit_resource():
+    if request.method == 'POST':
+        try:
+            if request.form.get("create-resource"): 
+                print("Hello?")
+                resource_type = request.form["type"]
+                name = request.form["resource_name"]
+                new_resource = Resource(type=resource_type,name=name,status="Good")
+                print(new_resource)
+                db.session.add(new_resource)
+                db.session.commit()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            traceback.print_exc()
+            db.session.rollback()  # Rollback the transaction in case of an error
+    return redirect(url_for('views.resources'))
+
 
 @views.route('/submit-assignment', methods=['GET', 'POST'])
 @login_required
@@ -490,6 +520,23 @@ def create_assignment(trainer, event, start_date, end_date, formatted_start_date
                                     event_id=event.id, isLead=isLead, resource_id=cur_resource.id)
         return new_assignment
 
+@views.route('/update-resource', methods=['GET', 'POST'])
+@login_required
+def update_resource():
+    if request.method == 'POST':
+        if request.form.get("update_resource_form"):
+            id = request.form["update_id"]
+            status = request.form["status"]
+            name = request.form["update_resource_name"]
+            admin_notes = request.form["admin_notes_input"]
+            resource = Resource.query.get(id)
+            if resource:
+                resource.status = status
+                if name:
+                    resource.name = name
+                resource.admin_notes = admin_notes
+                db.session.commit()
+    return redirect(url_for('views.resources'))
 
 @views.route('/update-event', methods=['GET', 'POST'])
 @login_required
@@ -799,14 +846,18 @@ def trainer_availability(weekday, start, end):
     print(endtime)
     query = TrainerDate.query.filter(
         db.func.lower(TrainerDate.weekday) == weekday).all()
+    resources = Resource.query.all()
 
     print(query)
     if query:
         result = []
         for trainer_date in query:
             if (trainer_date.start_date.time() <= starttime and ((trainer_date.end_date.time() >= endtime) or trainer_date.end_date.time() == time(0, 0))):
-                result.append({'trainer_id': trainer_date.trainer_id, 'name': trainer_date.trainerName, 'weekday': trainer_date.weekday,
+                result.append({'id': "trainer_" + str(trainer_date.trainer_id), 'name': trainer_date.trainerName, 'weekday': trainer_date.weekday,
                                'start': trainer_date.start_date, 'end': trainer_date.end_date})
+        ## resources should always be available
+        for resource in resources:
+            result.append({'id': "resource_" + str(resource.id)})
         return jsonify(result)
     else:
         return jsonify({'error': 'Query failed'}), 404
@@ -816,13 +867,18 @@ def trainer_availability(weekday, start, end):
 def trainer_availability_weekday(weekday):
     query = TrainerDate.query.filter(
         db.func.lower(TrainerDate.weekday) == weekday).all()
+    
+    resources = Resource.query.all()
 
     print(query)
-    if query:
+    if query and resources:
         result = []
         for trainer_date in query:
-            result.append({'trainer_id': trainer_date.trainer_id, 'name': trainer_date.trainerName, 'weekday': trainer_date.weekday,
+            result.append({'id': "trainer_" + str(trainer_date.trainer_id), 'name': trainer_date.trainerName, 'weekday': trainer_date.weekday,
                            'start': trainer_date.start_date, 'end': trainer_date.end_date})
+        ## resources should always be available
+        for resource in resources:
+            result.append({'id': "resource_" + str(resource.id)})
         return jsonify(result)
     else:
         return jsonify({'error': 'Query failed'}), 404

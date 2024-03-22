@@ -115,3 +115,4 @@ class Resource(db.Model):
     type = db.Column(db.String(50))
     status = db.Column(db.String(50))
     assignments = db.relationship('Assignment', backref = 'resource', cascade = 'all, delete-orphan', lazy = 'dynamic')
+    admin_notes = db.Column(db.String(1500))

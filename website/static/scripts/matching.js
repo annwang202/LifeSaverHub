@@ -278,6 +278,20 @@ function initializeAdvancedSearch(iframeDocument,modal){
   }
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Get the current URL
+var currentURL = window.location.href;
+console.log(currentURL);
+
+// Get the <a> elements inside the nav
+var navLinks = document.querySelectorAll('.nav-link');
+
+// Loop through each <a> element and check if its href matches the current URL
+navLinks.forEach(function(link) {
+  console.log(link.href);
+    if (link.href === currentURL) {
+        link.classList.add('active'); // Add 'active' class to the current tab
+    }
+});
   function fetchDataAndInitializeCalendar() {
     return new Promise(function (resolve) {
       var createModal = document.getElementById("detail-expand");

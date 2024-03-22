@@ -73,7 +73,7 @@
         </div>
         <div id="trainer-view" class="tabcontent">
           <div class="trainerList">
-            <ul class="list-group list-group-flush infoFilter" id="trainerInfoFilter">
+            <ul class="list-group list-group-flush infoFilter trainerInfoFilter">
               {% for trainer in trainers %}
               <li
                 id="trainer_{{trainer.id}}"
@@ -81,7 +81,7 @@
                 class="list-group-item {% if trainer.status == 'Suspended' %} hideItem {% endif %} "
                 style="display: inline-block; border-width: 3px;"
               >
-              <div name="warning" trainer="{{trainer.id}}" style="display:inline-block;"></div>
+              <div name="warning" warning="trainer_{{trainer.id}}" style="display:inline-block;"></div>
               <a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a><br>
               {{trainer.pronouns}}</br>
               <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{trainer.status}}</strong></div><br>

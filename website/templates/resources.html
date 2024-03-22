@@ -10,6 +10,27 @@
       var aed_count = {{ aed_count | tojson | safe }};
       var stb_count = {{ stb_count | tojson | safe }};
     </script>
+    <script>
+      function showType(selectObj){
+        console.log("showType called");
+        var types = ["Manikins", "AED Trainers","STB Kits"]
+        var index = selectObj.selectedIndex; 
+        var selected = selectObj.options[index].value; 
+        var typeDivs = document.querySelectorAll('div[name="typeDiv"]');
+        typeDivs.forEach(function(typeDiv){
+          if(selected == "All"){
+            typeDiv.style.display = "block";
+          }
+          else if(typeDiv.id == selected){
+            typeDiv.style.display = "block";
+          }
+          else{
+            typeDiv.style.display = "none";
+          }
+        })
+
+      }
+    </script>
     <div id="trainer-info-container" class="trainer-info-container">
       <div class="trainerFilterSection">
         <ul>
@@ -25,23 +46,23 @@
             <strong>Type</strong>
             <li>
                 <input checked="true" name="type" type="checkbox" value="Adult manikin"/>
-                <label style="font-weight: bold;">Adult manikin ({{adult_manikin_count}})</label>
+                <label style="color: #4c700c; font-weight: bold;">Adult manikin ({{adult_manikin_count}})</label>
             </li>
             <li>
                 <input checked="true" name="type" type="checkbox" value="Pediatric manikin"/>
-                <label style="font-weight: bold;">Pediatric manikin ({{pediatric_manikin_count}})</label>
+                <label style="color: #4c700c; font-weight: bold;">Pediatric manikin ({{pediatric_manikin_count}})</label>
             </li>
             <li>
               <input checked="true" name="type" type="checkbox" value="Infant manikin"/>
-              <label style="font-weight: bold;">Infant manikin ({{infant_manikin_count}})</label>
+              <label style="color: #4c700c; font-weight: bold;">Infant manikin ({{infant_manikin_count}})</label>
           </li>
           <li>
             <input checked="true" name="type" type="checkbox" value="AED trainer"/>
-            <label style="font-weight: bold;">AED trainer ({{aed_count}})</label>
+            <label style="color: #161b9e; font-weight: bold;">AED trainer ({{aed_count}})</label>
         </li>
         <li>
           <input checked="true" name="type" type="checkbox" value="STB kit"/>
-          <label style="font-weight: bold;">STB kit ({{stb_count}})</label>
+          <label style="color: #ba1818; font-weight: bold;">STB kit ({{stb_count}})</label>
       </li>
       </br>
             <strong>Availability</strong></br>
@@ -60,39 +81,145 @@
           <button id="trainer-view-button" class="tablinks active" onclick="openTab(event, 'trainer-view')">Resource View</button>
           <button id="calendar-view-button" class="tablinks" onclick="openTab(event, 'calendar-view')" disabled>Day View</button>
           <button id="calendar-view-all-button" class="tablinks" onclick="openTab(event, 'calendar-view-all')" disabled>Day View All</button>
-        </div>
+        </div></br>
+        <button title="Details" id="resource" class="btn btn-primary" onClick="showOrHideDropdown(this.id,'create')">Add new resource</button> 
+        <div id="create_resource" style="display:none;">
+          <form id="create-resource" autocomplete="off" name="create-resource" action="/submit-resource" method="POST">
+            <input type="hidden" name="create-resource" value="1">
+            <label for="type" style="font-weight: bold;">Resource type:</label>
+            <select name="type" id="type" required>
+              <option value="Adult manikin">Adult manikin</option>
+              <option value="Pediatric manikin">Pediatric manikin</option>
+              <option value="Infant manikin">Infant manikin</option>
+              <option value="AED trainer">AED trainer</option>
+              <option value="STB kit">STB kit</option>
+            </select></br>
+            <label for="resource_name" style="font-weight: bold;">Name:</label>
+          <input type="text" id="resource_name" name="resource_name" maxlength="50" style="width: 200px;" required /><br />
+          <button type="submit" form = "create-resource" id="resource_submit" class="btn btn-primary">Add</button>
+          </form>
+        </div></br></br>
+        <select id="show-type" onchange="showType(this)">
+          <option value="Select" selected disabled hidden>Select resource type...</option>
+          <option value="All">Show all</option>
+          <option value="Manikins">Manikins</option>
+          <option value="AED Trainers">AED Trainers</option>
+          <option value="STB Kits">STB Kits</option>
+        </select>
         <div id="trainer-view" class="tabcontent">
           <div class="trainerList">
-            <ul class="list-group list-group-flush" id="trainerInfoFilter">
-              {% for resource in resources %}
-              <li
-                id="resource_{{resource.id}}"
-                data-type="{{resource.type}}"
-                status="{{resource.status}}"
-                class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
-                style="display: inline-block; border-width: 3px;"
-              >
-              <div name="warning" trainer="{{resource.id}}" style="display:inline-block;"></div>
-              <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong><br>
-              {{resource.type}}</br>
-              <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{resource.status}}</strong></div><br>
-                <div class = "button-container">
-                  <button title="Edit trainer" id="{{resource.id}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit trainer"/></button></div>
-              <div id="update_div_{{ resource.id }}" style="display:none;">
-                <form id="update_form_{{ resource.id }}"  name="update_trainer_form" action="/update-resource" method="POST">
-                  <input type="hidden" name="update_trainer_form" value="1">
-                  <input type="hidden" name="update_id" value="{{resource.id}}">
-                  <strong>Update status:</strong><br>
-                  <select name="status" id="status_{{resource.id}}">
-                    <option value="none" selected disabled hidden>{{resource.status}}</option>
-                    <option value="Good">Good</option>
-                    <option value="Suspended">Suspended</option>
-                  </select><br>
-                  <button type="submit" form = "update_form_{{ resource.id }}" id="update_submit_{{ resource.id }}" class="btn btn-primary">Update {{resource.name}}</button>
-                </form>
-              </div>
-              </li> 
-              {% endfor %}
+              <div id="Manikins" name="typeDiv"><strong>Manikins</strong>
+                <ul class="list-group list-group-flush infoFilter trainerInfoFilter">
+                {% for resource in manikins %}
+                <li
+                  id="resource_{{resource.id}}"
+                  data-type="{{resource.type}}"
+                  status="{{resource.status}}"
+                  class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
+                  style="display: inline-block; border-width: 3px;"
+                >
+                <div name="warning" warning="resource_{{resource.id}}" style="display:inline-block;"></div>
+                <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong><br>
+                {{resource.type}}</br>
+                <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{resource.status}}</strong></div><br>
+                <div><u>Admin notes: </u>{{resource.admin_notes}}</div>
+                  <div class = "button-container">
+                    <button title="Edit resource" id="{{resource.id}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit resource"/></button></div>
+                <div id="update_div_{{ resource.id }}" style="display:none;">
+                  <form id="update_form_{{ resource.id }}"  name="update_resource_form" action="/update-resource" method="POST">
+                    <input type="hidden" name="update_resource_form" value="1">
+                    <input type="hidden" name="update_id" value="{{resource.id}}">
+                    <label for="status" style="font-weight: bold;">Update status:</label>
+                    <select name="status" id="status_{{resource.id}}">
+                      <option value="{{resource.status}}" selected hidden>{{resource.status}}</option>
+                      <option value="Good">Good</option>
+                      <option value="Suspended">Suspended</option>
+                    </select><br>
+                    <label for="update_resource_name" style="font-weight: bold;">Update name:</label>
+                    <input type="text" id="update_resource_name" name="update_resource_name" maxlength="50" style="width: 200px;" value="{{resource.name}}"/><br />
+                    <label for="admin_notes_input" style="font-weight: bold;">Admin notes:</label>
+                    <textarea id="admin_notes_input" name="admin_notes_input" rows="4" cols="50" style="font-size:10px;">{{resource.admin_notes}}</textarea><br>
+                    <button type="submit" form = "update_form_{{ resource.id }}" id="update_submit_{{ resource.id }}" class="btn btn-primary">Update {{resource.name}}</button>
+                  </form>
+                </div>
+                </li> 
+                {% endfor %}
+                </ul>
+              </div> 
+                <div id="AED Trainers" name="typeDiv"><strong>AED Trainers</strong>
+                  <ul class="list-group list-group-flush infoFilter trainerInfoFilter">
+                  {% for resource in aeds %}
+                  <li
+                    id="resource_{{resource.id}}"
+                    data-type="{{resource.type}}"
+                    status="{{resource.status}}"
+                    class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
+                    style="display: inline-block; border-width: 3px;"
+                  >
+                  <div name="warning" warning="resource_{{resource.id}}" style="display:inline-block;"></div>
+                  <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong><br>
+                  {{resource.type}}</br>
+                  <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{resource.status}}</strong></div><br>
+                  <div><u>Admin notes: </u>{{resource.admin_notes}}</div>
+                    <div class = "button-container">
+                      <button title="Edit resource" id="{{resource.id}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit resource"/></button></div>
+                  <div id="update_div_{{ resource.id }}" style="display:none;">
+                    <form id="update_form_{{ resource.id }}"  name="update_resource_form" action="/update-resource" method="POST">
+                      <input type="hidden" name="update_resource_form" value="1">
+                      <input type="hidden" name="update_id" value="{{resource.id}}">
+                      <label for="status" style="font-weight: bold;">Update status:</label>
+                      <select name="status" id="status_{{resource.id}}">
+                        <option value="none" selected disabled hidden>{{resource.status}}</option>
+                        <option value="Good">Good</option>
+                        <option value="Suspended">Suspended</option>
+                      </select><br>
+                      <label for="update_resource_name" style="font-weight: bold;">Update name:</label>
+                      <input type="text" id="update_resource_name" name="update_resource_name" maxlength="50" style="width: 200px;" value="{{resource.name}}"/><br />
+                      <label for="admin_notes_input" style="font-weight: bold;">Admin notes:</label>
+                      <textarea id="admin_notes_input" name="admin_notes_input" rows="4" cols="50" style="font-size:10px;">{{resource.admin_notes}}</textarea><br>
+                      <button type="submit" form = "update_form_{{ resource.id }}" id="update_submit_{{ resource.id }}" class="btn btn-primary">Update {{resource.name}}</button>
+                    </form>
+                  </div>
+                  </li> 
+                  {% endfor %}
+                  </ul>
+                </div>
+                  <div id="STB Kits" name="typeDiv"><strong>STB Kits</strong>
+                    <ul class="list-group list-group-flush infoFilter trainerInfoFilter">
+                    {% for resource in stbs %}
+                    <li
+                      id="resource_{{resource.id}}"
+                      data-type="{{resource.type}}"
+                      status="{{resource.status}}"
+                      class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
+                      style="display: inline-block; border-width: 3px;"
+                    >
+                    <div name="warning" warning="resource_{{resource.id}}" style="display:inline-block;"></div>
+                    <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong><br>
+                    {{resource.type}}</br>
+                    <strong>Status: </strong><div class="update-status" style="display: inline-block;"><strong>{{resource.status}}</strong></div><br>
+                    <div><u>Admin notes: </u>{{resource.admin_notes}}</div>
+                      <div class = "button-container">
+                        <button title="Edit resource" id="{{resource.id}}"class="update-trainer-option" onClick="showOrHideDropdown(this.id,'update_div')"><img width="16" height="16" src="https://img.icons8.com/metro/26/pencil.png" alt="Edit resource"/></button></div>
+                    <div id="update_div_{{ resource.id }}" style="display:none;">
+                      <form id="update_form_{{ resource.id }}"  name="update_resource_form" action="/update-resource" method="POST">
+                        <input type="hidden" name="update_resource_form" value="1">
+                        <input type="hidden" name="update_id" value="{{resource.id}}">
+                        <label for="status" style="font-weight: bold;">Update status:</label>
+                        <select name="status" id="status_{{resource.id}}">
+                          <option value="none" selected disabled hidden>{{resource.status}}</option>
+                          <option value="Good">Good</option>
+                          <option value="Suspended">Suspended</option>
+                        </select><br>
+                        <label for="update_resource_name" style="font-weight: bold;">Update name:</label>
+                        <input type="text" id="update_resource_name" name="update_resource_name" maxlength="50" style="width: 200px;" value="{{resource.name}}"/><br />
+                        <label for="admin_notes_input" style="font-weight: bold;">Admin notes:</label>
+                        <textarea id="admin_notes_input" name="admin_notes_input" rows="4" cols="50" style="font-size:10px;">{{resource.admin_notes}}</textarea><br>
+                        <button type="submit" form = "update_form_{{ resource.id }}" id="update_submit_{{ resource.id }}" class="btn btn-primary">Update {{resource.name}}</button>
+                      </form>
+                    </div>
+                    </li> 
+                    {% endfor %}</ul></div> 
             </ul>
           </div>
         </div>

@@ -138,31 +138,6 @@
     "events": [
       {
         "allDay": false,
-        "color": "#ff8503",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-03-20T14:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#ff8503",
-        "extendedProps": {
-          "eventId": 5,
-          "formattedEndTime": "02:00 PM",
-          "formattedStartDate": "03/20/2024 12:00 PM",
-          "numLearners": 24,
-          "timeOfDay": null,
-          "trainerTrue": false
-        },
-        "id": 11,
-        "start": "2024-03-20T12:00:00",
-        "title": "Duolingo"
-      }
-    ],
-    "id": 5
-  },
-  {
-    "events": [
-      {
-        "allDay": false,
         "color": "#039e72",
         "display": "block",
         "displayEventEnd": true,
@@ -183,6 +158,56 @@
       }
     ],
     "id": 3
+  },
+  {
+    "events": [
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-26T14:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 6,
+          "formattedEndTime": "02:00 PM",
+          "formattedStartDate": "03/26/2024 12:00 PM",
+          "numLearners": 100,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 12,
+        "start": "2024-03-26T12:00:00",
+        "title": "WXPI"
+      }
+    ],
+    "id": 6
+  },
+  {
+    "events": [
+      {
+        "allDay": false,
+        "color": "#ff8503",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-20T14:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#ff8503",
+        "extendedProps": {
+          "eventId": 5,
+          "formattedEndTime": "02:00 PM",
+          "formattedStartDate": "03/20/2024 12:00 PM",
+          "numLearners": 24,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 11,
+        "start": "2024-03-20T12:00:00",
+        "title": "Duolingo"
+      }
+    ],
+    "id": 5
   },
   {
     "events": [
@@ -228,31 +253,6 @@
       }
     ],
     "id": 1
-  },
-  {
-    "events": [
-      {
-        "allDay": false,
-        "color": "#039e72",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-03-26T14:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#039e72",
-        "extendedProps": {
-          "eventId": 6,
-          "formattedEndTime": "02:00 PM",
-          "formattedStartDate": "03/26/2024 12:00 PM",
-          "numLearners": 100,
-          "timeOfDay": null,
-          "trainerTrue": false
-        },
-        "id": 12,
-        "start": "2024-03-26T12:00:00",
-        "title": "WXPI"
-      }
-    ],
-    "id": 6
   },
   {
     "events": [

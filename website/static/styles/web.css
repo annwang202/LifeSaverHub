@@ -90,13 +90,13 @@ ul {
   height:100vh;
 }
 
-#trainerInfoFilter {
+.trainerInfoFilter {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-gap: 0px;
 }
 
-#advancedInfoFilter {
+.advancedInfoFilter {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 0px;
@@ -380,4 +380,10 @@ input.star { /*star checkboxes*/
   padding: 6px 12px;
   border: 1px solid #ccc;
   border-top: none;
+}
+
+/*active nav bar tab*/
+nav-link a.active {
+  font-weight: bolder;
+  color: #fff;
 }

@@ -106,7 +106,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
             <div class="rating">
               <div class="trainerList">
                 <div id="noTrainers" style="display:none;"><strong>No trainers available with the current filters.</strong></div>
-                <ul class="list-group list-group-flush infoFilter" id="advancedInfoFilter">
+                <ul class="list-group list-group-flush infoFilter advancedInfoFilter">
                   {% for trainer in trainers %}
                   <li
                     id="trainer_{{trainer.id}}"
@@ -125,7 +125,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
                   value="{{trainer.nickname}} (ID: {{trainer.id}})"
                   onchange="copySelectedTrainers(this,'{{trainer.id}}')"
                 >
-                <div name="warning" trainer="{{trainer.id}}" style="display:inline-block;"></div>
+                <div name="warning" warning="trainer_{{trainer.id}}" style="display:inline-block;"></div>
                 <a title="Email {{trainer.nickname}}" href = "mailto: {{trainer.email}}" style="text-decoration: underline; color:black;"><strong>{{trainer.nickname}} (ID: {{trainer.id}})</strong></a>
                 <br>
                   {{trainer.pronouns}}

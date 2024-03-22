@@ -76,23 +76,23 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
                 <strong>Type</strong>
                 <li>
                     <input checked="true" name="type" type="checkbox" value="Adult manikin"/>
-                    <label style="font-weight: bold;">Adult manikin ({{adult_manikin_count}})</label>
+                    <label style="color: #4c700c; font-weight: bold;">Adult manikin ({{adult_manikin_count}})</label>
                 </li>
                 <li>
                     <input checked="true" type="checkbox" name="type" value="Pediatric manikin"/>
-                    <label style="font-weight: bold;">Pediatric manikin ({{pediatric_manikin_count}})</label>
+                    <label style="color: #4c700c; font-weight: bold;">Pediatric manikin ({{pediatric_manikin_count}})</label>
                 </li>
                 <li>
                   <input checked="true" type="checkbox" name="type" value="Infant manikin"/>
-                  <label style="font-weight: bold;">Infant manikin ({{infant_manikin_count}})</label>
+                  <label style="color: #4c700c; font-weight: bold;">Infant manikin ({{infant_manikin_count}})</label>
               </li>
               <li>
                 <input checked="true" type="checkbox" name="type" value="AED trainer"/>
-                <label style="font-weight: bold;">AED trainer ({{aed_count}})</label>
+                <label style="color: #161b9e; font-weight: bold;">AED trainer ({{aed_count}})</label>
             </li>
             <li>
               <input checked="true" type="checkbox" name="type" value="STB kit"/>
-              <label style="font-weight: bold;">STB kit ({{stb_count}})</label>
+              <label style="color: #ba1818; font-weight: bold;">STB kit ({{stb_count}})</label>
           </li>
           </br>
                 <strong>Availability</strong></br>
@@ -117,8 +117,9 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
           <div id="resource-view" class="tabcontent">
             <div class="rating">
               <div class="trainerList">
-                <ul class="list-group list-group-flush" id="advancedInfoFilter">
-                  {% for resource in resources %}
+                <div class="Manikins"><strong>Manikins</strong>
+                  <ul class="list-group list-group-flush infoFilter advancedInfoFilter">
+                  {% for resource in manikins %}
                   <li
                   id="resource_{{resource.id}}"
                   data-type="{{resource.type}}"
@@ -134,7 +135,7 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
                   value="{{resource.name}} (ID: {{resource.id}})"
                   onchange="copySelectedresources(this,'{{resource.id}}')"
                 >
-                <div name="warning" resource="{{resource.id}}" style="display:inline-block;"></div>
+                <div name="warning" warning="resource_{{resource.id}}" style="display:inline-block;"></div>
                 <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong>
                 <br>
                   {{resource.type}}
@@ -145,6 +146,67 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
                   </li> 
                   {% endfor %}
                 </ul>
+                </div>       
+                <div class="AED Trainers"><strong>AED Trainers</strong>
+                  <ul class="list-group list-group-flush infoFilter advancedInfoFilter">
+                {% for resource in aeds %}
+                  <li
+                  id="resource_{{resource.id}}"
+                  data-type="{{resource.type}}"
+                  status="{{resource.status}}"
+                  class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
+                  style="display: inline-block; border-width: 3px;"
+                >
+                  <input
+                  type="checkbox"
+                  class="resource-checkbox"
+                  name="check"
+                  resource="{{resource.id}}"
+                  value="{{resource.name}} (ID: {{resource.id}})"
+                  onchange="copySelectedresources(this,'{{resource.id}}')"
+                >
+                <div name="warning" warning="resource_{{resource.id}}" style="display:inline-block;"></div>
+                <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong>
+                <br>
+                  {{resource.type}}
+                  <div class="update-status"><strong>Status:</strong> {{resource.status}} </div>
+                    <div class = "button-container">
+                      <button title="Details" id="details_{{resource.id}}"class="show-resource-details" onClick="showOrHideDropdown(this.id,'resource','expand')">&#128899;</button>
+                    </div>
+                  </li> 
+                  {% endfor %}
+                </ul>
+                </div>
+                <div class="STB Kits"><strong>STB Kits</strong>
+                  <ul class="list-group list-group-flush infoFilter advancedInfoFilter">
+                {% for resource in stbs %}
+                  <li
+                  id="resource_{{resource.id}}"
+                  data-type="{{resource.type}}"
+                  status="{{resource.status}}"
+                  class="list-group-item {% if resource.status == 'Suspended' %} hideItem {% endif %} "
+                  style="display: inline-block; border-width: 3px;"
+                >
+                  <input
+                  type="checkbox"
+                  class="resource-checkbox"
+                  name="check"
+                  resource="{{resource.id}}"
+                  value="{{resource.name}} (ID: {{resource.id}})"
+                  onchange="copySelectedresources(this,'{{resource.id}}')"
+                >
+                <div name="warning" warning="resource_{{resource.id}}" style="display:inline-block;"></div>
+                <strong style="text-decoration: underline; color:black;">{{resource.name}} (ID: {{resource.id}})</strong>
+                <br>
+                  {{resource.type}}
+                  <div class="update-status"><strong>Status:</strong> {{resource.status}} </div>
+                    <div class = "button-container">
+                      <button title="Details" id="details_{{resource.id}}"class="show-resource-details" onClick="showOrHideDropdown(this.id,'resource','expand')">&#128899;</button>
+                    </div>
+                  </li> 
+                  {% endfor %}
+                </ul>
+                </div>
               </div>
               </div>
           </div>

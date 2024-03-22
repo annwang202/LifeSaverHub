@@ -1,4 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Get the current URL
+  var currentURL = window.location.href;
+
+  // Get the <a> elements inside the nav
+  var navLinks = document.querySelectorAll('.nav-link');
+
+  // Loop through each <a> element and check if its href matches the current URL
+  navLinks.forEach(function(link) {
+      if (link.href === currentURL) {
+          link.classList.add('active'); // Add 'active' class to the current tab
+      }
+  });
   const container = document.getElementById("trainer-info-container");
   var inputs = container.querySelectorAll(
     'input[type="date"], input[type="time"]'
@@ -46,6 +58,12 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (status === "Basic Trainer") {
       box.style.borderColor = "DodgerBlue";
       box.querySelector(".update-status").style.color = "#044dba";
+    } else if (status === "Adult manikin" || status === "Pediatric manikin" || status === "Infant manikin"){
+      box.style.borderColor = "#4c700c";
+    } else if (status === "AED trainer"){
+      box.style.borderColor = "#161b9e";
+    } else if (status === "STB kit"){
+      box.style.borderColor = "#ba1818";
     }
   });
 
@@ -183,7 +201,7 @@ async function filterAvailability(container, trainerBoxes) {
         );
 
         var ids = data.map(function (trainer) {
-          return "trainer_" + trainer["trainer_id"];
+          return trainer["id"];
         });
         trainerBoxes.forEach(function (box) {
           if (!ids.includes(box.id)) {
@@ -205,8 +223,9 @@ async function filterAvailability(container, trainerBoxes) {
         );
 
         var ids = data.map(function (trainer) {
-          return "trainer_" + trainer["trainer_id"];
+          return trainer["id"];
         });
+        console.log(ids);
         trainerBoxes.forEach(function (box) {
           if (!ids.includes(box.id)) {
             //only append trainers that were not returned by JSON call
@@ -258,7 +277,7 @@ async function getWarnings(date){
     let keys = Object.keys(data);
     let warnings = document.querySelectorAll('div[name="warning"]');
     warnings.forEach(function(warningDiv){
-      let trainerId = warningDiv.getAttribute("trainer");
+      let trainerId = warningDiv.getAttribute("warning");
       if(keys.includes(trainerId)){
         warningDiv.className = "warningIcon";
         warningDiv.title = "This trainer is already assigned to " + data["" + trainerId] + " on this day.";

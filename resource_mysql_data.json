@@ -1,13 +1,6 @@
 [
   {
     "events": [],
-    "id": 1004,
-    "name": "Joe",
-    "status": "Suspended",
-    "type": "Pediatric manikin"
-  },
-  {
-    "events": [],
     "id": 1002,
     "name": "AED 1",
     "status": "Good",
@@ -22,16 +15,37 @@
   },
   {
     "events": [],
+    "id": 1003,
+    "name": "STB Kit 1",
+    "status": "Good",
+    "type": "STB kit"
+  },
+  {
+    "events": [],
+    "id": 1005,
+    "name": "AED 3",
+    "status": "Good",
+    "type": "AED trainer"
+  },
+  {
+    "events": [],
+    "id": 1006,
+    "name": "AED 2",
+    "status": "Good",
+    "type": "AED trainer"
+  },
+  {
+    "events": [],
     "id": 1001,
-    "name": "Bob",
+    "name": "Jim",
     "status": "Good",
     "type": "Infant manikin"
   },
   {
     "events": [],
-    "id": 1003,
-    "name": "STB Kit 1",
+    "id": 1004,
+    "name": "Billy",
     "status": "Good",
-    "type": "STB kit"
+    "type": "Pediatric manikin"
   }
 ]
