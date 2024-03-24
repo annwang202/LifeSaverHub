@@ -258,6 +258,71 @@
     "events": [
       {
         "allDay": false,
+        "color": "#039e72",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-07T16:00:00",
+        "eventDisplay": "background",
+        "eventTextColor": "#039e72",
+        "extendedProps": {
+          "eventId": 12,
+          "formattedEndTime": "04:00 PM",
+          "formattedStartDate": "03/07/2024 02:00 PM",
+          "numLearners": 12,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 8,
+        "start": "2024-03-07T14:00:00",
+        "title": "Canada Dry"
+      },
+      {
+        "allDay": true,
+        "color": "#039e72",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-20T11:00:00.000",
+        "eventDisplay": "background",
+        "eventTextColor": "#039e72",
+        "extendedProps": {
+          "eventId": 12,
+          "formattedEndTime": "11:00 AM",
+          "formattedStartDate": "03/19/2024",
+          "numLearners": 12,
+          "timeOfDay": "Morning",
+          "trainerTrue": false
+        },
+        "id": 13,
+        "start": "2024-03-19T08:00:00",
+        "title": "Canada Dry"
+      },
+      {
+        "allDay": false,
+        "color": "#039e72",
+        "display": "block",
+        "displayEventEnd": true,
+        "end": "2024-03-20T18:00:00.000",
+        "eventDisplay": "background",
+        "eventTextColor": "#039e72",
+        "extendedProps": {
+          "eventId": 12,
+          "formattedEndTime": "06:00 PM",
+          "formattedStartDate": "03/20/2024 04:00 PM",
+          "numLearners": 12,
+          "timeOfDay": null,
+          "trainerTrue": false
+        },
+        "id": 14,
+        "start": "2024-03-20T16:00:00",
+        "title": "Canada Dry"
+      }
+    ],
+    "id": 12
+  },
+  {
+    "events": [
+      {
+        "allDay": false,
         "color": "#ff8503",
         "display": "block",
         "displayEventEnd": true,
@@ -318,70 +383,5 @@
       }
     ],
     "id": 9
-  },
-  {
-    "events": [
-      {
-        "allDay": false,
-        "color": "#ff8503",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-03-07T16:00:00",
-        "eventDisplay": "background",
-        "eventTextColor": "#ff8503",
-        "extendedProps": {
-          "eventId": 12,
-          "formattedEndTime": "04:00 PM",
-          "formattedStartDate": "03/07/2024 02:00 PM",
-          "numLearners": 12,
-          "timeOfDay": null,
-          "trainerTrue": false
-        },
-        "id": 8,
-        "start": "2024-03-07T14:00:00",
-        "title": "Canada Dry"
-      },
-      {
-        "allDay": true,
-        "color": "#ff8503",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-03-20T11:00:00.000",
-        "eventDisplay": "background",
-        "eventTextColor": "#ff8503",
-        "extendedProps": {
-          "eventId": 12,
-          "formattedEndTime": "11:00 AM",
-          "formattedStartDate": "03/19/2024",
-          "numLearners": 12,
-          "timeOfDay": "Morning",
-          "trainerTrue": false
-        },
-        "id": 13,
-        "start": "2024-03-19T08:00:00",
-        "title": "Canada Dry"
-      },
-      {
-        "allDay": false,
-        "color": "#ff8503",
-        "display": "block",
-        "displayEventEnd": true,
-        "end": "2024-03-20T18:00:00.000",
-        "eventDisplay": "background",
-        "eventTextColor": "#ff8503",
-        "extendedProps": {
-          "eventId": 12,
-          "formattedEndTime": "06:00 PM",
-          "formattedStartDate": "03/20/2024 04:00 PM",
-          "numLearners": 12,
-          "timeOfDay": null,
-          "trainerTrue": false
-        },
-        "id": 14,
-        "start": "2024-03-20T16:00:00",
-        "title": "Canada Dry"
-      }
-    ],
-    "id": 12
   }
 ]
